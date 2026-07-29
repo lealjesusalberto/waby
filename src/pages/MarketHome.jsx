@@ -3,12 +3,47 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { Star, Search, MapPin, Package, X, LogOut, User, ShoppingCart } from 'lucide-react'
 import { NotificationBell } from '../components/NotificationBell'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import L from 'leaflet'
 
 export default function MarketHome() {
   const navigate = useNavigate()
   const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart } = useStore()
   const [showOrders, setShowOrders] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+
+  // Map Modal State
+  const [showMapModal, setShowMapModal] = useState(false)
+  const [selectedStoreForMap, setSelectedStoreForMap] = useState(null)
+  const [mapCoords, setMapCoords] = useState([10.4806, -66.9036]) // Default Caracas
+
+  const openStoreMap = async (store, e) => {
+    e.stopPropagation()
+    setSelectedStoreForMap(store)
+    setShowMapModal(true)
+    if (store.location && store.location !== 'Online') {
+      try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(store.location)}`)
+        const data = await response.json()
+        if (data && data.length > 0) {
+          setMapCoords([parseFloat(data[0].lat), parseFloat(data[0].lon)])
+        }
+      } catch (err) {
+        console.error("Geocoding error", err)
+      }
+    }
+  }
+
+  const createCustomMarker = (logoUrl) => {
+    return new L.DivIcon({
+      className: 'custom-leaflet-marker',
+      html: logoUrl && (logoUrl.startsWith('http') || logoUrl.startsWith('data:')) 
+            ? `<img src="${logoUrl}" />` 
+            : `<div style="font-size:24px;line-height:34px;text-align:center;">${logoUrl || '🏪'}</div>`,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20]
+    })
+  }
 
   useEffect(() => {
     fetchMarketplaceStores()
@@ -157,8 +192,14 @@ export default function MarketHome() {
                 <p style={{ margin: '0 0 1rem 0', color: '#64748B', fontSize: '0.9rem' }}>{store.category}</p>
 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid #F1F5F9' }}>
-                  <span style={{ fontSize: '0.8rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                    <MapPin size={12} /> {store.location || 'Online'}
+                  <span 
+                    onClick={(e) => openStoreMap(store, e)}
+                    style={{ fontSize: '0.8rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', background: '#F4FBF7', padding: '0.3rem 0.6rem', borderRadius: '20px', border: '1px solid #A7F3D0', fontWeight: '600', transition: 'background 0.2s' }}
+                    onMouseOver={e => e.currentTarget.style.background = '#D1FAE5'}
+                    onMouseOut={e => e.currentTarget.style.background = '#F4FBF7'}
+                    title="Ver en mapa"
+                  >
+                    <MapPin size={14} /> {store.location || 'Online'}
                   </span>
                   <button style={{ background: '#F4FBF7', color: 'var(--primary)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold' }}>
                     Visitar
@@ -297,6 +338,45 @@ export default function MarketHome() {
 
       {/* Overlays */}
       {showOrders && <div onClick={() => setShowOrders(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999 }} />}
+
+      {/* Map Modal */}
+      {showMapModal && selectedStoreForMap && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1050, backdropFilter: 'blur(4px)', animation: 'fadeIn 0.2s'
+        }}>
+          <div style={{
+            background: 'white', borderRadius: '16px', width: '90%', maxWidth: '600px',
+            overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+            display: 'flex', flexDirection: 'column'
+          }}>
+            <div style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #E2E8F0' }}>
+              <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <MapPin size={20} color="var(--primary)" /> Ubicación: {selectedStoreForMap.name}
+              </h3>
+              <button onClick={() => setShowMapModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}>
+                <X size={24} />
+              </button>
+            </div>
+            <div style={{ height: '400px', width: '100%' }}>
+              {/* Force re-render of map when coords change using key prop */}
+              <MapContainer key={mapCoords.join(',')} center={mapCoords} zoom={13} style={{ height: '100%', width: '100%' }}>
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={mapCoords} icon={createCustomMarker(selectedStoreForMap.logo)}>
+                  <Popup>
+                    <strong>{selectedStoreForMap.name}</strong><br/>
+                    {selectedStoreForMap.location}
+                  </Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )
