@@ -129,7 +129,7 @@ const CategoryProductsModal = ({ category, products, onClose }) => {
           {products.length === 0 ? (
             <p style={{ textAlign: 'center', color: '#64748B', fontSize: '1.2rem', marginTop: '2rem' }}>No hay productos en esta categoría por ahora.</p>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 280px))', gap: '1.5rem' }}>
               {products.map(prod => (
                 <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
                   <div style={{ height: '180px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
@@ -464,7 +464,7 @@ const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
     <>
       <div>
       <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, 250px), 1fr))`, gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 260px), 320px))`, gap: '1.5rem' }}>
         {products.map(prod => (
           <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
             <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', gap: '0.5rem', zIndex: 1 }}>
