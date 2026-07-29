@@ -138,12 +138,13 @@ export default function MarketHome() {
               <div style={{ padding: '1.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div style={{ 
-                    width: '50px', height: '50px', background: '#F8FAFC', borderRadius: '12px', 
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', marginTop: '-40px', border: '3px solid white', overflow: 'hidden'
+                    width: '64px', height: '64px', background: '#FFFFFF', borderRadius: '14px', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem',
+                    boxShadow: '0 6px 12px -2px rgba(0, 0, 0, 0.15)', marginTop: '-42px', border: '3px solid white', 
+                    overflow: 'hidden', padding: '4px'
                   }}>
                     {store.logo?.startsWith('http') || store.logo?.startsWith('data:image') ? (
-                      <img src={store.logo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={store.logo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     ) : (
                       <span>{store.logo}</span>
                     )}

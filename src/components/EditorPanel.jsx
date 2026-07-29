@@ -253,10 +253,21 @@ export default function EditorPanel() {
                     </div>
                   </div>
                   <div style={{ flex: 1 }}>
+                    <label style={labelStyle}>Portada de la Tarjeta (URL o Archivo)</label>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <input type="text" value={storeConfig.coverUrl || ''} onChange={(e) => updateStoreConfig({ coverUrl: e.target.value })} style={{...inputStyle, flex: 1}} placeholder="URL o subir portada" />
+                      <label style={{ background: '#E2E8E0', padding: '0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Upload size={16} />
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => updateStoreConfig({ coverUrl: base64 }))} />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Color Primario</label>
                     <input type="color" value={storeConfig.primaryColor} onChange={(e) => updateStoreConfig({ primaryColor: e.target.value })} style={{ width: '100%', height: '40px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
                   </div>
-                </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Ubicación</label>
