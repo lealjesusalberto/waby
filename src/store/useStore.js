@@ -280,8 +280,7 @@ export const useStore = create((set, get) => ({
 
   // --- Notificaciones & Alertas ---
   notifications: [
-    { id: 'notif-1', title: '🛍️ ¡Pedido Enviado!', message: 'Tu compra por $15.00 en Waby Store está en proceso de verificación.', date: new Date().toISOString(), read: false, type: 'order' },
-    { id: 'notif-2', title: '🎉 ¡Bienvenido a Waby!', message: 'Descubre las mejores tiendas locales o gestiona tus pedidos.', date: new Date().toISOString(), read: true, type: 'system' }
+    { id: 'notif-1', title: '🎉 ¡Bienvenido a Waby!', message: 'Tu panel de control está listo. Aquí recibirás notificaciones de tus ventas.', date: new Date().toISOString(), read: true, type: 'system' }
   ],
   toast: null,
 
