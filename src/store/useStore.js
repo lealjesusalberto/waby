@@ -291,20 +291,27 @@ export const useStore = create((set, get) => ({
   
   fetchMarketplaceStores: async () => {
     try {
-      const q = query(collection(db, 'users'), where('role', '==', 'tienda'), where('status', '==', 'active'))
+      const q = query(collection(db, 'users'), where('role', '==', 'tienda'))
       const snapshot = await getDocs(q)
       const realStores = []
       snapshot.forEach(doc => {
         const data = doc.data()
-        realStores.push({
-          id: doc.id,
-          name: data.storeConfig?.name || data.storeName || 'Tienda',
-          category: 'General',
-          rating: 5.0,
-          reviews: 0,
-          cover: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500',
-          logo: data.storeConfig?.logoText || '🏪'
-        })
+        if (data.status === 'active') {
+          // Intentar obtener una imagen de fondo de la sección "hero" o "banner"
+          const heroSection = data.layoutSections?.find(s => s.templateType === 'hero' || s.templateType === 'banner')
+          const coverImg = heroSection?.config?.bgImage || 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500'
+
+          realStores.push({
+            id: doc.id,
+            name: data.storeConfig?.name || data.storeName || 'Tienda',
+            category: data.storeConfig?.category || 'Tienda Local',
+            rating: 5.0,
+            reviews: data.storeConfig?.followers || 0,
+            cover: coverImg,
+            logo: data.storeConfig?.logoText || '🏪',
+            location: data.storeConfig?.location || 'Online'
+          })
+        }
       })
       // You can mix real and dummy stores, or just show real ones if they exist
       set((state) => ({ 

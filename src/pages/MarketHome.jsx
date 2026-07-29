@@ -136,7 +136,7 @@ export default function MarketHome() {
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid #F1F5F9' }}>
                   <span style={{ fontSize: '0.8rem', color: '#94A3B8', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                    <MapPin size={12} /> Caracas
+                    <MapPin size={12} /> {store.location || 'Online'}
                   </span>
                   <button style={{ background: '#F4FBF7', color: 'var(--primary)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold' }}>
                     Visitar
