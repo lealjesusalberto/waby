@@ -43,6 +43,9 @@ function App() {
   const [authInitialized, setAuthInitialized] = useState(false)
 
   useEffect(() => {
+    // Cargar configuraciones globales (ej. Tasa BCV) al iniciar
+    useStore.getState().fetchGlobalSettings()
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {

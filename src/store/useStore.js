@@ -20,6 +20,28 @@ export const useStore = create((set, get) => ({
     }
   },
 
+  // --- Configuración Global ---
+  bcvRate: 36.5,
+  fetchGlobalSettings: async () => {
+    try {
+      const globalDoc = await getDoc(doc(db, 'settings', 'global'))
+      if (globalDoc.exists()) {
+        const data = globalDoc.data()
+        if (data.bcvRate) set({ bcvRate: data.bcvRate })
+      }
+    } catch(err) {
+      console.error("Error fetching global settings", err)
+    }
+  },
+  updateBcvRate: async (rate) => {
+    try {
+      await setDoc(doc(db, 'settings', 'global'), { bcvRate: rate }, { merge: true })
+      set({ bcvRate: rate })
+    } catch(err) {
+      console.error("Error updating BCV rate", err)
+    }
+  },
+
   // --- Configuración de la Tienda (Header/Globales) ---
   storeConfig: {
     name: 'Mi Nueva Tienda',

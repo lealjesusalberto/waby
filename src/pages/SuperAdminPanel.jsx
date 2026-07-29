@@ -11,6 +11,14 @@ export default function SuperAdminPanel() {
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
 
+  const bcvRate = useStore(state => state.bcvRate)
+  const updateBcvRate = useStore(state => state.updateBcvRate)
+  const [localBcvRate, setLocalBcvRate] = useState(36.5)
+
+  useEffect(() => {
+    setLocalBcvRate(bcvRate)
+  }, [bcvRate])
+
   useEffect(() => {
     fetchUsers()
   }, [])
@@ -125,6 +133,24 @@ export default function SuperAdminPanel() {
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
             <p style={{ color: '#64748B', margin: '0 0 0.5rem 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Clientes Registrados</p>
             <h3 style={{ margin: 0, fontSize: '2rem', color: '#3B82F6' }}>{clients.length}</h3>
+          </div>
+          <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+            <p style={{ color: '#64748B', margin: '0 0 0.5rem 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Tasa BCV (Bs/$)</p>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input 
+                type="number" 
+                step="0.01"
+                value={localBcvRate} 
+                onChange={(e) => setLocalBcvRate(parseFloat(e.target.value))} 
+                style={{ width: '100px', fontSize: '1.5rem', fontWeight: 'bold', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.5rem' }} 
+              />
+              <button 
+                onClick={() => updateBcvRate(localBcvRate)}
+                style={{ background: '#38BDF8', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+              >
+                Actualizar
+              </button>
+            </div>
           </div>
         </div>
 

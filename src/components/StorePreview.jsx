@@ -41,12 +41,15 @@ const CartDrawer = ({ onClose, onCheckout }) => {
                 <img src={item.image} alt={item.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '12px', background: '#F8F9F3' }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <h5 style={{ margin: '0 0 0.2rem 0', fontSize: '0.95rem' }}>{item.name}</h5>
+                    <h4 style={{ margin: '0 0 0.3rem 0', fontSize: '1rem' }}>{item.name}</h4>
                     <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: 0 }}>
                       <Trash2 size={16} />
                     </button>
                   </div>
-                  <p style={{ margin: '0 0 0.5rem 0', color: 'var(--primary)', fontWeight: 'bold' }}>${item.price.toFixed(2)}</p>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>${item.price.toFixed(2)}</span>
+                    <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>({(item.price * useStore.getState().bcvRate).toFixed(2)} Bs)</span>
+                  </div>
                   
                   {/* Quantity Control */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#F8FAFC', width: 'fit-content', borderRadius: '20px', padding: '0.2rem 0.5rem' }}>
@@ -72,14 +75,17 @@ const CartDrawer = ({ onClose, onCheckout }) => {
             <span>Envío Estimado</span>
             <span>${envio.toFixed(2)}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', fontSize: '1.2rem', fontWeight: 'bold', color: '#1C2B23' }}>
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: '900' }}>
+            <span>Total a pagar</span>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <span>${total.toFixed(2)}</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{(total * useStore.getState().bcvRate).toFixed(2)} Bs</span>
+            </div>
           </div>
           
           <button 
             onClick={onCheckout}
-            style={{ width: '100%', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
+            style={{ width: '100%', marginTop: '1.5rem', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
           >
             Proceder al Pago <CreditCard size={18} />
           </button>
@@ -132,7 +138,10 @@ const CategoryProductsModal = ({ category, products, onClose }) => {
                   <div style={{ padding: '1rem' }}>
                     <h5 style={{ margin: '0 0 0.3rem 0', fontSize: '0.95rem', color: 'var(--text-main)' }}>{prod.name}</h5>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-                      <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
+                        <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</span>
+                      </div>
                       <button 
                         onClick={() => addToCart(prod)}
                         style={{ background: '#E8F5E9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
@@ -153,6 +162,7 @@ const CategoryProductsModal = ({ category, products, onClose }) => {
 
 const CheckoutModal = ({ onClose, total, onSuccess }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const bcvRate = useStore.getState().bcvRate;
   
   // Customer details
   const [customerName, setCustomerName] = useState('');
@@ -208,10 +218,10 @@ const CheckoutModal = ({ onClose, total, onSuccess }) => {
               <div><strong>Banco:</strong> Banesco (0134)</div>
               <div><strong>Teléfono:</strong> 0414-1234567</div>
               <div><strong>Cédula/RIF:</strong> V-12345678</div>
-              <div><strong>Tasa (BCV):</strong> 36.50 Bs</div>
+              <div><strong>Tasa (BCV):</strong> {bcvRate.toFixed(2)} Bs</div>
             </div>
             <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px dashed #FFEDD5', fontWeight: 'bold', color: '#C2410C' }}>
-              Monto en Bs: {(total * 36.5).toFixed(2)} Bs.
+              Monto en Bs: {(total * bcvRate).toFixed(2)} Bs.
             </div>
           </div>
 

@@ -498,8 +498,9 @@ export default function EditorPanel() {
                     <img src={p.image} alt={p.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} />
                     <div>
                       <p style={{ margin: 0, fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-main)' }}>{p.name}</p>
-                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.2rem', alignItems: 'center' }}>
                         <span style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 'bold' }}>${p.price.toFixed(2)}</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>({(p.price * useStore.getState().bcvRate).toFixed(2)} Bs)</span>
                       </div>
                     </div>
                   </div>
@@ -711,6 +712,7 @@ export default function EditorPanel() {
                       <p style={{ margin: '0 0 0.3rem 0', fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--text-main)' }}>{p.name}</p>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                         <span style={{ color: 'var(--primary)', fontSize: '1rem', fontWeight: 'bold' }}>${p.price.toFixed(2)}</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>({(p.price * useStore.getState().bcvRate).toFixed(2)} Bs)</span>
                         {p.tags.includes('featured') && <span style={{ fontSize: '0.75rem', background: '#FEF3C7', color: '#D97706', padding: '0.1rem 0.5rem', borderRadius: '4px' }}>⭐ Destacado</span>}
                         {p.tags.includes('bestseller') && <span style={{ fontSize: '0.75rem', background: '#FEE2E2', color: '#DC2626', padding: '0.1rem 0.5rem', borderRadius: '4px' }}>🔥 Bestseller</span>}
                       </div>
