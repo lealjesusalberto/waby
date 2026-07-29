@@ -1,0 +1,239 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary: #11683E; /* Dark Green */
+  --primary-hover: #0d5431;
+  --bg-color: #F8F9F3; /* Light cream */
+  --card-bg: #FFFFFF;
+  --text-main: #1C2B23;
+  --text-muted: #5F7368;
+  --border-color: #E2E8E0;
+  --accent: #FF3B30; /* Vibrant Red */
+  --accent-yellow: #FFC107;
+  --accent-orange: #FF9800;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .serif-font {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+}
+
+/* Glassmorphism Utilities (retained for sidebar/floating elements if needed) */
+.glass {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-color);
+}
+
+/* Editor Panel Sidebar */
+.design-panel {
+  width: 450px;
+  background: white;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.03);
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.design-panel.collapsed {
+  margin-left: -450px;
+  transform: translateX(-450px);
+}
+
+.design-panel-header {
+  background: var(--primary);
+  color: white;
+  padding: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.main-preview-area {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  background: var(--bg-color);
+  display: flex;
+  justify-content: center;
+}
+
+/* Store Preview Container */
+.store-container {
+  width: 100%;
+  max-width: 1200px;
+  background: var(--bg-color);
+  min-height: 100%;
+  position: relative;
+}
+
+.pill-btn {
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.pill-btn.active {
+  background: #00D37F;
+  color: white;
+}
+
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.section-hover {
+  position: relative;
+  transition: outline 0.2s;
+}
+
+/* The badge that appears when active/hovering */
+.section-badge {
+  position: absolute;
+  top: -15px;
+  left: 20px;
+  background: var(--primary);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.section-hover:hover .section-badge,
+.section-active .section-badge {
+  opacity: 1;
+}
+
+.section-active {
+  outline: 3px solid var(--primary);
+  outline-offset: -3px;
+  z-index: 5;
+}
+
+/* --- Responsive Utilities --- */
+.store-header {
+  padding: 1.5rem 4rem;
+}
+
+.store-section-padding {
+  padding: 2rem 4rem;
+}
+
+.hero-padding {
+  padding: 4rem;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+}
+
+.hero-buttons {
+  flex-direction: row;
+}
+
+.hero-min-height {
+  min-height: 400px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  /* Editor Panel Layout */
+  .layout {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .design-panel {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .design-panel.collapsed {
+    margin-left: 0;
+    margin-top: -100vh; /* Approximate hide, or better to use display/height */
+    display: none;
+  }
+
+  .main-preview-area {
+    width: 100%;
+    overflow: visible;
+  }
+
+  /* Store Preview Adjustments */
+  .store-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .store-header > div:first-child {
+    flex-direction: column;
+  }
+
+  .store-section-padding {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero-padding {
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-buttons button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .hero-min-height {
+    min-height: auto;
+  }
+}
