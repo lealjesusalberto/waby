@@ -325,13 +325,13 @@ const hexToRgba = (hex, alpha = 0.8) => {
 
 const HeroTemplate = ({ config, storeConfig }) => {
   const baseColor = config.overlayColor || storeConfig?.primaryColor || '#11683E';
-  const colorStart = hexToRgba(baseColor, 0.88);
-  const colorEnd = hexToRgba(baseColor, 0.45);
+  const colorStart = hexToRgba(baseColor, 0.95);
+  const colorEnd = hexToRgba(baseColor, 0.1);
 
   return (
     <div className="hero-padding hero-min-height" style={{
       position: 'relative', borderRadius: '24px', overflow: 'hidden',
-      backgroundImage: `linear-gradient(to right, ${colorStart} 30%, ${colorEnd} 100%), url(${config.bgImage})`,
+      backgroundImage: `linear-gradient(to right, ${colorStart} 35%, ${colorEnd} 100%), url(${config.bgImage})`,
       backgroundSize: 'cover', backgroundPosition: 'center', color: 'white',
       display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center'
     }}>
