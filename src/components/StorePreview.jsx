@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOut } from 'lucide-react'
+import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOut, ArrowLeft } from 'lucide-react'
 import { mockStoreData } from '../store/mockStoreData'
 
 // --- CARRITO (DRAWER) ---
@@ -652,6 +652,17 @@ export default function StorePreview({ isReadOnly = false }) {
       <div className="store-hero-header">
         {/* Cover Banner */}
         <div className="store-cover-banner">
+          {isReadOnly && (
+            <button
+              onClick={() => navigate('/market')}
+              className="store-back-floating-btn"
+              title="Volver al Marketplace"
+            >
+              <ArrowLeft size={16} />
+              <span>Volver al Marketplace</span>
+            </button>
+          )}
+
           {storeConfig.coverUrl ? (
             <img src={storeConfig.coverUrl} alt="Portada" className="store-cover-img" />
           ) : (
@@ -713,29 +724,14 @@ export default function StorePreview({ isReadOnly = false }) {
 
           {/* Actions & Navigation */}
           <div className="store-profile-actions">
-            {isReadOnly && (
-              <button
-                onClick={() => navigate('/market')}
-                className="store-header-back-btn"
-                title="Volver al Marketplace"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="m15 18-6-6 6-6" /></svg>
-                <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Volver</span>
-              </button>
-            )}
-
             <button 
               onClick={toggleCart} 
               className="store-cart-btn-primary"
               style={{ background: storeConfig.buttonColor || storeConfig.primaryColor || 'var(--primary)' }}
             >
               <ShoppingCart size={18} />
-              <span>Carrito ({cartTotalQty})</span>
+              <span>Ver Carrito ({cartTotalQty})</span>
               {cartTotal > 0 && <span className="cart-total-badge">${cartTotal.toFixed(2)}</span>}
-            </button>
-
-            <button onClick={handleLogout} className="store-logout-btn" title="Cerrar Sesión">
-              <LogOut size={16} />
             </button>
           </div>
         </div>
