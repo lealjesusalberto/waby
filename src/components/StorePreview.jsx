@@ -5,10 +5,10 @@ import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOu
 import { mockStoreData } from '../store/mockStoreData'
 
 // --- CARRITO (DRAWER) ---
-const CartDrawer = ({ onClose, onCheckout }) => {
+const CartDrawer = ({ onClose, onCheckout, shippingCost = 0 }) => {
   const { cart, removeFromCart, updateQuantity } = useStore()
   const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
-  const envio = subtotal > 0 ? 5.00 : 0
+  const envio = subtotal > 0 ? shippingCost : 0
   const total = subtotal + envio
 
   return (
@@ -644,9 +644,10 @@ export default function StorePreview({ isReadOnly = false }) {
   // Datos específicos de la tienda (visual)
   const { storeConfig, layoutSections, categories, products, features, testimonials } = activeStoreData
 
+  const shippingCost = storeConfig?.shippingCost !== undefined ? parseFloat(storeConfig.shippingCost) : 0
   const cartTotalQty = cart.reduce((acc, item) => acc + item.quantity, 0)
   const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
-  const cartTotal = cartSubtotal > 0 ? cartSubtotal + 5 : 0; // +5 envio
+  const cartTotal = cartSubtotal > 0 ? cartSubtotal + shippingCost : 0
 
   const handleLogout = () => {
     logout()
@@ -804,6 +805,7 @@ export default function StorePreview({ isReadOnly = false }) {
         <>
           <div onClick={toggleCart} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999 }} />
           <CartDrawer
+            shippingCost={shippingCost}
             onClose={toggleCart}
             onCheckout={() => {
               toggleCart();
