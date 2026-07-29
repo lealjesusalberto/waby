@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { Star, Search, MapPin, Package, X, LogOut, User, ShoppingCart } from 'lucide-react'
+import { NotificationBell } from '../components/NotificationBell'
 
 export default function MarketHome() {
   const navigate = useNavigate()
@@ -36,6 +37,7 @@ export default function MarketHome() {
         </div>
 
         <div className="market-header-buttons">
+          <NotificationBell />
           <button
             onClick={() => setShowOrders(true)}
             style={{ background: '#F8FAFC', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s', border: '1px solid #E2E8F0' }}

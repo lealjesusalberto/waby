@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { Package, User, Upload, ArrowLeft, CheckCircle, X } from 'lucide-react'
+import { NotificationBell } from '../components/NotificationBell'
 
 const SuccessModal = ({ onClose }) => (
   <div style={{
@@ -36,12 +37,19 @@ const SuccessModal = ({ onClose }) => (
 
 export default function ClientProfile() {
   const navigate = useNavigate()
-  const { userProfile, updateUserProfile, orders } = useStore()
+  const { user, userProfile, updateUserProfile, orders, logout } = useStore()
   
-  const [name, setName] = useState(userProfile.name || '')
-  const [avatar, setAvatar] = useState(userProfile.avatar || '')
+  const [name, setName] = useState(userProfile?.name || '')
+  const [avatar, setAvatar] = useState(userProfile?.avatar || '')
   const [isSaving, setIsSaving] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+
+  useEffect(() => {
+    if (userProfile) {
+      setName(userProfile.name || '')
+      setAvatar(userProfile.avatar || '')
+    }
+  }, [userProfile])
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
@@ -90,11 +98,14 @@ export default function ClientProfile() {
 
   return (
     <div style={{ background: '#F8F9F3', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
-      <div style={{ background: 'white', padding: '1.5rem 2rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <button onClick={() => navigate('/market')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', color: '#64748B' }}>
-          <ArrowLeft size={24} />
-        </button>
-        <h1 style={{ margin: 0, fontSize: '1.5rem', color: '#0F172A' }}>Mi Perfil</h1>
+      <div style={{ background: 'white', padding: '1.5rem 2rem', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <button onClick={() => navigate('/market')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', color: '#64748B' }}>
+            <ArrowLeft size={24} />
+          </button>
+          <h1 style={{ margin: 0, fontSize: '1.5rem', color: '#0F172A' }}>Mi Perfil</h1>
+        </div>
+        <NotificationBell />
       </div>
 
       <div className="client-profile-grid">

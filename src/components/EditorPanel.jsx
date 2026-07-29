@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useStore } from '../store/useStore'
 import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload } from 'lucide-react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
+import { NotificationBell } from './NotificationBell'
 
 const STORE_CATEGORY_SUBCATEGORIES = {
   'Ropa & Accesorios': [
@@ -247,7 +248,7 @@ export default function EditorPanel() {
         )}
 
         {/* Navigation Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', background: '#F8FAFC' }}>
+        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--border-color)', background: '#F8FAFC', paddingRight: '0.8rem' }}>
           <button 
             onClick={() => setActiveTab('design')} 
             style={{ flex: 1, padding: '1rem', border: 'none', background: activeTab === 'design' ? 'white' : 'transparent', fontWeight: 'bold', color: activeTab === 'design' ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab === 'design' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
@@ -266,6 +267,7 @@ export default function EditorPanel() {
           >
             <Inbox size={18} /> Órdenes
           </button>
+          <NotificationBell />
         </div>
 
         {/* --- PESTAÑA DE DISEÑO (Visual Builder) --- */}

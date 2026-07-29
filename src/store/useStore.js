@@ -275,6 +275,41 @@ export const useStore = create((set, get) => ({
     }
   },
 
+  // --- Notificaciones & Alertas ---
+  notifications: [
+    { id: 'notif-1', title: '🛍️ ¡Pedido Enviado!', message: 'Tu compra por $15.00 en Waby Store está en proceso de verificación.', date: new Date().toISOString(), read: false, type: 'order' },
+    { id: 'notif-2', title: '🎉 ¡Bienvenido a Waby!', message: 'Descubre las mejores tiendas locales o gestiona tus pedidos.', date: new Date().toISOString(), read: true, type: 'system' }
+  ],
+  toast: null,
+
+  showToast: (title, message, type = 'info') => {
+    set({ toast: { title, message, type } })
+    setTimeout(() => {
+      set({ toast: null })
+    }, 4500)
+  },
+
+  addNotification: (title, message, type = 'order') => {
+    const newNotif = {
+      id: `notif-${Date.now()}`,
+      title,
+      message,
+      type,
+      date: new Date().toISOString(),
+      read: false
+    }
+    set((state) => ({
+      notifications: [newNotif, ...state.notifications]
+    }))
+    get().showToast(title, message, type)
+  },
+
+  markNotificationsAsRead: () => {
+    set((state) => ({
+      notifications: state.notifications.map(n => ({ ...n, read: true }))
+    }))
+  },
+
   // Órdenes
   addOrder: async (order) => {
     let storeId = order.storeId || get().cart[0]?.storeId
@@ -297,6 +332,13 @@ export const useStore = create((set, get) => ({
 
     set((state) => ({ orders: [newOrder, ...state.orders] }))
 
+    // Trigger Notification for Order Received
+    get().addNotification(
+      '🎉 ¡Nuevo pedido recibido!',
+      `Orden ${newOrder.id} realizada en ${newOrder.storeName} por un total de $${newOrder.total ? newOrder.total.toFixed(2) : '0.00'}.`,
+      'order'
+    )
+
     try {
       await setDoc(doc(db, 'orders', newOrder.id), newOrder)
     } catch (err) {
@@ -310,6 +352,13 @@ export const useStore = create((set, get) => ({
         order.id === orderId ? { ...order, status: newStatus } : order
       )
     }))
+
+    // Trigger Notification for Status Change
+    get().addNotification(
+      `✅ Estado de Pedido Actualizado`,
+      `El pedido ${orderId} ahora está "${newStatus}".`,
+      'payment'
+    )
 
     try {
       await updateDoc(doc(db, 'orders', orderId), { status: newStatus })

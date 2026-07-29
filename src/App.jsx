@@ -14,6 +14,8 @@ import { auth, db } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 
+import { ToastBanner } from './components/NotificationBell'
+
 // Componente para el Builder (Dueño de Tienda)
 function BuilderLayout() {
   return (
@@ -83,6 +85,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ToastBanner />
       <Routes>
         {/* Redirigir el inicio a login por defecto */}
         <Route path="/" element={<Navigate to="/login" replace />} />
