@@ -645,20 +645,20 @@ export default function StorePreview({ isReadOnly = false }) {
 
       {/* Store Header */}
       <div className="store-header" style={{ background: storeConfig.headerColor || 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
           {isReadOnly && (
             <button
               onClick={() => navigate('/market')}
-              style={{ background: '#F1F5F9', color: '#64748B', border: 'none', padding: '0.5rem', borderRadius: '50%', cursor: 'pointer', marginRight: '0.5rem' }}
+              style={{ background: '#F1F5F9', color: '#64748B', border: 'none', padding: '0.5rem', borderRadius: '50%', cursor: 'pointer', marginRight: '0.2rem' }}
               title="Volver al Marketplace"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
             </button>
           )}
           {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
-            <img src={storeConfig.logoText} alt="Logo" style={{ height: '85px', maxHeight: '95px', objectFit: 'contain', borderRadius: '12px' }} />
+            <img src={storeConfig.logoText} alt="Logo" style={{ height: '100px', maxHeight: '110px', objectFit: 'contain', borderRadius: '12px', display: 'block', margin: 0, padding: 0 }} />
           ) : (
-            <span style={{ fontSize: '5rem', lineHeight: 1, filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))', display: 'inline-block' }}>{storeConfig.logoText}</span>
+            <span style={{ fontSize: '6.5rem', lineHeight: 0.85, filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.15))', display: 'inline-block', margin: 0, padding: 0 }}>{storeConfig.logoText}</span>
           )}
           <div>
             <h2 style={{ margin: 0, fontSize: '1.35rem', fontFamily: 'Fraunces, serif', fontWeight: '900', letterSpacing: '-0.5px', color: 'var(--primary)', dropShadow: '0 2px 2px rgba(0,0,0,0.05)' }}>{storeConfig.name}</h2>
