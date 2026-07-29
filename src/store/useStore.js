@@ -383,7 +383,17 @@ export const useStore = create((set, get) => ({
         set({ storeConfig: finalConfig })
 
         if (data.layoutSections && data.layoutSections.length > 0) {
-          set({ layoutSections: data.layoutSections })
+          const cleanedSections = data.layoutSections.map(s => {
+            const cfg = s.config || {}
+            let sectionTitle = cfg.sectionTitle
+            let sectionSubtitle = cfg.sectionSubtitle
+            if (sectionTitle === 'Tu Catálogo') sectionTitle = 'Nuestros Productos'
+            if (sectionSubtitle && sectionSubtitle.includes('Sube tus primeros')) {
+              sectionSubtitle = 'Explora nuestra colección exclusiva con entrega rápida y garantía de calidad.'
+            }
+            return { ...s, config: { ...cfg, sectionTitle, sectionSubtitle } }
+          })
+          set({ layoutSections: cleanedSections })
         } else {
           // If no sections exist, save the default ones
           get().saveStoreData()

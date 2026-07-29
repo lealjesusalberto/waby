@@ -460,10 +460,13 @@ const SingleProductModal = ({ product, onClose, addToCart, bcvRate }) => {
 const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
 
+  const cleanTitle = (config.sectionTitle === 'Tu Catálogo') ? 'Nuestros Productos' : (config.sectionTitle || 'Nuestros Productos')
+  const cleanSubtitle = (config.sectionSubtitle && config.sectionSubtitle.includes('Sube tus primeros')) ? 'Explora nuestra colección exclusiva con entrega rápida y garantía de calidad.' : (config.sectionSubtitle || '')
+
   return (
     <>
       <div>
-      <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
+      <SectionHeader title={cleanTitle} subtitle={cleanSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 260px), 320px))`, gap: '1.5rem' }}>
         {products.map(prod => (
           <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
