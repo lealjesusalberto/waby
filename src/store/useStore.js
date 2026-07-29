@@ -292,22 +292,23 @@ export const useStore = create((set, get) => ({
       const realStores = []
       snapshot.forEach(doc => {
         const data = doc.data()
-        if (data.status === 'active') {
-          // Intentar obtener una imagen de fondo de la sección "hero" o "banner"
-          const heroSection = data.layoutSections?.find(s => s.templateType === 'hero' || s.templateType === 'banner')
-          const coverImg = heroSection?.config?.bgImage || 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500'
-
-          realStores.push({
-            id: doc.id,
-            name: data.storeConfig?.name || data.storeName || 'Tienda',
-            category: data.storeConfig?.category || 'Tienda Local',
-            rating: 5.0,
-            reviews: data.storeConfig?.followers || 0,
-            cover: coverImg,
-            logo: data.storeConfig?.logoText || '🏪',
-            location: data.storeConfig?.location || 'Online'
-          })
+        // Mostrar todas las tiendas por ahora para evitar confusión en desarrollo
+        let coverImg = 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500'
+        if (data.layoutSections) {
+          const hero = data.layoutSections.find(s => s.templateType === 'hero' || s.templateType === 'banner')
+          if (hero && hero.config.bgImage) coverImg = hero.config.bgImage
         }
+        
+        realStores.push({
+          id: doc.id,
+          name: data.storeConfig?.name || data.storeName || 'Tienda',
+          category: data.storeConfig?.category || 'Tienda Local',
+          rating: 5.0,
+          reviews: data.storeConfig?.followers || 0,
+          cover: coverImg,
+          logo: data.storeConfig?.logoText || '🏪',
+          location: data.storeConfig?.location || 'Online'
+        })
       })
       // Mostramos siempre las tiendas reales, aunque esté vacío
       set({ marketplaceStores: realStores })
