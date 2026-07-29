@@ -643,55 +643,95 @@ export default function StorePreview({ isReadOnly = false }) {
       '--accent-yellow': storeConfig.secondaryColor || '#FFC107'
     }}>
 
-      {/* Store Header */}
-      <header 
-        className="store-header" 
-        style={{ 
-          background: storeConfig.headerColor || 'white', 
-          borderBottom: '1px solid rgba(0,0,0,0.06)', 
-          position: 'sticky', 
-          top: 0, 
-          zIndex: 100,
-          boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
-        }}
-      >
-        <div className="store-header-content">
-          <div className="store-header-left">
+      {/* 1. Top Announcement Bar */}
+      <div className="store-top-announcement">
+        <span>🚀 Envíos a todo el país &nbsp;|&nbsp; 💳 Pago Móvil Inmediato &nbsp;|&nbsp; ⭐ Calidad Garantizada</span>
+      </div>
+
+      {/* 2. Store Hero Profile Header */}
+      <div className="store-hero-header">
+        {/* Cover Banner */}
+        <div className="store-cover-banner">
+          {storeConfig.coverUrl ? (
+            <img src={storeConfig.coverUrl} alt="Portada" className="store-cover-img" />
+          ) : (
+            <div 
+              className="store-cover-gradient" 
+              style={{ background: `linear-gradient(135deg, ${storeConfig.primaryColor || '#11683E'} 0%, #0F172A 100%)` }}
+            />
+          )}
+          <div className="store-cover-overlay" />
+        </div>
+
+        {/* Store Profile Card */}
+        <div className="store-profile-card">
+          {/* Store Avatar / Logo */}
+          <div className="store-avatar-box">
+            {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
+              <img src={storeConfig.logoText} alt="Logo" className="store-avatar-img" />
+            ) : (
+              <span className="store-avatar-emoji">{storeConfig.logoText || '🏪'}</span>
+            )}
+          </div>
+
+          {/* Store Information */}
+          <div className="store-profile-details">
+            <div className="store-title-row">
+              <h1 className="store-name-title" style={{ color: storeConfig.titleColor || 'var(--text-main)' }}>
+                {storeConfig.name}
+              </h1>
+              <span className="store-verified-badge" title="Tienda Verificada">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--primary)" color="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                Verificada
+              </span>
+            </div>
+
+            <div className="store-profile-meta">
+              {storeConfig.category && (
+                <span className="meta-pill category-pill">
+                  🏷️ {storeConfig.category}
+                </span>
+              )}
+              <span className="meta-pill rating-pill">
+                ⭐ 5.0 (Reseñas)
+              </span>
+              <span className="meta-pill info-pill">
+                📦 {products.length} Productos
+              </span>
+              {storeConfig.location && (
+                <span className="meta-pill info-pill">
+                  📍 {storeConfig.location}
+                </span>
+              )}
+              {storeConfig.followers && (
+                <span className="meta-pill info-pill">
+                  👥 {storeConfig.followers} seguidores
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Actions & Navigation */}
+          <div className="store-profile-actions">
             {isReadOnly && (
               <button
                 onClick={() => navigate('/market')}
                 className="store-header-back-btn"
                 title="Volver al Marketplace"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="m15 18-6-6 6-6" /></svg>
+                <span style={{ fontSize: '0.85rem', fontWeight: 'bold' }}>Volver</span>
               </button>
             )}
-            
-            {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
-              <img src={storeConfig.logoText} alt="Logo" className="store-logo-img" />
-            ) : (
-              <span className="store-logo-emoji">{storeConfig.logoText || '🏪'}</span>
-            )}
 
-            <div className="store-header-info">
-              <h2 className="store-header-title">{storeConfig.name}</h2>
-              <div className="store-header-meta">
-                <span className="store-meta-badge"><Star size={11} fill="#D97706" color="#D97706" /> 5.0</span>
-                <span className="store-meta-item">📦 {products.length} prods</span>
-                <span className="store-meta-item">👥 {storeConfig.followers || '0'}</span>
-                <span className="store-meta-item">📍 {storeConfig.location || 'Online'}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="store-header-right">
             <button 
               onClick={toggleCart} 
-              className="store-cart-btn"
+              className="store-cart-btn-primary"
               style={{ background: storeConfig.buttonColor || storeConfig.primaryColor || 'var(--primary)' }}
             >
-              <ShoppingCart size={17} />
-              <span className="cart-btn-text">Carrito {cartTotalQty > 0 ? `(${cartTotalQty})` : '(0)'}</span>
+              <ShoppingCart size={18} />
+              <span>Carrito ({cartTotalQty})</span>
+              {cartTotal > 0 && <span className="cart-total-badge">${cartTotal.toFixed(2)}</span>}
             </button>
 
             <button onClick={handleLogout} className="store-logout-btn" title="Cerrar Sesión">
@@ -699,7 +739,7 @@ export default function StorePreview({ isReadOnly = false }) {
             </button>
           </div>
         </div>
-      </header>
+      </div>
 
       <div className="store-section-padding" style={{ display: 'flex', flexDirection: 'column', gap: '3rem', paddingBottom: '6rem' }}>
         {layoutSections.map((section) => {
