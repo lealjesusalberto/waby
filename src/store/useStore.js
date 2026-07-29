@@ -256,7 +256,7 @@ export const useStore = create((set, get) => ({
         return item;
       })
     })),
-  // Tienda (Suscripción)
+  clearCart: () => set({ cart: [], isCartOpen: false }),
   reportSubscriptionPayment: async (reference, bank) => {
     const user = get().user;
     if (user) {
