@@ -140,6 +140,7 @@ export default function MarketHome() {
               <div style={{ padding: '1.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div style={{
+                    position: 'relative', zIndex: 10,
                     width: '50px', height: '50px', background: '#F8FAFC', borderRadius: '12px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem',
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', marginTop: '-40px', border: '3px solid white', overflow: 'hidden'
