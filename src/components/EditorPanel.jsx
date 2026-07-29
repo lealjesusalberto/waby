@@ -3,6 +3,62 @@ import { useStore } from '../store/useStore'
 import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload } from 'lucide-react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 
+const STORE_CATEGORY_SUBCATEGORIES = {
+  'Ropa & Accesorios': [
+    { id: 'camisetas', name: 'Camisetas & Tops', icon: '👕' },
+    { id: 'pantalones', name: 'Pantalones & Jeans', icon: '👖' },
+    { id: 'vestidos', name: 'Vestidos & Faldas', icon: '👗' },
+    { id: 'chaquetas', name: 'Chaquetas & Abrigos', icon: '🧥' },
+    { id: 'calzado', name: 'Calzado & Zapatos', icon: '👟' },
+    { id: 'accesorios', name: 'Accesorios & Bolsos', icon: '👜' },
+  ],
+  'Frutas & Superfoods': [
+    { id: 1, name: 'Frutas Tropicales', icon: '🥭' },
+    { id: 2, name: 'Especias & Hierbas', icon: '🌿' },
+    { id: 3, name: 'Bebidas Naturales', icon: '🥥' },
+    { id: 4, name: 'Superfoods', icon: '✨' },
+    { id: 5, name: 'Snacks Tostados', icon: '🥜' },
+  ],
+  'Comida Rápida': [
+    { id: 'hamburguesas', name: 'Hamburguesas', icon: '🍔' },
+    { id: 'pizzas', name: 'Pizzas', icon: '🍕' },
+    { id: 'perros', name: 'Perros Calientes', icon: '🌭' },
+    { id: 'bebidas', name: 'Bebidas & Refrescos', icon: '🥤' },
+    { id: 'postres', name: 'Postres', icon: '🍰' },
+  ],
+  'Tecnología': [
+    { id: 'celulares', name: 'Celulares & Smartphones', icon: '📱' },
+    { id: 'laptops', name: 'Laptops & Computadoras', icon: '💻' },
+    { id: 'audio', name: 'Audio & Audífonos', icon: '🎧' },
+    { id: 'accesorios_tech', name: 'Cargadores & Cables', icon: '🔌' },
+    { id: 'gadgets', name: 'Gadgets & Smartwatches', icon: '⌚' },
+  ],
+  'Mascotas': [
+    { id: 'alimentos_pet', name: 'Alimentos & Croquetas', icon: '🥩' },
+    { id: 'juguetes_pet', name: 'Juguetes & Accesorios', icon: '🎾' },
+    { id: 'higiene_pet', name: 'Higiene & Cuidado', icon: '🧴' },
+    { id: 'camas_pet', name: 'Camas & Transportines', icon: '🐕' },
+  ],
+  'Hogar & Jardín': [
+    { id: 'decoracion', name: 'Decoración & Iluminación', icon: '💡' },
+    { id: 'cocina', name: 'Cocina & Menaje', icon: '🍳' },
+    { id: 'jardin', name: 'Plantas & Jardinería', icon: '🪴' },
+    { id: 'muebles', name: 'Muebles & Organización', icon: '🪑' },
+  ],
+  'Salud & Belleza': [
+    { id: 'skincare', name: 'Cuidado Facial & Skincare', icon: '✨' },
+    { id: 'maquillaje', name: 'Maquillaje & Cosméticos', icon: '💄' },
+    { id: 'capilar', name: 'Cuidado Capilar', icon: '💇' },
+    { id: 'perfumes', name: 'Perfumes & Fragancias', icon: '🧴' },
+  ],
+  'General': [
+    { id: 'destacados', name: 'Productos Destacados', icon: '⭐' },
+    { id: 'ofertas', name: 'Ofertas & Promociones', icon: '🔥' },
+    { id: 'nuevos', name: 'Novedades', icon: '✨' },
+    { id: 'varios', name: 'Varios / General', icon: '📦' },
+  ]
+}
+
 export default function EditorPanel() {
   const { 
     layoutSections, reorderSections, activeSectionId, setActiveSectionId, 
@@ -15,13 +71,13 @@ export default function EditorPanel() {
     categories
   } = useStore()
   
-  const getAvailableCategories = () => (categories && categories.length > 0) ? categories : [
-    { id: 1, name: 'Frutas Tropicales', icon: '🥭' },
-    { id: 2, name: 'Especias & Hierbas', icon: '🌿' },
-    { id: 3, name: 'Bebidas Naturales', icon: '🥥' },
-    { id: 4, name: 'Superfoods', icon: '✨' },
-    { id: 5, name: 'Snacks Tostados', icon: '🥜' }
-  ];
+  const getAvailableCategories = () => {
+    if (storeConfig?.categories && storeConfig.categories.length > 0) {
+      return storeConfig.categories
+    }
+    const currentCategory = storeConfig?.category || 'Ropa & Accesorios'
+    return STORE_CATEGORY_SUBCATEGORIES[currentCategory] || STORE_CATEGORY_SUBCATEGORIES['Ropa & Accesorios']
+  }
   
   const [activeTab, setActiveTab] = useState('design') // 'design' | 'catalog' | 'orders'
   const [isModalOpen, setIsModalOpen] = useState(false)

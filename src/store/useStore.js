@@ -180,14 +180,12 @@ export const useStore = create((set, get) => ({
 
   // --- Datos Mock ---
   categories: [
-    { id: 1, name: 'Frutas Tropicales', count: 84, color: '#FF1493', icon: '🥭' },
-    { id: 2, name: 'Especias & Hierbas', count: 56, color: '#00C853', icon: '🌿' },
-    { id: 3, name: 'Bebidas Naturales', count: 42, color: '#2962FF', icon: '🥥' },
-    { id: 4, name: 'Superfoods', count: 67, color: '#D500F9', icon: '✨' },
-    { id: 5, name: 'Snacks Tostados', count: 32, color: '#FF6D00', icon: '🥜' },
-    { id: 6, name: 'Productos Orgánicos', count: 112, color: '#64DD17', icon: '🌱' },
-    { id: 7, name: 'Raíces & Tubérculos', count: 18, color: '#E65100', icon: '🍠' },
-    { id: 8, name: 'Flores Comestibles', count: 24, color: '#C51162', icon: '🌺' },
+    { id: 'camisetas', name: 'Camisetas & Tops', count: 42, color: '#FF1493', icon: '👕' },
+    { id: 'pantalones', name: 'Pantalones & Jeans', count: 35, color: '#00C853', icon: '👖' },
+    { id: 'vestidos', name: 'Vestidos & Faldas', count: 28, color: '#2962FF', icon: '👗' },
+    { id: 'chaquetas', name: 'Chaquetas & Abrigos', count: 19, color: '#D500F9', icon: '🧥' },
+    { id: 'calzado', name: 'Calzado & Zapatos', count: 50, color: '#FF6D00', icon: '👟' },
+    { id: 'accesorios', name: 'Accesorios & Bolsos', count: 64, color: '#64DD17', icon: '👜' },
   ],
 
   products: [
