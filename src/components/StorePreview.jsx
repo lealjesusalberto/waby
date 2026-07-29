@@ -151,16 +151,28 @@ const CategoryProductsModal = ({ category, products, onClose }) => {
   )
 }
 
-// --- CHECKOUT MODAL (Pago Móvil) ---
 const CheckoutModal = ({ onClose, total, onSuccess }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Customer details
+  const [customerName, setCustomerName] = useState('');
+  const [customerPhone, setCustomerPhone] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
+
+  // Payment details
+  const [paymentBank, setPaymentBank] = useState('');
+  const [paymentReference, setPaymentReference] = useState('');
+  const [paymentDate, setPaymentDate] = useState(new Date().toISOString().split('T')[0]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
-      onSuccess();
+      onSuccess({
+        customer: { name: customerName, phone: customerPhone, address: customerAddress },
+        pagoMovil: { bank: paymentBank, reference: paymentReference, date: paymentDate }
+      });
     }, 1500);
   }
 
@@ -203,11 +215,27 @@ const CheckoutModal = ({ onClose, total, onSuccess }) => {
             </div>
           </div>
 
+          <h4 style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>Datos de Envío</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#64748B' }}>Nombre Completo</label>
+              <input type="text" value={customerName} onChange={e => setCustomerName(e.target.value)} style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none' }} required />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#64748B' }}>Teléfono</label>
+              <input type="text" value={customerPhone} onChange={e => setCustomerPhone(e.target.value)} style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none' }} required />
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#64748B' }}>Dirección de Entrega</label>
+              <textarea value={customerAddress} onChange={e => setCustomerAddress(e.target.value)} style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none', resize: 'vertical' }} required />
+            </div>
+          </div>
+
           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>Reporta tu pago</h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#64748B' }}>Banco Emisor</label>
-              <select style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none', background: 'white' }} required>
+              <select value={paymentBank} onChange={e => setPaymentBank(e.target.value)} style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none', background: 'white' }} required>
                 <option value="">Selecciona tu banco...</option>
                 <option value="0102">Banco de Venezuela (0102)</option>
                 <option value="0105">Mercantil (0105)</option>
@@ -218,11 +246,11 @@ const CheckoutModal = ({ onClose, total, onSuccess }) => {
             </div>
             <div>
               <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#64748B' }}>Número de Referencia (Últimos 6 dígitos)</label>
-              <input type="text" placeholder="Ej. 938472" maxLength={6} pattern="\d{4,6}" style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none' }} required />
+              <input type="text" value={paymentReference} onChange={e => setPaymentReference(e.target.value)} placeholder="Ej. 938472" maxLength={6} pattern="\d{4,6}" style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none' }} required />
             </div>
             <div>
               <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.85rem', fontWeight: 'bold', color: '#64748B' }}>Fecha del Pago</label>
-              <input type="date" defaultValue={new Date().toISOString().split('T')[0]} style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none' }} required />
+              <input type="date" value={paymentDate} onChange={e => setPaymentDate(e.target.value)} style={{ width: '100%', padding: '0.8rem', borderRadius: '8px', border: '1px solid #E2E8E0', outline: 'none' }} required />
             </div>
           </div>
 
@@ -618,9 +646,9 @@ export default function StorePreview({ isReadOnly = false }) {
         <CheckoutModal 
           total={cartTotal}
           onClose={() => setShowCheckout(false)}
-          onSuccess={() => {
+          onSuccess={(checkoutData) => {
             setShowCheckout(false);
-            addOrder({ total: cartTotal, items: [...cart] });
+            addOrder({ total: cartTotal, items: [...cart], ...checkoutData });
             clearCart();
             setShowSuccess(true);
           }}

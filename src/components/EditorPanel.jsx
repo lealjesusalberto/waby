@@ -542,6 +542,15 @@ export default function EditorPanel() {
                     <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '1rem' }}>
                       <p style={{ margin: '0 0 0.3rem 0' }}><strong>Fecha:</strong> {new Date(order.date).toLocaleString()}</p>
                       
+                      {order.customer && (
+                        <div style={{ background: '#F0FDF4', padding: '0.8rem', borderRadius: '8px', marginTop: '0.8rem', border: '1px solid #BBF7D0' }}>
+                          <p style={{ margin: '0 0 0.3rem 0', fontWeight: 'bold', color: '#166534' }}>Datos del Cliente:</p>
+                          <p style={{ margin: '0 0 0.2rem 0', color: '#166534' }}><strong>Nombre:</strong> {order.customer.name}</p>
+                          <p style={{ margin: '0 0 0.2rem 0', color: '#166534' }}><strong>Teléfono:</strong> {order.customer.phone}</p>
+                          <p style={{ margin: '0', color: '#166534' }}><strong>Dirección:</strong> {order.customer.address}</p>
+                        </div>
+                      )}
+
                       <div style={{ background: '#F8FAFC', borderRadius: '8px', padding: '1rem', marginTop: '1rem', border: '1px solid #E2E8E0' }}>
                         <h4 style={{ margin: '0 0 0.8rem 0', fontSize: '0.95rem' }}>Productos ({order.items?.length || 0})</h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
@@ -567,7 +576,7 @@ export default function EditorPanel() {
                           <p style={{ margin: '0 0 0.3rem 0', fontWeight: 'bold', color: '#9A3412' }}>Datos Pago Móvil Reportado:</p>
                           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#9A3412' }}>
                             <span><strong>Ref:</strong> {order.pagoMovil.reference}</span>
-                            <span><strong>Tel:</strong> {order.pagoMovil.phone}</span>
+                            <span><strong>Fecha:</strong> {order.pagoMovil.date}</span>
                             <span><strong>Banco:</strong> {order.pagoMovil.bank}</span>
                           </div>
                         </div>
