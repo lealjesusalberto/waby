@@ -37,6 +37,15 @@ export default function MarketHome() {
         <div className="market-header-buttons">
           <button 
             onClick={() => navigate('/profile')}
+            style={{ background: '#F8FAFC', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s', border: '1px solid #E2E8F0' }}
+            onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
+            onMouseOut={e => e.currentTarget.style.background = '#F8FAFC'}
+          >
+            <Package size={18} /> <span className="market-btn-text">Mis Órdenes</span> ({orders.length})
+          </button>
+
+          <button 
+            onClick={() => navigate('/profile')}
             style={{ background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s' }}
             onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
             onMouseOut={e => e.currentTarget.style.background = '#F1F5F9'}
