@@ -486,7 +486,11 @@ export default function StorePreview({ isReadOnly = false }) {
   }
 
   return (
-    <div className="store-container" style={{ margin: isReadOnly ? '0 auto' : '0' }}>
+    <div className="store-container" style={{ 
+      margin: isReadOnly ? '0 auto' : '0',
+      '--primary': storeConfig.primaryColor || '#11683E',
+      '--accent-yellow': storeConfig.secondaryColor || '#FFC107'
+    }}>
       
       {/* Store Header */}
       <div className="store-header" style={{ background: storeConfig.headerColor || 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', position: 'sticky', top: 0, zIndex: 100 }}>
