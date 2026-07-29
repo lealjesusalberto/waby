@@ -644,52 +644,62 @@ export default function StorePreview({ isReadOnly = false }) {
     }}>
 
       {/* Store Header */}
-      <div className="store-header" style={{ background: storeConfig.headerColor || 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-          {isReadOnly && (
-            <button
-              onClick={() => navigate('/market')}
-              style={{ background: '#F1F5F9', color: '#64748B', border: 'none', padding: '0.5rem', borderRadius: '50%', cursor: 'pointer', marginRight: '0.2rem' }}
-              title="Volver al Marketplace"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
-            </button>
-          )}
-          {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
-            <img src={storeConfig.logoText} alt="Logo" style={{ height: '100px', maxHeight: '110px', objectFit: 'contain', borderRadius: '12px', display: 'block', margin: 0, padding: 0 }} />
-          ) : (
-            <span style={{ fontSize: '6.5rem', lineHeight: 0.85, filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.15))', display: 'inline-block', margin: 0, padding: 0 }}>{storeConfig.logoText}</span>
-          )}
-          <div>
-            <h2 style={{ margin: 0, fontSize: '1.35rem', fontFamily: 'Fraunces, serif', fontWeight: '900', letterSpacing: '-0.5px', color: 'var(--primary)', dropShadow: '0 2px 2px rgba(0,0,0,0.05)' }}>{storeConfig.name}</h2>
-            <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}><Star size={12} fill="#FFC107" color="#FFC107" /> 5.0 (Nuevas)</span>
-              <span>📦 {products.length} productos</span>
-              <span>👥 {storeConfig.followers || '0'} seguidores</span>
-              <span>📍 {storeConfig.location || 'Online'}</span>
+      <header 
+        className="store-header" 
+        style={{ 
+          background: storeConfig.headerColor || 'white', 
+          borderBottom: '1px solid rgba(0,0,0,0.06)', 
+          position: 'sticky', 
+          top: 0, 
+          zIndex: 100,
+          boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+        }}
+      >
+        <div className="store-header-content">
+          <div className="store-header-left">
+            {isReadOnly && (
+              <button
+                onClick={() => navigate('/market')}
+                className="store-header-back-btn"
+                title="Volver al Marketplace"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+              </button>
+            )}
+            
+            {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
+              <img src={storeConfig.logoText} alt="Logo" className="store-logo-img" />
+            ) : (
+              <span className="store-logo-emoji">{storeConfig.logoText || '🏪'}</span>
+            )}
+
+            <div className="store-header-info">
+              <h2 className="store-header-title">{storeConfig.name}</h2>
+              <div className="store-header-meta">
+                <span className="store-meta-badge"><Star size={11} fill="#D97706" color="#D97706" /> 5.0</span>
+                <span className="store-meta-item">📦 {products.length} prods</span>
+                <span className="store-meta-item">👥 {storeConfig.followers || '0'}</span>
+                <span className="store-meta-item">📍 {storeConfig.location || 'Online'}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button
-            onClick={toggleCart}
-            style={{ background: storeConfig.buttonColor || storeConfig.primaryColor || 'var(--primary)', color: 'white', border: 'none', padding: '0.8rem 1.5rem', borderRadius: '30px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'transform 0.1s' }}
-            onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
-            onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            <ShoppingCart size={18} /> Ver Carrito {cartTotalQty > 0 ? `(${cartTotalQty}) - $${cartTotal.toFixed(2)}` : '(0)'}
-          </button>
+          <div className="store-header-right">
+            <button 
+              onClick={toggleCart} 
+              className="store-cart-btn"
+              style={{ background: storeConfig.buttonColor || storeConfig.primaryColor || 'var(--primary)' }}
+            >
+              <ShoppingCart size={17} />
+              <span className="cart-btn-text">Carrito {cartTotalQty > 0 ? `(${cartTotalQty})` : '(0)'}</span>
+            </button>
 
-          <button
-            onClick={handleLogout}
-            style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '0.8rem', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title="Cerrar Sesión"
-          >
-            <LogOut size={18} />
-          </button>
+            <button onClick={handleLogout} className="store-logout-btn" title="Cerrar Sesión">
+              <LogOut size={16} />
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
       <div className="store-section-padding" style={{ display: 'flex', flexDirection: 'column', gap: '3rem', paddingBottom: '6rem' }}>
         {layoutSections.map((section) => {
