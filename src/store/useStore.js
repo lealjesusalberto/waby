@@ -283,11 +283,7 @@ export const useStore = create((set, get) => ({
   },
 
   // --- Marketplace Dummy Stores ---
-  marketplaceStores: [
-    { id: 1, name: 'Sabores del Paraíso', category: 'Frutas & Superfoods', rating: 4.9, reviews: 2847, cover: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500', logo: '🌸' },
-    { id: 2, name: 'Moda Urbana', category: 'Ropa & Accesorios', rating: 4.7, reviews: 1420, cover: 'https://images.unsplash.com/photo-1489987707023-af8147c6e240?q=80&w=500', logo: '👗' },
-    { id: 3, name: 'Huellas Felices', category: 'Mascotas', rating: 5.0, reviews: 950, cover: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=500', logo: '🐶' }
-  ],
+  marketplaceStores: [],
   
   fetchMarketplaceStores: async () => {
     try {
@@ -313,10 +309,8 @@ export const useStore = create((set, get) => ({
           })
         }
       })
-      // You can mix real and dummy stores, or just show real ones if they exist
-      set((state) => ({ 
-        marketplaceStores: realStores.length > 0 ? realStores : state.marketplaceStores 
-      }))
+      // Mostramos siempre las tiendas reales, aunque esté vacío
+      set({ marketplaceStores: realStores })
     } catch(err) {
       console.error("Error fetching marketplace stores", err)
     }
