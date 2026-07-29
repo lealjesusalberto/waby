@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
-import { Star, Search, MapPin, Package, X, LogOut, User } from 'lucide-react'
+import { Star, Search, MapPin, Package, X, LogOut, User, ShoppingCart } from 'lucide-react'
 
 export default function MarketHome() {
   const navigate = useNavigate()
-  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile } = useStore()
+  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart } = useStore()
+  const [showOrders, setShowOrders] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function MarketHome() {
         
         <div className="market-header-buttons">
           <button 
-            onClick={() => navigate('/profile')}
+            onClick={() => setShowOrders(true)}
             style={{ background: '#F8FAFC', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s', border: '1px solid #E2E8F0' }}
             onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
             onMouseOut={e => e.currentTarget.style.background = '#F8FAFC'}
@@ -166,7 +167,89 @@ export default function MarketHome() {
         </div>
       </div>
 
-      {/* El Modal de Mis Órdenes fue movido a ClientProfile.jsx */}
+      {/* Modal Mis Órdenes y Carrito */}
+      {showOrders && (
+        <div style={{
+          position: 'fixed', top: 0, right: 0, bottom: 0, width: '450px', maxWidth: '100vw',
+          background: 'white', zIndex: 1000, boxShadow: '-5px 0 25px rgba(0,0,0,0.1)',
+          display: 'flex', flexDirection: 'column', animation: 'slideInRight 0.3s ease-out'
+        }}>
+          <div style={{ padding: '1.5rem', borderBottom: '1px solid #E2E8E0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0, fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Package size={20} /> Mis Órdenes y Carrito
+            </h3>
+            <button onClick={() => setShowOrders(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}>
+              <X size={24} />
+            </button>
+          </div>
+
+          <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }}>
+            {/* Sección de Carrito Pendiente */}
+            {cart && cart.length > 0 && (
+              <div style={{ marginBottom: '2rem' }}>
+                <h4 style={{ margin: '0 0 1rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#0F172A' }}>
+                  <ShoppingCart size={18} /> Carrito Pendiente
+                </h4>
+                <div style={{ border: '1px solid #38BDF8', borderRadius: '12px', padding: '1rem', background: '#F0F9FF' }}>
+                  <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', color: '#0369A1' }}>Tienes <strong>{cart.reduce((sum, item) => sum + item.quantity, 0)}</strong> producto(s) en tu carrito sin procesar.</p>
+                  <button 
+                    onClick={() => {
+                      // Navigate to the first store in the cart
+                      if(cart[0] && cart[0].storeId) {
+                        navigate(`/store/${cart[0].storeId}`);
+                      } else {
+                        navigate('/store/1'); // Fallback
+                      }
+                    }}
+                    style={{ background: '#0284C7', color: 'white', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', width: '100%' }}
+                  >
+                    Ir a Pagar
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <h4 style={{ margin: '0 0 1rem 0', color: '#0F172A' }}>Historial de Compras</h4>
+            {orders.length === 0 ? (
+              <div style={{ textAlign: 'center', color: '#94A3B8', marginTop: '2rem' }}>
+                <Package size={48} style={{ opacity: 0.5, marginBottom: '1rem' }} />
+                <p>Aún no has realizado ninguna compra.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {orders.map((order, idx) => (
+                  <div key={idx} style={{ border: '1px solid #E2E8E0', borderRadius: '12px', padding: '1rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                      <div>
+                        <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>ID: {order.id}</span>
+                        <strong style={{ fontSize: '1.1rem', color: 'var(--primary)' }}>${order.total.toFixed(2)}</strong>
+                      </div>
+                      <span style={{ background: '#FEF3C7', color: '#D97706', padding: '0.3rem 0.6rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                        {order.status}
+                      </span>
+                    </div>
+                    
+                    <div style={{ borderTop: '1px dashed #E2E8E0', paddingTop: '1rem' }}>
+                      <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', fontWeight: 'bold', color: '#0F172A' }}>Productos:</p>
+                      <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.85rem', color: '#64748B' }}>
+                        {order.items.map((item, i) => (
+                          <li key={i}>{item.quantity}x {item.name}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: '#94A3B8', textAlign: 'right', marginTop: '1rem' }}>
+                      {new Date(order.date).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {/* Overlays */}
+      {showOrders && <div onClick={() => setShowOrders(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999 }} />}
 
     </div>
   )
