@@ -473,6 +473,10 @@ export default function StorePreview({ isReadOnly = false }) {
     }
   }, [storeId, isReadOnly, fetchPublicStoreData, clearPublicStoreData])
 
+  const [showCheckout, setShowCheckout] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null)
+
   let activeStoreData;
   if (!isReadOnly) {
     activeStoreData = globalState;
@@ -486,11 +490,6 @@ export default function StorePreview({ isReadOnly = false }) {
   
   // Datos específicos de la tienda (visual)
   const { storeConfig, layoutSections, categories, products, features, testimonials } = activeStoreData
-
-  
-  const [showCheckout, setShowCheckout] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState(null)
 
   const cartTotalQty = cart.reduce((acc, item) => acc + item.quantity, 0)
   const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
