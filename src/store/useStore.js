@@ -356,5 +356,20 @@ export const useStore = create((set, get) => ({
     } catch (err) {
       console.error("Error fetching store data", err)
     }
+  },
+
+  fetchClientOrders: async (uid) => {
+    try {
+      const ordersQ = query(collection(db, 'orders'), where('customerId', '==', uid))
+      const ordersSnapshot = await getDocs(ordersQ)
+      const orders = []
+      ordersSnapshot.forEach((doc) => {
+        orders.push(doc.data())
+      })
+      orders.sort((a, b) => new Date(b.date) - new Date(a.date))
+      set({ orders: orders })
+    } catch (err) {
+      console.error("Error fetching client orders", err)
+    }
   }
 }))

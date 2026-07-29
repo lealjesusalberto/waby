@@ -52,13 +52,17 @@ function App() {
             setUser(user, data.role, data.status || 'active')
             if (data.role === 'tienda') {
               useStore.getState().fetchStoreData(user.uid)
+            } else if (data.role === 'cliente') {
+              useStore.getState().fetchClientOrders(user.uid)
             }
           } else {
             setUser(user, 'cliente', 'active')
+            useStore.getState().fetchClientOrders(user.uid)
           }
         } catch (error) {
           console.error("Error fetching user data:", error)
           setUser(user, 'cliente', 'active')
+          useStore.getState().fetchClientOrders(user.uid)
         }
       } else {
         useStore.getState().logout()
