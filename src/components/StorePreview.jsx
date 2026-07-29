@@ -399,6 +399,7 @@ const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
                 <div>
                   <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
                   {prod.oldPrice && <span style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'line-through', marginLeft: '0.5rem' }}>${prod.oldPrice}</span>}
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</div>
                 </div>
                 <button 
                   onClick={() => addToCart(prod)}
