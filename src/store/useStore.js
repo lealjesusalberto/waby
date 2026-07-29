@@ -343,9 +343,19 @@ export const useStore = create((set, get) => ({
       const userDoc = await getDoc(doc(db, 'users', uid))
       if (userDoc.exists()) {
         const data = userDoc.data()
+        
+        let finalConfig = get().storeConfig;
         if (data.storeConfig) {
-          set({ storeConfig: data.storeConfig })
+          finalConfig = { ...finalConfig, ...data.storeConfig }
         }
+        
+        // Si el nombre sigue siendo el de prueba, intentamos usar el de registro
+        if ((!data.storeConfig || data.storeConfig.name === 'Mi Nueva Tienda') && data.storeName) {
+          finalConfig.name = data.storeName;
+        }
+
+        set({ storeConfig: finalConfig })
+
         if (data.layoutSections && data.layoutSections.length > 0) {
           set({ layoutSections: data.layoutSections })
         } else {
@@ -415,7 +425,16 @@ export const useStore = create((set, get) => ({
       
       if (userDoc.exists()) {
          const data = userDoc.data()
-         if(data.storeConfig) storeConfig = data.storeConfig
+         
+         if(data.storeConfig) {
+           storeConfig = { ...storeConfig, ...data.storeConfig }
+         }
+         
+         // Si el nombre sigue siendo el de prueba, intentamos usar el de registro
+         if ((!data.storeConfig || data.storeConfig.name === 'Mi Nueva Tienda') && data.storeName) {
+           storeConfig.name = data.storeName;
+         }
+
          if(data.layoutSections) layoutSections = data.layoutSections
       }
 
