@@ -552,8 +552,8 @@ h4,
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 0 1rem 1.2rem 1rem;
-    margin-top: -45px;
+    padding: 0.5rem 1rem 1.2rem 1rem;
+    margin-top: 0 !important;
     gap: 0.75rem;
   }
 
@@ -561,6 +561,7 @@ h4,
     width: 85px;
     height: 85px;
     border-radius: 20px;
+    margin-top: -50px !important;
   }
 
   .store-avatar-emoji {
@@ -570,6 +571,7 @@ h4,
   .store-profile-details {
     align-items: center;
     width: 100%;
+    padding-top: 0.5rem !important;
   }
 
   .store-title-row {
