@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOut } from 'lucide-react'
@@ -459,17 +459,33 @@ const SectionHeader = ({ title, subtitle, link, center, titleColor, buttonColor 
 // --- COMPONENTE PRINCIPAL ---
 export default function StorePreview({ isReadOnly = false }) {
   const navigate = useNavigate()
-  const { storeId = '1' } = useParams()
+  const { storeId } = useParams()
   const globalState = useStore()
   
-  // Si es la tienda 1, usamos el estado global editable. Si es otra, usamos los datos mock, o el global como fallback.
-  const activeStoreData = storeId === '1' ? globalState : (mockStoreData[storeId] || globalState)
+  const { publicStoreData, fetchPublicStoreData, clearPublicStoreData, activeSectionId, setActiveSectionId, cart, isCartOpen, toggleCart, clearCart, logout, addOrder, addToCart } = globalState
+
+  useEffect(() => {
+    if (isReadOnly && storeId && !mockStoreData[storeId]) {
+      fetchPublicStoreData(storeId)
+    }
+    return () => {
+      if (isReadOnly) clearPublicStoreData()
+    }
+  }, [storeId, isReadOnly, fetchPublicStoreData, clearPublicStoreData])
+
+  let activeStoreData;
+  if (!isReadOnly) {
+    activeStoreData = globalState;
+  } else if (storeId && mockStoreData[storeId]) {
+    activeStoreData = { ...globalState, ...mockStoreData[storeId] };
+  } else if (publicStoreData) {
+    activeStoreData = { ...globalState, ...publicStoreData };
+  } else {
+    return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter' }}>Cargando datos de la tienda...</div>
+  }
   
   // Datos específicos de la tienda (visual)
   const { storeConfig, layoutSections, categories, products, features, testimonials } = activeStoreData
-  
-  // Acciones y estados globales (carrito y editor)
-  const { activeSectionId, setActiveSectionId, cart, isCartOpen, toggleCart, clearCart, logout, addOrder, addToCart } = globalState
 
   
   const [showCheckout, setShowCheckout] = useState(false)

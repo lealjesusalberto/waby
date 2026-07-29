@@ -371,5 +371,34 @@ export const useStore = create((set, get) => ({
     } catch (err) {
       console.error("Error fetching client orders", err)
     }
-  }
+  },
+
+  publicStoreData: null,
+  fetchPublicStoreData: async (uid) => {
+    try {
+      const userDoc = await getDoc(doc(db, 'users', uid))
+      let storeConfig = get().storeConfig;
+      let layoutSections = get().layoutSections;
+      
+      if (userDoc.exists()) {
+         const data = userDoc.data()
+         if(data.storeConfig) storeConfig = data.storeConfig
+         if(data.layoutSections) layoutSections = data.layoutSections
+      }
+
+      const productsQ = query(collection(db, 'products'), where('storeId', '==', uid))
+      const productsSnapshot = await getDocs(productsQ)
+      const products = []
+      productsSnapshot.forEach(doc => products.push(doc.data()))
+
+      set({ publicStoreData: { 
+        storeConfig, 
+        layoutSections, 
+        products: products.length > 0 ? products : get().products 
+      }})
+    } catch(err) {
+      console.error("Error fetching public store data", err)
+    }
+  },
+  clearPublicStoreData: () => set({ publicStoreData: null })
 }))
