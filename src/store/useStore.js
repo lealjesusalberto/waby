@@ -168,9 +168,12 @@ export const useStore = create((set, get) => ({
     if (!user) return
 
     try {
+      const cleanStoreConfig = JSON.parse(JSON.stringify(get().storeConfig))
+      const cleanLayoutSections = JSON.parse(JSON.stringify(get().layoutSections))
+      
       await updateDoc(doc(db, 'users', user.uid), {
-        storeConfig: get().storeConfig,
-        layoutSections: get().layoutSections
+        storeConfig: cleanStoreConfig,
+        layoutSections: cleanLayoutSections
       })
       set({ hasUnsavedChanges: false })
     } catch (err) {
