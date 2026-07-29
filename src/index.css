@@ -686,4 +686,32 @@ h4,
   .market-btn-text {
     display: none;
   }
+
+  /* Client Profile & Form Responsiveness */
+  .client-profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+    padding: 0 1rem !important;
+    margin: 1rem auto !important;
+  }
+
+  .client-profile-card {
+    padding: 1.25rem !important;
+    border-radius: 14px !important;
+  }
+
+  .form-row-responsive {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  .modal-filter-row {
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .modal-select-box {
+    width: 100% !important;
+  }
 }

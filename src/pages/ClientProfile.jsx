@@ -97,10 +97,10 @@ export default function ClientProfile() {
         <h1 style={{ margin: 0, fontSize: '1.5rem', color: '#0F172A' }}>Mi Perfil</h1>
       </div>
 
-      <div style={{ maxWidth: '1000px', margin: '2rem auto', padding: '0 2rem', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '2rem', alignItems: 'start' }}>
+      <div className="client-profile-grid">
         
         {/* Ajustes de Cuenta */}
-        <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+        <div className="client-profile-card">
           <h2 style={{ margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', color: '#0F172A' }}>
             <User size={20} /> Ajustes de Cuenta
           </h2>
@@ -144,7 +144,7 @@ export default function ClientProfile() {
         </div>
 
         {/* Historial de Órdenes */}
-        <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
+        <div className="client-profile-card">
           <h2 style={{ margin: '0 0 1.5rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.2rem', color: '#0F172A' }}>
             <Package size={20} /> Historial de Órdenes
           </h2>

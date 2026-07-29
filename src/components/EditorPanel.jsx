@@ -501,7 +501,7 @@ export default function EditorPanel() {
             <div style={{ background: '#F8FAFC', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem' }}>
               <h4 style={{ margin: '0 0 1rem 0', color: 'var(--text-main)', fontSize: '1rem' }}>+ Agregar Nuevo Producto</h4>
               <form onSubmit={handleAddProduct} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Nombre del Producto</label>
                     <input type="text" value={newProdName} onChange={e => setNewProdName(e.target.value)} style={inputStyle} required />
@@ -511,7 +511,7 @@ export default function EditorPanel() {
                     <input type="number" step="0.01" value={newProdPrice} onChange={e => setNewProdPrice(e.target.value)} style={inputStyle} required />
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Categoría</label>
                     <select value={newProdCategory} onChange={e => setNewProdCategory(e.target.value)} style={inputStyle}>
@@ -761,7 +761,7 @@ export default function EditorPanel() {
               </button>
             </div>
 
-            <div style={{ padding: '1.5rem', borderBottom: '1px solid #E2E8E0', display: 'flex', gap: '1rem', background: '#F8FAFC' }}>
+            <div className="modal-filter-row" style={{ padding: '1.5rem', borderBottom: '1px solid #E2E8E0', display: 'flex', gap: '1rem', background: '#F8FAFC' }}>
               <div style={{ flex: 1, position: 'relative' }}>
                 <Search size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#94A3B8' }} />
                 <input 
@@ -772,7 +772,7 @@ export default function EditorPanel() {
                   style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.5rem', border: '1px solid #CBD5E1', borderRadius: '8px', fontSize: '0.95rem' }} 
                 />
               </div>
-              <div style={{ width: '250px', position: 'relative' }}>
+              <div className="modal-select-box" style={{ width: '250px', position: 'relative' }}>
                 <Filter size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#94A3B8' }} />
                 <select 
                   value={inventoryCategory}
