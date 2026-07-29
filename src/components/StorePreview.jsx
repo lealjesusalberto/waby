@@ -656,9 +656,9 @@ export default function StorePreview({ isReadOnly = false }) {
             </button>
           )}
           {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
-            <img src={storeConfig.logoText} alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
+            <img src={storeConfig.logoText} alt="Logo" className="store-header-img" />
           ) : (
-            <span style={{ fontSize: '2.5rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{storeConfig.logoText}</span>
+            <span className="store-header-emoji">{storeConfig.logoText}</span>
           )}
           <div>
             <h2 style={{ margin: 0, fontSize: '1.8rem', fontFamily: 'Fraunces, serif', fontWeight: '900', letterSpacing: '-0.5px', color: 'var(--primary)', dropShadow: '0 2px 2px rgba(0,0,0,0.05)' }}>{storeConfig.name}</h2>

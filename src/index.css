@@ -243,6 +243,27 @@ h1, h2, h3, h4, .serif-font {
   top: 0;
   z-index: 10;
 }
+
+.store-header-img {
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+}
+
+.store-header-emoji {
+  font-size: 3rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+@media (max-width: 768px) {
+  .store-header-img {
+    height: 55px;
+    width: 55px;
+  }
+  .store-header-emoji {
+    font-size: 2.5rem;
+  }
+}
 .market-header-logo {
   height: 75px;
   width: 75px;
