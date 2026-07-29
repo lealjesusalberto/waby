@@ -5,7 +5,6 @@ import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { Loader2 } from 'lucide-react'
-import Loader from '../components/Loader'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -18,17 +17,17 @@ export default function Login() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
 
       // Fetch user role from Firestore
       const userDoc = await getDoc(doc(db, 'users', user.uid))
-      
+
       let role = 'cliente'
       let status = 'active'
-      
+
       if (email.toLowerCase() === 'wabyadmin@waby.com') {
         role = 'admin'
       } else if (userDoc.exists()) {
@@ -55,10 +54,6 @@ export default function Login() {
     }
   }
 
-  if (loading) {
-    return <Loader text="Iniciando sesión..." />
-  }
-
   return (
     <div style={{ animation: 'fadeIn 0.3s ease' }}>
       <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#1C2B23', fontFamily: 'Fraunces' }}>Bienvenido de nuevo</h2>
@@ -70,8 +65,8 @@ export default function Login() {
         {error && <div style={{ color: 'red', fontSize: '0.9rem', textAlign: 'center', background: '#FEE2E2', padding: '0.5rem', borderRadius: '8px' }}>{error}</div>}
         <div>
           <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Correo Electrónico</label>
-          <input 
-            type="email" 
+          <input
+            type="email"
             placeholder="ejemplo@correo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -81,8 +76,8 @@ export default function Login() {
         </div>
         <div>
           <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Contraseña</label>
-          <input 
-            type="password" 
+          <input
+            type="password"
             placeholder="••••••••"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -90,7 +85,7 @@ export default function Login() {
             required
           />
         </div>
-        
+
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <a href="#" style={{ color: '#11683E', fontSize: '0.85rem', textDecoration: 'none', fontWeight: 'bold' }}>¿Olvidaste tu contraseña?</a>
         </div>
@@ -106,7 +101,7 @@ export default function Login() {
       <div style={{ textAlign: 'center', marginTop: '1.5rem', color: '#5F7368' }}>
         ¿No tienes una cuenta? <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 'bold', textDecoration: 'none' }}>Regístrate</Link>
       </div>
-      
+
       <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem' }}>
         ¿Eres vendedor? <Link to="/planes" style={{ color: '#F97316', fontWeight: 'bold', textDecoration: 'none' }}>Descubre nuestros planes</Link>
       </div>

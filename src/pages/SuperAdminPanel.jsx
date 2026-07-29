@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { db } from '../firebase'
-import { collection, query, getDocs, doc, updateDoc } from 'firebase/firestore'
+import { collection, query, getDocs, doc, updateDoc, where } from 'firebase/firestore'
 import { LogOut, Users, Store, CheckCircle, Clock, Search, XCircle, Activity } from 'lucide-react'
-import Loader from '../components/Loader'
 
 export default function SuperAdminPanel() {
   const logout = useStore(state => state.logout)
   const [activeTab, setActiveTab] = useState('pending') // pending, active, users
-  
+
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -85,20 +84,20 @@ export default function SuperAdminPanel() {
         </div>
 
         <nav className="admin-nav">
-          <button 
+          <button
             onClick={() => setActiveTab('pending')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem 1rem', background: activeTab === 'pending' ? '#334155' : 'transparent', color: activeTab === 'pending' ? '#38BDF8' : '#CBD5E1', border: 'none', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: activeTab === 'pending' ? 'bold' : 'normal', transition: 'all 0.2s' }}
           >
-            <Clock size={18} /> Validar Pagos 
+            <Clock size={18} /> Validar Pagos
             {pendingStores.length > 0 && <span style={{ background: '#EF4444', color: 'white', padding: '0.1rem 0.5rem', borderRadius: '10px', fontSize: '0.7rem', marginLeft: 'auto' }}>{pendingStores.length}</span>}
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('active')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem 1rem', background: activeTab === 'active' ? '#334155' : 'transparent', color: activeTab === 'active' ? '#38BDF8' : '#CBD5E1', border: 'none', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: activeTab === 'active' ? 'bold' : 'normal', transition: 'all 0.2s' }}
           >
             <Store size={18} /> Tiendas Activas
           </button>
-          <button 
+          <button
             onClick={() => setActiveTab('users')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem 1rem', background: activeTab === 'users' ? '#334155' : 'transparent', color: activeTab === 'users' ? '#38BDF8' : '#CBD5E1', border: 'none', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: activeTab === 'users' ? 'bold' : 'normal', transition: 'all 0.2s' }}
           >
@@ -107,7 +106,7 @@ export default function SuperAdminPanel() {
         </nav>
 
         <div style={{ padding: '1rem' }}>
-          <button 
+          <button
             onClick={logout}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', width: '100%', padding: '0.8rem', background: '#334155', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', transition: 'background 0.2s' }}
             onMouseOver={e => e.currentTarget.style.background = '#475569'}
@@ -120,7 +119,7 @@ export default function SuperAdminPanel() {
 
       {/* Main Content */}
       <main className="admin-main">
-        
+
         {/* Header Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
@@ -138,14 +137,14 @@ export default function SuperAdminPanel() {
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
             <p style={{ color: '#64748B', margin: '0 0 0.5rem 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Tasa BCV (Bs/$)</p>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 step="0.01"
-                value={localBcvRate} 
-                onChange={(e) => setLocalBcvRate(parseFloat(e.target.value))} 
-                style={{ width: '100px', fontSize: '1.5rem', fontWeight: 'bold', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.5rem' }} 
+                value={localBcvRate}
+                onChange={(e) => setLocalBcvRate(parseFloat(e.target.value))}
+                style={{ width: '100px', fontSize: '1.5rem', fontWeight: 'bold', color: '#0F172A', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.5rem' }}
               />
-              <button 
+              <button
                 onClick={() => updateBcvRate(localBcvRate)}
                 style={{ background: '#38BDF8', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
               >
@@ -164,9 +163,7 @@ export default function SuperAdminPanel() {
           </h2>
 
           {loading ? (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
-              <Loader text="Cargando datos..." />
-            </div>
+            <div style={{ textAlign: 'center', padding: '3rem', color: '#64748B' }}>Cargando datos...</div>
           ) : (
             <div>
               {/* Pending Stores Cards */}

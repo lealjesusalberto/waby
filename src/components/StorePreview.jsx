@@ -3,7 +3,6 @@ import { useStore } from '../store/useStore'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOut } from 'lucide-react'
 import { mockStoreData } from '../store/mockStoreData'
-import Loader from './Loader'
 
 // --- CARRITO (DRAWER) ---
 const CartDrawer = ({ onClose, onCheckout }) => {
@@ -51,12 +50,12 @@ const CartDrawer = ({ onClose, onCheckout }) => {
                     <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>${item.price.toFixed(2)}</span>
                     <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>({(item.price * useStore.getState().bcvRate).toFixed(2)} Bs)</span>
                   </div>
-                  
+
                   {/* Quantity Control */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#F8FAFC', width: 'fit-content', borderRadius: '20px', padding: '0.2rem 0.5rem' }}>
-                    <button onClick={() => updateQuantity(item.id, -1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex' }}><Minus size={14}/></button>
+                    <button onClick={() => updateQuantity(item.id, -1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex' }}><Minus size={14} /></button>
                     <span style={{ fontSize: '0.9rem', fontWeight: 'bold', width: '20px', textAlign: 'center' }}>{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex' }}><Plus size={14}/></button>
+                    <button onClick={() => updateQuantity(item.id, 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex' }}><Plus size={14} /></button>
                   </div>
                 </div>
               </div>
@@ -83,8 +82,8 @@ const CartDrawer = ({ onClose, onCheckout }) => {
               <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 'normal' }}>{(total * useStore.getState().bcvRate).toFixed(2)} Bs</span>
             </div>
           </div>
-          
-          <button 
+
+          <button
             onClick={onCheckout}
             style={{ width: '100%', marginTop: '1.5rem', padding: '1rem', background: 'var(--primary)', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
           >
@@ -100,7 +99,7 @@ const CartDrawer = ({ onClose, onCheckout }) => {
 // --- CATEGORY PRODUCTS MODAL ---
 const CategoryProductsModal = ({ category, products, onClose }) => {
   const { addToCart } = useStore()
-  
+
   return (
     <div style={{
       position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -143,7 +142,7 @@ const CategoryProductsModal = ({ category, products, onClose }) => {
                         <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
                         <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</span>
                       </div>
-                      <button 
+                      <button
                         onClick={() => addToCart(prod)}
                         style={{ background: '#E8F5E9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                       >
@@ -164,7 +163,7 @@ const CategoryProductsModal = ({ category, products, onClose }) => {
 const CheckoutModal = ({ onClose, total, onSuccess }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const bcvRate = useStore.getState().bcvRate;
-  
+
   // Customer details
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -207,7 +206,7 @@ const CheckoutModal = ({ onClose, total, onSuccess }) => {
         </div>
 
         <form onSubmit={handleSubmit} style={{ padding: '2rem' }}>
-          
+
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '2rem', color: 'var(--primary)' }}>${total.toFixed(2)}</h3>
             <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>Monto total a pagar</p>
@@ -265,12 +264,12 @@ const CheckoutModal = ({ onClose, total, onSuccess }) => {
             </div>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={isProcessing}
-            style={{ 
-              width: '100%', padding: '1rem', background: isProcessing ? '#94A3B8' : 'var(--primary)', 
-              color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', 
+            style={{
+              width: '100%', padding: '1rem', background: isProcessing ? '#94A3B8' : 'var(--primary)',
+              color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold',
               fontSize: '1rem', cursor: isProcessing ? 'not-allowed' : 'pointer', marginTop: '2rem',
               display: 'flex', justifyContent: 'center', alignItems: 'center'
             }}
@@ -295,13 +294,13 @@ const SuccessModal = ({ onClose }) => (
       animation: 'fadeIn 0.4s ease-out'
     }}>
       <div style={{ background: '#DCFCE7', width: '80px', height: '80px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', color: '#16A34A' }}>
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
       </div>
       <h2 style={{ margin: '0 0 0.5rem 0', fontFamily: 'Fraunces', color: '#1C2B23', fontSize: '1.8rem' }}>¡Orden Recibida!</h2>
       <p style={{ color: '#64748B', marginBottom: '2rem', lineHeight: 1.5 }}>
         Hemos recibido el reporte de tu pago. La tienda lo validará en breve y preparará tu envío.
       </p>
-      <button 
+      <button
         onClick={onClose}
         style={{ width: '100%', padding: '1rem', background: '#F1F5F9', color: '#0F172A', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer' }}
       >
@@ -349,15 +348,15 @@ const CategoriesTemplate = ({ categories, config, storeConfig, onCategoryClick }
       <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todas &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, 220px), 1fr))`, gap: '1rem' }}>
         {categories.map(cat => (
-          <div key={cat.id} 
-               onClick={() => onCategoryClick && onCategoryClick(cat)}
-               style={{
-                  background: cat.color, borderRadius: '16px', padding: '1.5rem', color: 'white',
-                  display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative',
-                  overflow: 'hidden', cursor: 'pointer', minHeight: '120px', transition: 'transform 0.2s'
-               }}
-               onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-               onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+          <div key={cat.id}
+            onClick={() => onCategoryClick && onCategoryClick(cat)}
+            style={{
+              background: cat.color, borderRadius: '16px', padding: '1.5rem', color: 'white',
+              display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative',
+              overflow: 'hidden', cursor: 'pointer', minHeight: '120px', transition: 'transform 0.2s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
           >
             <div style={{ position: 'absolute', right: '-10px', bottom: '-20px', fontSize: '6rem', opacity: 0.2 }}>{cat.icon}</div>
             <div style={{ position: 'absolute', top: '1rem', right: '1rem', fontSize: '2rem' }}>{cat.icon}</div>
@@ -430,8 +429,8 @@ const SingleProductModal = ({ product, onClose, addToCart, bcvRate }) => {
               <div style={{ padding: '0.8rem 1rem', minWidth: '40px', textAlign: 'center', fontWeight: 'bold' }}>{quantity}</div>
               <button onClick={() => setQuantity(quantity + 1)} style={{ padding: '0.8rem 1rem', background: '#F8FAFC', border: 'none', cursor: 'pointer', color: '#0F172A', fontWeight: 'bold' }}>+</button>
             </div>
-            
-            <button 
+
+            <button
               onClick={handleAdd}
               style={{ flex: 1, background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'opacity 0.2s' }}
             >
@@ -450,7 +449,7 @@ const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
   return (
     <>
       <div>
-        <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
+      <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, 250px), 1fr))`, gap: '1.5rem' }}>
         {products.map(prod => (
           <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
@@ -464,52 +463,54 @@ const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
                 </span>
               )}
             </div>
-              <div 
-                style={{ height: '200px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}
+            <div
+              style={{ height: '200px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}
+              onClick={() => setSelectedProduct(prod)}
+            >
+              <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <div style={{ padding: '1rem' }}>
+              <h5
+                style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--text-main)', cursor: 'pointer' }}
                 onClick={() => setSelectedProduct(prod)}
               >
-                <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                {prod.name}
+              </h5>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '1rem' }}>
+                <Star size={14} color="#FFC107" fill="#FFC107" />
+                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{prod.rating} (120)</span>
               </div>
-              <div style={{ padding: '1rem' }}>
-                <h5 
-                  style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--text-main)', cursor: 'pointer' }}
-                  onClick={() => setSelectedProduct(prod)}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
+                  {prod.oldPrice && <span style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'line-through', marginLeft: '0.5rem' }}>${prod.oldPrice}</span>}
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</div>
+                </div>
+                <button
+                  onClick={() => addToCart(prod)}
+                  style={{ background: '#E8F5E9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                  onMouseOver={(e) => { e.currentTarget.style.background = '#2E7D32'; e.currentTarget.style.color = 'white'; }}
+                  onMouseOut={(e) => { e.currentTarget.style.background = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; }}
                 >
-                  {prod.name}
-                </h5>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '1rem' }}>
-                  <Star size={14} color="#FFC107" fill="#FFC107" />
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{prod.rating} (120)</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
-                    {prod.oldPrice && <span style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'line-through', marginLeft: '0.5rem' }}>${prod.oldPrice}</span>}
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</div>
-                  </div>
-                  <button 
-                    onClick={() => addToCart(prod)}
-                    style={{ background: '#E8F5E9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
-                    onMouseOver={(e) => { e.currentTarget.style.background = '#2E7D32'; e.currentTarget.style.color = 'white'; }}
-                    onMouseOut={(e) => { e.currentTarget.style.background = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; }}
-                  >
-                    <Plus size={18} />
-                  </button>
-                </div>
+                  <Plus size={18} />
+                </button>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
+    </div>
       
-      {selectedProduct && (
-        <SingleProductModal 
-          product={selectedProduct} 
-          onClose={() => setSelectedProduct(null)} 
-          addToCart={addToCart} 
-          bcvRate={useStore.getState().bcvRate} 
-        />
-      )}
+      {
+    selectedProduct && (
+      <SingleProductModal
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        addToCart={addToCart}
+        bcvRate={useStore.getState().bcvRate}
+      />
+    )
+  }
     </>
   )
 }
@@ -562,7 +563,7 @@ const TestimonialsTemplate = ({ testimonials, config, storeConfig }) => {
         {testimonials.map(test => (
           <div key={test.id} style={{ background: 'white', borderRadius: '16px', padding: '2rem', textAlign: 'left', border: '1px solid #eee' }}>
             <div style={{ display: 'flex', gap: '0.2rem', marginBottom: '1rem' }}>
-              {[1,2,3,4,5].map(s => <Star key={s} size={14} color="#FFC107" fill="#FFC107" />)}
+              {[1, 2, 3, 4, 5].map(s => <Star key={s} size={14} color="#FFC107" fill="#FFC107" />)}
             </div>
             <p style={{ margin: '0 0 1.5rem 0', fontSize: '0.95rem', fontStyle: 'italic', color: 'var(--text-main)', lineHeight: 1.6 }}>
               "{test.text}"
@@ -596,7 +597,7 @@ export default function StorePreview({ isReadOnly = false }) {
   const navigate = useNavigate()
   const { storeId } = useParams()
   const globalState = useStore()
-  
+
   const { publicStoreData, fetchPublicStoreData, clearPublicStoreData, activeSectionId, setActiveSectionId, cart, isCartOpen, toggleCart, clearCart, logout, addOrder, addToCart } = globalState
 
   useEffect(() => {
@@ -620,12 +621,11 @@ export default function StorePreview({ isReadOnly = false }) {
   } else if (publicStoreData) {
     activeStoreData = { ...globalState, ...publicStoreData };
   } else {
-    return <Loader text="Cargando datos de la tienda..." fullScreen={true} />
+    return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter' }}>Cargando datos de la tienda...</div>
   }
-  
+
   // Datos específicos de la tienda (visual)
-  const { storeConfig, layoutSections, products, features, testimonials } = activeStoreData
-  const categories = globalState.getAvailableCategories(storeConfig)
+  const { storeConfig, layoutSections, categories, products, features, testimonials } = activeStoreData
 
   const cartTotalQty = cart.reduce((acc, item) => acc + item.quantity, 0)
   const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)
@@ -637,42 +637,42 @@ export default function StorePreview({ isReadOnly = false }) {
   }
 
   return (
-    <div className="store-container" style={{ 
+    <div className="store-container" style={{
       margin: isReadOnly ? '0 auto' : '0',
       '--primary': storeConfig.primaryColor || '#11683E',
       '--accent-yellow': storeConfig.secondaryColor || '#FFC107'
     }}>
-      
+
       {/* Store Header */}
       <div className="store-header" style={{ background: storeConfig.headerColor || 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           {isReadOnly && (
-            <button 
+            <button
               onClick={() => navigate('/market')}
               style={{ background: '#F1F5F9', color: '#64748B', border: 'none', padding: '0.5rem', borderRadius: '50%', cursor: 'pointer', marginRight: '0.5rem' }}
               title="Volver al Marketplace"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
             </button>
           )}
           {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
-            <img src={storeConfig.logoText} alt="Logo" className="store-header-img" />
+            <img src={storeConfig.logoText} alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
           ) : (
-            <span className="store-header-emoji">{storeConfig.logoText}</span>
+            <span style={{ fontSize: '2.5rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{storeConfig.logoText}</span>
           )}
           <div>
             <h2 style={{ margin: 0, fontSize: '1.8rem', fontFamily: 'Fraunces, serif', fontWeight: '900', letterSpacing: '-0.5px', color: 'var(--primary)', dropShadow: '0 2px 2px rgba(0,0,0,0.05)' }}>{storeConfig.name}</h2>
             <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-              <span style={{display:'flex', alignItems:'center', gap:'0.2rem'}}><Star size={12} fill="#FFC107" color="#FFC107"/> 5.0 (Nuevas)</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}><Star size={12} fill="#FFC107" color="#FFC107" /> 5.0 (Nuevas)</span>
               <span>📦 {products.length} productos</span>
               <span>👥 {storeConfig.followers || '0'} seguidores</span>
               <span>📍 {storeConfig.location || 'Online'}</span>
             </div>
           </div>
         </div>
-        
+
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <button 
+          <button
             onClick={toggleCart}
             style={{ background: storeConfig.buttonColor || storeConfig.primaryColor || 'var(--primary)', color: 'white', border: 'none', padding: '0.8rem 1.5rem', borderRadius: '30px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'transform 0.1s' }}
             onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
@@ -680,8 +680,8 @@ export default function StorePreview({ isReadOnly = false }) {
           >
             <ShoppingCart size={18} /> Ver Carrito {cartTotalQty > 0 ? `(${cartTotalQty}) - $${cartTotal.toFixed(2)}` : '(0)'}
           </button>
-          
-          <button 
+
+          <button
             onClick={handleLogout}
             style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '0.8rem', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             title="Cerrar Sesión"
@@ -697,18 +697,18 @@ export default function StorePreview({ isReadOnly = false }) {
           const config = section.config || {}
 
           return (
-            <section 
-              key={section.id} 
+            <section
+              key={section.id}
               className={isReadOnly ? '' : `section-hover ${isActive ? 'section-active' : ''}`}
-              onClick={(e) => { 
-                if(!isReadOnly) {
-                  e.stopPropagation(); 
-                  setActiveSectionId(section.id) 
+              onClick={(e) => {
+                if (!isReadOnly) {
+                  e.stopPropagation();
+                  setActiveSectionId(section.id)
                 }
               }}
-              style={{ position: 'relative', borderRadius: '24px' }} 
+              style={{ position: 'relative', borderRadius: '24px' }}
             >
-              
+
               {!isReadOnly && (
                 <div className="section-badge" style={{ background: isActive ? 'var(--primary)' : '#475569' }}>
                   {section.title} <Settings size={12} />
@@ -721,7 +721,7 @@ export default function StorePreview({ isReadOnly = false }) {
               {section.templateType === 'promo' && <PromoTemplate config={config} storeConfig={storeConfig} />}
               {section.templateType === 'features' && <FeaturesTemplate features={features} config={config} storeConfig={storeConfig} />}
               {section.templateType === 'testimonials' && <TestimonialsTemplate testimonials={testimonials} config={config} storeConfig={storeConfig} />}
-              
+
             </section>
           )
         })}
@@ -729,10 +729,10 @@ export default function StorePreview({ isReadOnly = false }) {
 
       {/* Category Modal */}
       {selectedCategory && (
-        <CategoryProductsModal 
-          category={selectedCategory} 
-          products={products.filter(p => p.categoryId === selectedCategory.id)} 
-          onClose={() => setSelectedCategory(null)} 
+        <CategoryProductsModal
+          category={selectedCategory}
+          products={products.filter(p => p.categoryId === selectedCategory.id)}
+          onClose={() => setSelectedCategory(null)}
         />
       )}
 
@@ -740,18 +740,18 @@ export default function StorePreview({ isReadOnly = false }) {
       {isCartOpen && (
         <>
           <div onClick={toggleCart} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999 }} />
-          <CartDrawer 
-            onClose={toggleCart} 
+          <CartDrawer
+            onClose={toggleCart}
             onCheckout={() => {
               toggleCart();
               setShowCheckout(true);
-            }} 
+            }}
           />
         </>
       )}
 
       {showCheckout && (
-        <CheckoutModal 
+        <CheckoutModal
           total={cartTotal}
           onClose={() => setShowCheckout(false)}
           onSuccess={(checkoutData) => {

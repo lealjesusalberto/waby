@@ -13,7 +13,6 @@ import { useStore } from './store/useStore'
 import { auth, db } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import Loader from './components/Loader'
 
 // Componente para el Builder (Dueño de Tienda)
 function BuilderLayout() {
@@ -79,7 +78,7 @@ function App() {
   }, [setUser])
 
   if (!authInitialized) {
-    return <Loader text="Cargando Waby..." fullScreen={true} />
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#F8F9F3' }}>Cargando Waby...</div>
   }
 
   return (
@@ -98,39 +97,39 @@ function App() {
         <Route path="/planes" element={<Pricing />} />
 
         {/* Ruta del Creador de Tiendas (protegida para tiendas) */}
-        <Route 
-          path="/builder" 
+        <Route
+          path="/builder"
           element={
             userRole === 'tienda' ? <BuilderLayout /> : <Navigate to="/login" replace />
-          } 
+          }
         />
 
         {/* Ruta del Súper Administrador */}
-        <Route 
-          path="/admin" 
+        <Route
+          path="/admin"
           element={
             userRole === 'admin' ? <SuperAdminPanel /> : <Navigate to="/login" replace />
-          } 
+          }
         />
 
         {/* Directorio Principal / Marketplace */}
-        <Route 
-          path="/market" 
-          element={<MarketHome />} 
+        <Route
+          path="/market"
+          element={<MarketHome />}
         />
 
         {/* Perfil de Cliente */}
-        <Route 
-          path="/profile" 
-          element={userRole === 'cliente' ? <ClientProfile /> : <Navigate to="/login" replace />} 
+        <Route
+          path="/profile"
+          element={userRole === 'cliente' ? <ClientProfile /> : <Navigate to="/login" replace />}
         />
 
         {/* Ruta Pública / Tienda (para clientes o dueños) */}
-        <Route 
-          path="/store/:storeId" 
-          element={<StorefrontLayout />} 
+        <Route
+          path="/store/:storeId"
+          element={<StorefrontLayout />}
         />
-        
+
         {/* Redirección por defecto si entran a /store sin ID */}
         <Route path="/store" element={<Navigate to="/store/1" />} />
       </Routes>

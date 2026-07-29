@@ -268,6 +268,7 @@ export default function EditorPanel() {
                     <label style={labelStyle}>Color Primario</label>
                     <input type="color" value={storeConfig.primaryColor} onChange={(e) => updateStoreConfig({ primaryColor: e.target.value })} style={{ width: '100%', height: '40px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
                   </div>
+                </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Ubicación</label>

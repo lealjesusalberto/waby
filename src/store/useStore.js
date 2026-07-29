@@ -3,77 +3,13 @@ import { db, auth } from '../firebase'
 import { doc, updateDoc, getDoc, collection, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 
-export const CATEGORY_MAP = {
-  'Frutas & Superfoods': [
-    { id: 1, name: 'Frutas Tropicales', count: 84, color: '#FF1493', icon: '🥭' },
-    { id: 2, name: 'Especias & Hierbas', count: 56, color: '#00C853', icon: '🌿' },
-    { id: 3, name: 'Bebidas Naturales', count: 42, color: '#2962FF', icon: '🥥' },
-    { id: 4, name: 'Superfoods', count: 67, color: '#D500F9', icon: '✨' },
-    { id: 5, name: 'Snacks Tostados', count: 32, color: '#FF6D00', icon: '🥜' },
-    { id: 6, name: 'Productos Orgánicos', count: 112, color: '#64DD17', icon: '🌱' },
-    { id: 7, name: 'Raíces & Tubérculos', count: 18, color: '#E65100', icon: '🍠' },
-    { id: 8, name: 'Flores Comestibles', count: 24, color: '#C51162', icon: '🌺' },
-  ],
-  'Ropa & Accesorios': [
-    { id: 101, name: 'Camisas & Franelas', color: '#1E88E5', icon: '👕' },
-    { id: 102, name: 'Pantalones', color: '#43A047', icon: '👖' },
-    { id: 103, name: 'Zapatos', color: '#E53935', icon: '👟' },
-    { id: 104, name: 'Vestidos', color: '#8E24AA', icon: '👗' },
-    { id: 105, name: 'Accesorios', color: '#FDD835', icon: '🧢' },
-    { id: 106, name: 'Ropa Interior', color: '#D81B60', icon: '🩲' },
-  ],
-  'Comida Rápida': [
-    { id: 201, name: 'Hamburguesas', color: '#FB8C00', icon: '🍔' },
-    { id: 202, name: 'Pizzas', color: '#E53935', icon: '🍕' },
-    { id: 203, name: 'Sushi', color: '#00ACC1', icon: '🍣' },
-    { id: 204, name: 'Postres', color: '#8E24AA', icon: '🍰' },
-    { id: 205, name: 'Bebidas', color: '#43A047', icon: '🥤' },
-  ],
-  'Tecnología': [
-    { id: 301, name: 'Celulares', color: '#1E88E5', icon: '📱' },
-    { id: 302, name: 'Computadoras', color: '#546E7A', icon: '💻' },
-    { id: 303, name: 'Audífonos', color: '#FDD835', icon: '🎧' },
-    { id: 304, name: 'Accesorios', color: '#D81B60', icon: '🔌' },
-    { id: 305, name: 'Smartwatches', color: '#43A047', icon: '⌚' },
-  ],
-  'Mascotas': [
-    { id: 401, name: 'Alimentos', color: '#795548', icon: '🦴' },
-    { id: 402, name: 'Juguetes', color: '#FFCA28', icon: '🧶' },
-    { id: 403, name: 'Higiene', color: '#26C6DA', icon: '🧴' },
-    { id: 404, name: 'Ropa y Accesorios', color: '#EC407A', icon: '🦮' },
-  ],
-  'Hogar & Jardín': [
-    { id: 501, name: 'Muebles', color: '#8D6E63', icon: '🛋️' },
-    { id: 502, name: 'Decoración', color: '#FFA726', icon: '🖼️' },
-    { id: 503, name: 'Jardinería', color: '#66BB6A', icon: '🪴' },
-    { id: 504, name: 'Iluminación', color: '#FFEE58', icon: '💡' },
-  ],
-  'Salud & Belleza': [
-    { id: 601, name: 'Maquillaje', color: '#EC407A', icon: '💄' },
-    { id: 602, name: 'Cuidado de la Piel', color: '#26C6DA', icon: '🧴' },
-    { id: 603, name: 'Perfumes', color: '#AB47BC', icon: '✨' },
-    { id: 604, name: 'Vitaminas', color: '#FFA726', icon: '💊' },
-  ],
-  'Servicios': [
-    { id: 701, name: 'Consultoría', color: '#5C6BC0', icon: '💼' },
-    { id: 702, name: 'Mantenimiento', color: '#78909C', icon: '🔧' },
-    { id: 703, name: 'Diseño', color: '#FF7043', icon: '🎨' },
-    { id: 704, name: 'Educación', color: '#26A69A', icon: '📚' },
-  ],
-  'General': [
-    { id: 901, name: 'Novedades', color: '#FBC02D', icon: '🌟' },
-    { id: 902, name: 'Ofertas', color: '#EF5350', icon: '🏷️' },
-    { id: 903, name: 'Varios', color: '#8D6E63', icon: '📦' },
-  ]
-}
-
 export const useStore = create((set, get) => ({
   // --- Autenticación ---
   user: null,
   userRole: 'cliente',
   storeStatus: 'pending_activation', // 'pending_activation' | 'validation_pending' | 'active'
   userProfile: { name: '', avatar: '' },
-  
+
   // Auth actions
   setUser: (user, role = 'cliente', status = 'pending_activation', profile = { name: '', avatar: '' }) => set({ user, userRole: role, storeStatus: status, userProfile: profile }),
   updateUserProfile: async (name, avatar) => {
@@ -104,7 +40,7 @@ export const useStore = create((set, get) => ({
         const data = globalDoc.data()
         if (data.bcvRate) set({ bcvRate: data.bcvRate })
       }
-    } catch(err) {
+    } catch (err) {
       console.error("Error fetching global settings", err)
     }
   },
@@ -112,7 +48,7 @@ export const useStore = create((set, get) => ({
     try {
       await setDoc(doc(db, 'settings', 'global'), { bcvRate: rate }, { merge: true })
       set({ bcvRate: rate })
-    } catch(err) {
+    } catch (err) {
       console.error("Error updating BCV rate", err)
     }
   },
@@ -132,9 +68,9 @@ export const useStore = create((set, get) => ({
     titleColor: '#0F172A'
   },
   hasUnsavedChanges: false,
-  
+
   updateStoreConfig: (newConfig) => {
-    set((state) => ({ 
+    set((state) => ({
       storeConfig: { ...state.storeConfig, ...newConfig },
       hasUnsavedChanges: true
     }))
@@ -145,26 +81,26 @@ export const useStore = create((set, get) => ({
   setActiveSectionId: (id) => set({ activeSectionId: id }),
 
   layoutSections: [
-    { 
-      id: 'sec-hero-demo', 
-      title: 'Banner Principal (Editar)', 
+    {
+      id: 'sec-hero-demo',
+      title: 'Banner Principal (Editar)',
       templateType: 'hero',
-      config: { 
-        title: '¡Bienvenido a tu Tienda!', 
+      config: {
+        title: '¡Bienvenido a tu Tienda!',
         subtitle: 'Haz clic en el engranaje de esta sección para editar el texto y la imagen de fondo, o elimínala.',
         buttonText: 'Explorar',
         bgImage: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2070&auto=format&fit=crop'
       }
     },
-    { 
-      id: 'sec-products-demo', 
-      title: 'Productos (Editar)', 
-      tag: 'all', 
+    {
+      id: 'sec-products-demo',
+      title: 'Productos (Editar)',
+      tag: 'all',
       templateType: 'products_grid',
       config: { columns: 4, sectionTitle: 'Tu Catálogo', sectionSubtitle: 'Sube tus primeros productos reales desde la pestaña de Catálogo y borra estos de prueba' }
     }
   ],
-  
+
   reorderSections: (startIndex, endIndex) => {
     set((state) => {
       const newSections = Array.from(state.layoutSections)
@@ -176,7 +112,7 @@ export const useStore = create((set, get) => ({
 
   updateSectionConfig: (id, key, value) => {
     set((state) => ({
-      layoutSections: state.layoutSections.map(s => 
+      layoutSections: state.layoutSections.map(s =>
         s.id === id ? { ...s, config: { ...s.config, [key]: value } } : s
       ),
       hasUnsavedChanges: true
@@ -190,7 +126,7 @@ export const useStore = create((set, get) => ({
       title: 'Nueva Sección',
       config: {}
     }
-    
+
     // Set default config based on type
     if (templateType === 'banner') {
       newSection.title = 'Banner Principal'
@@ -213,14 +149,14 @@ export const useStore = create((set, get) => ({
       newSection.config = { columns: 2 }
     }
 
-    set((state) => ({ 
+    set((state) => ({
       layoutSections: [...state.layoutSections, newSection],
       hasUnsavedChanges: true
     }))
   },
-    
+
   deleteSection: (id) => {
-    set((state) => ({ 
+    set((state) => ({
       layoutSections: state.layoutSections.filter(s => s.id !== id),
       hasUnsavedChanges: true
     }))
@@ -230,7 +166,7 @@ export const useStore = create((set, get) => ({
   saveDesignToFirestore: async () => {
     const user = get().user
     if (!user) return
-    
+
     try {
       await updateDoc(doc(db, 'users', user.uid), {
         storeConfig: get().storeConfig,
@@ -243,16 +179,6 @@ export const useStore = create((set, get) => ({
   },
 
   // --- Datos Mock ---
-  getAvailableCategories: (config) => {
-    const mainCategory = (config || get().storeConfig)?.category;
-    if (mainCategory && CATEGORY_MAP[mainCategory]) {
-      return CATEGORY_MAP[mainCategory];
-    }
-    // Retorna arreglo vacío si no hay categoría seleccionada, 
-    // pero si es la tienda demo, forzamos Frutas.
-    return CATEGORY_MAP['Frutas & Superfoods'] || [];
-  },
-  
   categories: [
     { id: 1, name: 'Frutas Tropicales', count: 84, color: '#FF1493', icon: '🥭' },
     { id: 2, name: 'Especias & Hierbas', count: 56, color: '#00C853', icon: '🌿' },
@@ -269,11 +195,11 @@ export const useStore = create((set, get) => ({
     { id: 2, categoryId: 1, name: 'Producto de Prueba 2 (Editar)', price: 15.00, image: 'https://images.unsplash.com/photo-1613146445582-7ea4c4e7ab56?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
     { id: 3, categoryId: 1, name: 'Producto de Prueba 3 (Editar)', price: 20.00, image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
   ],
-  
+
   addNewProduct: async (product) => {
     const newProduct = { ...product, id: Date.now().toString(), storeId: get().user?.uid || 'demo' }
     set((state) => ({ products: [...state.products, newProduct] }))
-    
+
     if (get().user) {
       try {
         await setDoc(doc(db, 'products', newProduct.id), newProduct)
@@ -282,7 +208,7 @@ export const useStore = create((set, get) => ({
       }
     }
   },
-  
+
   deleteProduct: async (id) => {
     set((state) => ({ products: state.products.filter(p => p.id !== id) }))
     if (get().user) {
@@ -312,7 +238,7 @@ export const useStore = create((set, get) => ({
   orders: [],
   isCartOpen: false,
   toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
-  addToCart: (product) => 
+  addToCart: (product) =>
     set((state) => {
       const exists = state.cart.find(item => item.id === product.id);
       if (exists) {
@@ -320,7 +246,7 @@ export const useStore = create((set, get) => ({
       }
       return { cart: [...state.cart, { ...product, quantity: 1 }], isCartOpen: true };
     }),
-  removeFromCart: (productId) => 
+  removeFromCart: (productId) =>
     set((state) => ({ cart: state.cart.filter(item => item.id !== productId) })),
   updateQuantity: (productId, delta) =>
     set((state) => ({
@@ -357,15 +283,15 @@ export const useStore = create((set, get) => ({
     if (!storeId || storeId === 'demo') {
       storeId = get().user?.uid || 'demo'
     }
-    const newOrder = { 
-      ...order, 
-      id: `ORD-${Date.now()}`, 
-      date: new Date().toISOString(), 
+    const newOrder = {
+      ...order,
+      id: `ORD-${Date.now()}`,
+      date: new Date().toISOString(),
       status: 'Validando Pago',
       storeId: storeId,
       customerId: get().user?.uid || 'guest'
     }
-    
+
     set((state) => ({ orders: [newOrder, ...state.orders] }))
 
     try {
@@ -374,10 +300,10 @@ export const useStore = create((set, get) => ({
       console.error("Error saving order to Firestore", err)
     }
   },
-  
+
   updateOrderStatus: async (orderId, newStatus) => {
     set((state) => ({
-      orders: state.orders.map(order => 
+      orders: state.orders.map(order =>
         order.id === orderId ? { ...order, status: newStatus } : order
       )
     }))
@@ -391,7 +317,7 @@ export const useStore = create((set, get) => ({
 
   // --- Marketplace Dummy Stores ---
   marketplaceStores: [],
-  
+
   fetchMarketplaceStores: async () => {
     try {
       const q = query(collection(db, 'users'), where('role', '==', 'tienda'))
@@ -399,15 +325,13 @@ export const useStore = create((set, get) => ({
       const realStores = []
       snapshot.forEach(doc => {
         const data = doc.data()
-        let coverImg = data.storeConfig?.coverUrl || data.storeConfig?.cover || ''
-        if (!coverImg && data.layoutSections) {
+        // Mostrar todas las tiendas por ahora para evitar confusión en desarrollo
+        let coverImg = 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500'
+        if (data.layoutSections) {
           const hero = data.layoutSections.find(s => s.templateType === 'hero' || s.templateType === 'banner')
           if (hero && hero.config.bgImage) coverImg = hero.config.bgImage
         }
-        if (!coverImg) {
-          coverImg = 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=500'
-        }
-        
+
         realStores.push({
           id: doc.id,
           name: data.storeConfig?.name || data.storeName || 'Tienda',
@@ -421,7 +345,7 @@ export const useStore = create((set, get) => ({
       })
       // Mostramos siempre las tiendas reales, aunque esté vacío
       set({ marketplaceStores: realStores })
-    } catch(err) {
+    } catch (err) {
       console.error("Error fetching marketplace stores", err)
     }
   },
@@ -447,12 +371,12 @@ export const useStore = create((set, get) => ({
       const userDoc = await getDoc(doc(db, 'users', uid))
       if (userDoc.exists()) {
         const data = userDoc.data()
-        
+
         let finalConfig = get().storeConfig;
         if (data.storeConfig) {
           finalConfig = { ...finalConfig, ...data.storeConfig }
         }
-        
+
         // Si el nombre sigue siendo el de prueba, intentamos usar el de registro
         if ((!data.storeConfig || data.storeConfig.name === 'Mi Nueva Tienda') && data.storeName) {
           finalConfig.name = data.storeName;
@@ -495,7 +419,7 @@ export const useStore = create((set, get) => ({
       ordersSnapshot.forEach((doc) => {
         orders.push(doc.data())
       })
-      
+
       // Sort orders by date descending
       orders.sort((a, b) => new Date(b.date) - new Date(a.date))
       set({ orders: orders })
@@ -526,20 +450,20 @@ export const useStore = create((set, get) => ({
       const userDoc = await getDoc(doc(db, 'users', uid))
       let storeConfig = get().storeConfig;
       let layoutSections = get().layoutSections;
-      
-      if (userDoc.exists()) {
-         const data = userDoc.data()
-         
-         if(data.storeConfig) {
-           storeConfig = { ...storeConfig, ...data.storeConfig }
-         }
-         
-         // Si el nombre sigue siendo el de prueba, intentamos usar el de registro
-         if ((!data.storeConfig || data.storeConfig.name === 'Mi Nueva Tienda') && data.storeName) {
-           storeConfig.name = data.storeName;
-         }
 
-         if(data.layoutSections) layoutSections = data.layoutSections
+      if (userDoc.exists()) {
+        const data = userDoc.data()
+
+        if (data.storeConfig) {
+          storeConfig = { ...storeConfig, ...data.storeConfig }
+        }
+
+        // Si el nombre sigue siendo el de prueba, intentamos usar el de registro
+        if ((!data.storeConfig || data.storeConfig.name === 'Mi Nueva Tienda') && data.storeName) {
+          storeConfig.name = data.storeName;
+        }
+
+        if (data.layoutSections) layoutSections = data.layoutSections
       }
 
       const productsQ = query(collection(db, 'products'), where('storeId', '==', uid))
@@ -547,12 +471,14 @@ export const useStore = create((set, get) => ({
       const products = []
       productsSnapshot.forEach(doc => products.push(doc.data()))
 
-      set({ publicStoreData: { 
-        storeConfig, 
-        layoutSections, 
-        products: products.length > 0 ? products : get().products 
-      }})
-    } catch(err) {
+      set({
+        publicStoreData: {
+          storeConfig,
+          layoutSections,
+          products: products.length > 0 ? products : get().products
+        }
+      })
+    } catch (err) {
       console.error("Error fetching public store data", err)
     }
   },

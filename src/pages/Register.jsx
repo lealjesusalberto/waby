@@ -5,14 +5,13 @@ import { Store, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react'
 import { auth, db } from '../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
-import Loader from '../components/Loader'
 
 export default function Register() {
   const navigate = useNavigate()
   const setUserRole = useStore(state => state.setUserRole)
   const [step, setStep] = useState(1) // 1: Role Selection, 2: Form
   const [selectedRole, setSelectedRole] = useState(null) // 'tienda' or 'cliente'
-  
+
   // Form fields
   const [name, setName] = useState('')
   const [storeName, setStoreName] = useState('')
@@ -30,7 +29,7 @@ export default function Register() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password)
       const user = userCredential.user
@@ -48,7 +47,7 @@ export default function Register() {
 
       // Update local state
       useStore.getState().setUser(user, selectedRole, selectedRole === 'tienda' ? 'pending_activation' : 'active')
-      
+
       if (selectedRole === 'tienda') {
         navigate('/builder')
       } else {
@@ -62,20 +61,16 @@ export default function Register() {
     }
   }
 
-  if (loading) {
-    return <Loader text="Creando cuenta..." />
-  }
-
   return (
     <div style={{ animation: 'fadeIn 0.3s ease' }}>
-      
+
       {step === 1 && (
         <>
           <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#1C2B23', fontFamily: 'Fraunces' }}>Crea tu cuenta</h2>
           <p style={{ color: '#5F7368', marginBottom: '2rem' }}>¿Cómo planeas usar Sabores del Paraíso?</p>
-          
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div 
+            <div
               onClick={() => handleRoleSelect('tienda')}
               style={{ border: '2px solid #E2E8E0', borderRadius: '12px', padding: '1.5rem', cursor: 'pointer', display: 'flex', gap: '1rem', alignItems: 'center', transition: 'all 0.2s', background: 'white' }}
               onMouseOver={(e) => e.currentTarget.style.borderColor = '#11683E'}
@@ -90,7 +85,7 @@ export default function Register() {
               </div>
             </div>
 
-            <div 
+            <div
               onClick={() => handleRoleSelect('cliente')}
               style={{ border: '2px solid #E2E8E0', borderRadius: '12px', padding: '1.5rem', cursor: 'pointer', display: 'flex', gap: '1rem', alignItems: 'center', transition: 'all 0.2s', background: 'white' }}
               onMouseOver={(e) => e.currentTarget.style.borderColor = '#FF3B30'}
@@ -113,7 +108,7 @@ export default function Register() {
           <button onClick={() => setStep(1)} style={{ background: 'none', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#5F7368', cursor: 'pointer', marginBottom: '1.5rem', padding: 0 }}>
             <ArrowLeft size={16} /> Volver a roles
           </button>
-          
+
           <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#1C2B23', fontFamily: 'Fraunces' }}>
             {selectedRole === 'tienda' ? 'Abre tu Tienda' : 'Únete como Cliente'}
           </h2>
@@ -121,7 +116,7 @@ export default function Register() {
 
           <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
             {error && <div style={{ color: 'red', fontSize: '0.9rem', textAlign: 'center', background: '#FEE2E2', padding: '0.5rem', borderRadius: '8px' }}>{error}</div>}
-            
+
             <div>
               <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Nombre Completo</label>
               <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Juan Pérez" style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '50px', border: '1px solid #CBD5E1', outline: 'none', background: '#F8FAFC' }} required />
@@ -140,7 +135,7 @@ export default function Register() {
               <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Contraseña</label>
               <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '50px', border: '1px solid #CBD5E1', outline: 'none', background: '#F8FAFC' }} required minLength={6} />
             </div>
-            
+
             <button type="submit" disabled={loading} style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', background: selectedRole === 'tienda' ? '#11683E' : '#FF3B30', color: 'white', border: 'none', padding: '1rem', borderRadius: '50px', fontWeight: 'bold', fontSize: '1rem', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '1rem', opacity: loading ? 0.7 : 1, transition: 'transform 0.2s', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)' }}
               onMouseOver={e => e.currentTarget.style.transform = 'scale(1.02)'}
               onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
