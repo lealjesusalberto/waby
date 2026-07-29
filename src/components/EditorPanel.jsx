@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useStore } from '../store/useStore'
-import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save } from 'lucide-react'
+import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload } from 'lucide-react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 
 export default function EditorPanel() {
@@ -38,6 +38,17 @@ export default function EditorPanel() {
   const [isBestseller, setIsBestseller] = useState(false)
 
   const activeSection = layoutSections.find(s => s.id === activeSectionId)
+
+  const handleImageUpload = (e, callback) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
@@ -189,8 +200,14 @@ export default function EditorPanel() {
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                   <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Emoji/Logo</label>
-                    <input type="text" value={storeConfig.logoText} onChange={(e) => updateStoreConfig({ logoText: e.target.value })} style={inputStyle} placeholder="Ej. 🚀" />
+                    <label style={labelStyle}>Logo (URL, Emoji o Archivo)</label>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <input type="text" value={storeConfig.logoText} onChange={(e) => updateStoreConfig({ logoText: e.target.value })} style={{...inputStyle, flex: 1}} placeholder="URL, Base64 o Emoji" />
+                      <label style={{ background: '#E2E8E0', padding: '0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Upload size={16} />
+                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => updateStoreConfig({ logoText: base64 }))} />
+                      </label>
+                    </div>
                   </div>
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Color Primario</label>
@@ -439,8 +456,14 @@ export default function EditorPanel() {
                   </div>
                 </div>
                 <div>
-                  <label style={labelStyle}>URL de la Imagen</label>
-                  <input type="text" value={newProdImage} onChange={e => setNewProdImage(e.target.value)} style={inputStyle} placeholder="https://..." />
+                  <label style={labelStyle}>URL o Imagen del Producto</label>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input type="text" value={newProdImage} onChange={e => setNewProdImage(e.target.value)} style={{...inputStyle, flex: 1}} placeholder="https://..." />
+                    <label style={{ background: '#E2E8E0', padding: '0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Upload size={16} />
+                      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => setNewProdImage(base64))} />
+                    </label>
+                  </div>
                 </div>
                 <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.5rem' }}>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', cursor: 'pointer' }}>

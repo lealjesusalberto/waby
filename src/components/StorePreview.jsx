@@ -519,7 +519,11 @@ export default function StorePreview({ isReadOnly = false }) {
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
             </button>
           )}
-          <span style={{ fontSize: '2.5rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{storeConfig.logoText}</span>
+          {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
+            <img src={storeConfig.logoText} alt="Logo" style={{ height: '40px', objectFit: 'contain' }} />
+          ) : (
+            <span style={{ fontSize: '2.5rem', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{storeConfig.logoText}</span>
+          )}
           <div>
             <h2 style={{ margin: 0, fontSize: '1.8rem', fontFamily: 'Fraunces, serif', fontWeight: '900', letterSpacing: '-0.5px', color: 'var(--primary)', dropShadow: '0 2px 2px rgba(0,0,0,0.05)' }}>{storeConfig.name}</h2>
             <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
