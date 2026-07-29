@@ -819,7 +819,16 @@ export default function StorePreview({ isReadOnly = false }) {
           onClose={() => setShowCheckout(false)}
           onSuccess={(checkoutData) => {
             setShowCheckout(false);
-            addOrder({ total: cartTotal, items: [...cart], ...checkoutData });
+            addOrder({ 
+              total: cartTotal, 
+              items: [...cart], 
+              storeId: storeId || '1',
+              storeName: storeConfig?.name || 'Waby Store',
+              storeLogo: storeConfig?.logoText || '🏪',
+              storeCategory: storeConfig?.category || 'Ropa & Accesorios',
+              storeLocation: storeConfig?.location || 'Caracas',
+              ...checkoutData 
+            });
             clearCart();
             setShowSuccess(true);
           }}

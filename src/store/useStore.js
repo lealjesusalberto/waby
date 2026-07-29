@@ -277,16 +277,21 @@ export const useStore = create((set, get) => ({
 
   // Órdenes
   addOrder: async (order) => {
-    let storeId = get().cart[0]?.storeId
+    let storeId = order.storeId || get().cart[0]?.storeId
     if (!storeId || storeId === 'demo') {
       storeId = get().user?.uid || 'demo'
     }
+    const currentStoreConfig = get().storeConfig || {}
     const newOrder = {
       ...order,
       id: `ORD-${Date.now()}`,
       date: new Date().toISOString(),
       status: 'Validando Pago',
       storeId: storeId,
+      storeName: order.storeName || currentStoreConfig.name || 'Waby Store',
+      storeLogo: order.storeLogo || currentStoreConfig.logoText || '🏪',
+      storeCategory: order.storeCategory || currentStoreConfig.category || 'Ropa & Accesorios',
+      storeLocation: order.storeLocation || currentStoreConfig.location || 'Caracas, Venezuela',
       customerId: get().user?.uid || 'guest'
     }
 

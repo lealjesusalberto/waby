@@ -156,29 +156,73 @@ export default function ClientProfile() {
               <button onClick={() => navigate('/market')} style={{ background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', marginTop: '0.5rem', fontWeight: 'bold', cursor: 'pointer' }}>Explorar Tiendas</button>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
               {orders.map((order, idx) => (
-                <div key={idx} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.5rem', background: '#F8FAFC' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                    <div>
-                      <span style={{ fontSize: '0.8rem', color: '#64748B', display: 'block' }}>ID: {order.id}</span>
-                      <strong style={{ fontSize: '1.2rem', color: 'var(--primary)' }}>${order.total.toFixed(2)}</strong>
+                <div key={idx} style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '16px', padding: '1.25rem' }}>
+                  {/* Header de la Tienda */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #E2E8F0', paddingBottom: '0.8rem', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'white', border: '1px solid #CBD5E1', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', flexShrink: 0 }}>
+                        {order.storeLogo && (order.storeLogo.startsWith('http') || order.storeLogo.startsWith('data:')) ? (
+                          <img src={order.storeLogo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          <span style={{ fontSize: '1.2rem' }}>{order.storeLogo || '🏪'}</span>
+                        )}
+                      </div>
+                      <div>
+                        <h5 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 'bold', color: '#0F172A' }}>{order.storeName || 'Tienda Waby'}</h5>
+                        <span style={{ fontSize: '0.75rem', color: '#64748B' }}>📍 {order.storeLocation || 'Venta Online'} {order.storeCategory ? `• ${order.storeCategory}` : ''}</span>
+                      </div>
                     </div>
-                    <span style={{ background: '#FEF3C7', color: '#D97706', padding: '0.4rem 0.8rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                      {order.status}
-                    </span>
+
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ 
+                        background: order.status === 'Aprobado' || order.status === 'Completado' ? '#D1FAE5' : '#FEF3C7', 
+                        color: order.status === 'Aprobado' || order.status === 'Completado' ? '#065F46' : '#D97706', 
+                        padding: '0.3rem 0.7rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold', display: 'inline-block'
+                      }}>
+                        {order.status || 'Validando Pago'}
+                      </span>
+                      <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block', marginTop: '0.2rem' }}>
+                        {new Date(order.date).toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
-                  
-                  <div style={{ borderTop: '1px dashed #CBD5E1', paddingTop: '1rem' }}>
-                    <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem', fontWeight: 'bold', color: '#0F172A' }}>Productos:</p>
-                    <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.9rem', color: '#475569' }}>
-                      {order.items.map((item, i) => (
-                        <li key={i}>{item.quantity}x {item.name}</li>
-                      ))}
-                    </ul>
+
+                  {/* Productos comprados */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginBottom: '1rem' }}>
+                    {order.items && order.items.map((item, i) => (
+                      <div key={i} style={{ display: 'flex', gap: '0.8rem', alignItems: 'center', background: 'white', padding: '0.6rem 0.8rem', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
+                        <img 
+                          src={item.image || 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=200'} 
+                          alt={item.name} 
+                          style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }} 
+                        />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <h6 style={{ margin: '0 0 0.1rem 0', fontSize: '0.9rem', color: '#0F172A', fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</h6>
+                          <p style={{ margin: 0, fontSize: '0.75rem', color: '#64748B', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            {item.description || 'Garantía de calidad y envío directo'}
+                          </p>
+                        </div>
+                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                          <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--primary)', display: 'block' }}>${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
+                          <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{item.quantity} x ${item.price?.toFixed(2) || '0.00'}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#94A3B8', textAlign: 'right', marginTop: '1rem' }}>
-                    {new Date(order.date).toLocaleDateString()}
+
+                  {/* Footer con Resumen de Pago */}
+                  <div style={{ borderTop: '1px dashed #CBD5E1', paddingTop: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+                      {order.pagoMovil?.reference && (
+                        <span>💳 Ref: <strong>{order.pagoMovil.reference}</strong> ({order.pagoMovil.bank || 'Pago Móvil'})</span>
+                      )}
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '0.8rem', color: '#64748B', marginRight: '0.4rem' }}>Total:</span>
+                      <strong style={{ fontSize: '1.1rem', color: '#0F172A' }}>${order.total ? order.total.toFixed(2) : '0.00'}</strong>
+                    </div>
                   </div>
                 </div>
               ))}
