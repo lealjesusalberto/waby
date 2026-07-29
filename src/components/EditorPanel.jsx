@@ -12,8 +12,16 @@ export default function EditorPanel() {
     storeStatus, reportSubscriptionPayment,
     storeConfig, updateStoreConfig,
     hasUnsavedChanges, saveDesignToFirestore,
-    getAvailableCategories
+    categories
   } = useStore()
+  
+  const getAvailableCategories = () => (categories && categories.length > 0) ? categories : [
+    { id: 1, name: 'Frutas Tropicales', icon: '🥭' },
+    { id: 2, name: 'Especias & Hierbas', icon: '🌿' },
+    { id: 3, name: 'Bebidas Naturales', icon: '🥥' },
+    { id: 4, name: 'Superfoods', icon: '✨' },
+    { id: 5, name: 'Snacks Tostados', icon: '🥜' }
+  ];
   
   const [activeTab, setActiveTab] = useState('design') // 'design' | 'catalog' | 'orders'
   const [isModalOpen, setIsModalOpen] = useState(false)
