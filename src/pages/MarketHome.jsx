@@ -1,13 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { Star, Search, MapPin, Package, X, LogOut } from 'lucide-react'
 
 export default function MarketHome() {
   const navigate = useNavigate()
-  const { marketplaceStores, orders, logout } = useStore()
+  const { marketplaceStores, orders, logout, fetchMarketplaceStores } = useStore()
   const [showOrders, setShowOrders] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+
+  useEffect(() => {
+    fetchMarketplaceStores()
+  }, [fetchMarketplaceStores])
 
   const filteredStores = marketplaceStores.filter(store => 
     store.name.toLowerCase().includes(searchTerm.toLowerCase()) || 

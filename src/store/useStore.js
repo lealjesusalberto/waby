@@ -288,6 +288,32 @@ export const useStore = create((set, get) => ({
     { id: 2, name: 'Moda Urbana', category: 'Ropa & Accesorios', rating: 4.7, reviews: 1420, cover: 'https://images.unsplash.com/photo-1489987707023-af8147c6e240?q=80&w=500', logo: '👗' },
     { id: 3, name: 'Huellas Felices', category: 'Mascotas', rating: 5.0, reviews: 950, cover: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=500', logo: '🐶' }
   ],
+  
+  fetchMarketplaceStores: async () => {
+    try {
+      const q = query(collection(db, 'users'), where('role', '==', 'tienda'), where('status', '==', 'active'))
+      const snapshot = await getDocs(q)
+      const realStores = []
+      snapshot.forEach(doc => {
+        const data = doc.data()
+        realStores.push({
+          id: doc.id,
+          name: data.storeConfig?.name || data.storeName || 'Tienda',
+          category: 'General',
+          rating: 5.0,
+          reviews: 0,
+          cover: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500',
+          logo: data.storeConfig?.logoText || '🏪'
+        })
+      })
+      // You can mix real and dummy stores, or just show real ones if they exist
+      set((state) => ({ 
+        marketplaceStores: realStores.length > 0 ? realStores : state.marketplaceStores 
+      }))
+    } catch(err) {
+      console.error("Error fetching marketplace stores", err)
+    }
+  },
 
   // --- Funciones de Sincronización con Firestore ---
   saveStoreData: async () => {
