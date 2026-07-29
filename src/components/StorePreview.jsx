@@ -3,6 +3,7 @@ import { useStore } from '../store/useStore'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOut } from 'lucide-react'
 import { mockStoreData } from '../store/mockStoreData'
+import Loader from './Loader'
 
 // --- CARRITO (DRAWER) ---
 const CartDrawer = ({ onClose, onCheckout }) => {
@@ -447,8 +448,9 @@ const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
 
   return (
-    <div>
-      <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
+    <>
+      <div>
+        <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, 250px), 1fr))`, gap: '1.5rem' }}>
         {products.map(prod => (
           <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
@@ -618,11 +620,12 @@ export default function StorePreview({ isReadOnly = false }) {
   } else if (publicStoreData) {
     activeStoreData = { ...globalState, ...publicStoreData };
   } else {
-    return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter' }}>Cargando datos de la tienda...</div>
+    return <Loader text="Cargando datos de la tienda..." fullScreen={true} />
   }
   
   // Datos específicos de la tienda (visual)
-  const { storeConfig, layoutSections, categories, products, features, testimonials } = activeStoreData
+  const { storeConfig, layoutSections, products, features, testimonials } = activeStoreData
+  const categories = globalState.getAvailableCategories(storeConfig)
 
   const cartTotalQty = cart.reduce((acc, item) => acc + item.quantity, 0)
   const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0)

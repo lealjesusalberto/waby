@@ -3,6 +3,70 @@ import { db, auth } from '../firebase'
 import { doc, updateDoc, getDoc, collection, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 
+export const CATEGORY_MAP = {
+  'Frutas & Superfoods': [
+    { id: 1, name: 'Frutas Tropicales', count: 84, color: '#FF1493', icon: '🥭' },
+    { id: 2, name: 'Especias & Hierbas', count: 56, color: '#00C853', icon: '🌿' },
+    { id: 3, name: 'Bebidas Naturales', count: 42, color: '#2962FF', icon: '🥥' },
+    { id: 4, name: 'Superfoods', count: 67, color: '#D500F9', icon: '✨' },
+    { id: 5, name: 'Snacks Tostados', count: 32, color: '#FF6D00', icon: '🥜' },
+    { id: 6, name: 'Productos Orgánicos', count: 112, color: '#64DD17', icon: '🌱' },
+    { id: 7, name: 'Raíces & Tubérculos', count: 18, color: '#E65100', icon: '🍠' },
+    { id: 8, name: 'Flores Comestibles', count: 24, color: '#C51162', icon: '🌺' },
+  ],
+  'Ropa & Accesorios': [
+    { id: 101, name: 'Camisas & Franelas', color: '#1E88E5', icon: '👕' },
+    { id: 102, name: 'Pantalones', color: '#43A047', icon: '👖' },
+    { id: 103, name: 'Zapatos', color: '#E53935', icon: '👟' },
+    { id: 104, name: 'Vestidos', color: '#8E24AA', icon: '👗' },
+    { id: 105, name: 'Accesorios', color: '#FDD835', icon: '🧢' },
+    { id: 106, name: 'Ropa Interior', color: '#D81B60', icon: '🩲' },
+  ],
+  'Comida Rápida': [
+    { id: 201, name: 'Hamburguesas', color: '#FB8C00', icon: '🍔' },
+    { id: 202, name: 'Pizzas', color: '#E53935', icon: '🍕' },
+    { id: 203, name: 'Sushi', color: '#00ACC1', icon: '🍣' },
+    { id: 204, name: 'Postres', color: '#8E24AA', icon: '🍰' },
+    { id: 205, name: 'Bebidas', color: '#43A047', icon: '🥤' },
+  ],
+  'Tecnología': [
+    { id: 301, name: 'Celulares', color: '#1E88E5', icon: '📱' },
+    { id: 302, name: 'Computadoras', color: '#546E7A', icon: '💻' },
+    { id: 303, name: 'Audífonos', color: '#FDD835', icon: '🎧' },
+    { id: 304, name: 'Accesorios', color: '#D81B60', icon: '🔌' },
+    { id: 305, name: 'Smartwatches', color: '#43A047', icon: '⌚' },
+  ],
+  'Mascotas': [
+    { id: 401, name: 'Alimentos', color: '#795548', icon: '🦴' },
+    { id: 402, name: 'Juguetes', color: '#FFCA28', icon: '🧶' },
+    { id: 403, name: 'Higiene', color: '#26C6DA', icon: '🧴' },
+    { id: 404, name: 'Ropa y Accesorios', color: '#EC407A', icon: '🦮' },
+  ],
+  'Hogar & Jardín': [
+    { id: 501, name: 'Muebles', color: '#8D6E63', icon: '🛋️' },
+    { id: 502, name: 'Decoración', color: '#FFA726', icon: '🖼️' },
+    { id: 503, name: 'Jardinería', color: '#66BB6A', icon: '🪴' },
+    { id: 504, name: 'Iluminación', color: '#FFEE58', icon: '💡' },
+  ],
+  'Salud & Belleza': [
+    { id: 601, name: 'Maquillaje', color: '#EC407A', icon: '💄' },
+    { id: 602, name: 'Cuidado de la Piel', color: '#26C6DA', icon: '🧴' },
+    { id: 603, name: 'Perfumes', color: '#AB47BC', icon: '✨' },
+    { id: 604, name: 'Vitaminas', color: '#FFA726', icon: '💊' },
+  ],
+  'Servicios': [
+    { id: 701, name: 'Consultoría', color: '#5C6BC0', icon: '💼' },
+    { id: 702, name: 'Mantenimiento', color: '#78909C', icon: '🔧' },
+    { id: 703, name: 'Diseño', color: '#FF7043', icon: '🎨' },
+    { id: 704, name: 'Educación', color: '#26A69A', icon: '📚' },
+  ],
+  'General': [
+    { id: 901, name: 'Novedades', color: '#FBC02D', icon: '🌟' },
+    { id: 902, name: 'Ofertas', color: '#EF5350', icon: '🏷️' },
+    { id: 903, name: 'Varios', color: '#8D6E63', icon: '📦' },
+  ]
+}
+
 export const useStore = create((set, get) => ({
   // --- Autenticación ---
   user: null,
@@ -179,6 +243,16 @@ export const useStore = create((set, get) => ({
   },
 
   // --- Datos Mock ---
+  getAvailableCategories: (config) => {
+    const mainCategory = (config || get().storeConfig)?.category;
+    if (mainCategory && CATEGORY_MAP[mainCategory]) {
+      return CATEGORY_MAP[mainCategory];
+    }
+    // Retorna arreglo vacío si no hay categoría seleccionada, 
+    // pero si es la tienda demo, forzamos Frutas.
+    return CATEGORY_MAP['Frutas & Superfoods'] || [];
+  },
+  
   categories: [
     { id: 1, name: 'Frutas Tropicales', count: 84, color: '#FF1493', icon: '🥭' },
     { id: 2, name: 'Especias & Hierbas', count: 56, color: '#00C853', icon: '🌿' },

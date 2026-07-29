@@ -5,6 +5,7 @@ import { Store, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react'
 import { auth, db } from '../firebase'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { doc, setDoc } from 'firebase/firestore'
+import Loader from '../components/Loader'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -59,6 +60,10 @@ export default function Register() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (loading) {
+    return <Loader text="Creando cuenta..." />
   }
 
   return (

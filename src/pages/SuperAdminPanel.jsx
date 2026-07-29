@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { db } from '../firebase'
-import { collection, query, getDocs, doc, updateDoc, where } from 'firebase/firestore'
+import { collection, query, getDocs, doc, updateDoc } from 'firebase/firestore'
 import { LogOut, Users, Store, CheckCircle, Clock, Search, XCircle, Activity } from 'lucide-react'
+import Loader from '../components/Loader'
 
 export default function SuperAdminPanel() {
   const logout = useStore(state => state.logout)
@@ -163,7 +164,9 @@ export default function SuperAdminPanel() {
           </h2>
 
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '3rem', color: '#64748B' }}>Cargando datos...</div>
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '3rem' }}>
+              <Loader text="Cargando datos..." />
+            </div>
           ) : (
             <div>
               {/* Pending Stores Cards */}

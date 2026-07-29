@@ -13,6 +13,7 @@ import { useStore } from './store/useStore'
 import { auth, db } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
+import Loader from './components/Loader'
 
 // Componente para el Builder (Dueño de Tienda)
 function BuilderLayout() {
@@ -78,7 +79,7 @@ function App() {
   }, [setUser])
 
   if (!authInitialized) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#F8F9F3' }}>Cargando Waby...</div>
+    return <Loader text="Cargando Waby..." fullScreen={true} />
   }
 
   return (

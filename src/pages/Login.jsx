@@ -5,6 +5,7 @@ import { auth, db } from '../firebase'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { Loader2 } from 'lucide-react'
+import Loader from '../components/Loader'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -52,6 +53,10 @@ export default function Login() {
     } finally {
       setLoading(false)
     }
+  }
+
+  if (loading) {
+    return <Loader text="Iniciando sesión..." />
   }
 
   return (

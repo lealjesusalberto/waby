@@ -11,7 +11,8 @@ export default function EditorPanel() {
     orders, updateOrderStatus,
     storeStatus, reportSubscriptionPayment,
     storeConfig, updateStoreConfig,
-    hasUnsavedChanges, saveDesignToFirestore
+    hasUnsavedChanges, saveDesignToFirestore,
+    getAvailableCategories
   } = useStore()
   
   const [activeTab, setActiveTab] = useState('design') // 'design' | 'catalog' | 'orders'
@@ -487,7 +488,7 @@ export default function EditorPanel() {
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Categoría</label>
                     <select value={newProdCategory} onChange={e => setNewProdCategory(e.target.value)} style={inputStyle}>
-                      {useStore.getState().categories.map(cat => (
+                      {getAvailableCategories().map(cat => (
                         <option key={cat.id} value={cat.id}>{cat.icon} {cat.name}</option>
                       ))}
                     </select>
@@ -752,7 +753,7 @@ export default function EditorPanel() {
                   style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.5rem', border: '1px solid #CBD5E1', borderRadius: '8px', fontSize: '0.95rem', background: 'white', cursor: 'pointer' }}
                 >
                   <option value="all">Todas las categorías</option>
-                  {useStore.getState().categories.map(c => (
+                  {getAvailableCategories().map(c => (
                     <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
                   ))}
                 </select>
