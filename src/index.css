@@ -231,6 +231,43 @@ h1, h2, h3, h4, .serif-font {
   width: 100%;
 }
 
+/* Market Layout */
+.market-header {
+  background: white;
+  padding: 1rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.market-header-logo {
+  height: 75px;
+  width: 75px;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+.market-header-title {
+  margin: 0;
+  font-size: 2.2rem;
+  font-family: 'Fraunces', serif;
+  letter-spacing: -1px;
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent-yellow) 50%, var(--accent-orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.market-header-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.market-btn-text {
+  display: inline;
+}
+
 /* Mobile Adjustments */
 @media (max-width: 768px) {
   /* Editor Panel Layout */
@@ -326,5 +363,23 @@ h1, h2, h3, h4, .serif-font {
   }
   .admin-main {
     padding: 1rem;
+  }
+
+  /* Market Layout Mobile Adjustments */
+  .market-header {
+    padding: 0.8rem 1rem;
+  }
+  .market-header-logo {
+    height: 50px;
+    width: 50px;
+  }
+  .market-header-title {
+    font-size: 1.5rem;
+  }
+  .market-header-buttons {
+    gap: 0.5rem;
+  }
+  .market-btn-text {
+    display: none;
   }
 }

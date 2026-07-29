@@ -23,22 +23,22 @@ export default function MarketHome() {
     <div style={{ background: '#F8F9F3', minHeight: '100vh', paddingBottom: '4rem' }}>
       
       {/* Header del Marketplace */}
-      <div style={{ background: 'white', padding: '1rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #E2E8E0', position: 'sticky', top: 0, zIndex: 10 }}>
+      <div className="market-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-          <img src="/waby_logo.png" alt="Waby Logo" style={{ height: '75px', width: '75px', objectFit: 'contain', mixBlendMode: 'multiply' }} />
-          <h1 style={{ margin: 0, fontSize: '2.2rem', fontFamily: 'Fraunces', letterSpacing: '-1px', fontWeight: '900', background: 'linear-gradient(90deg, #11683E 0%, #FFC107 50%, #F97316 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          <img src="/waby_logo.png" alt="Waby Logo" className="market-header-logo" />
+          <h1 className="market-header-title">
             Waby
           </h1>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div className="market-header-buttons">
           <button 
             onClick={() => setShowOrders(true)}
-            style={{ background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', transition: 'background 0.2s' }}
+            style={{ background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s' }}
             onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
             onMouseOut={e => e.currentTarget.style.background = '#F1F5F9'}
           >
-            <Package size={18} /> Mis Órdenes ({orders.length})
+            <Package size={18} /> <span className="market-btn-text">Mis Órdenes</span> ({orders.length})
           </button>
           
           <button 
