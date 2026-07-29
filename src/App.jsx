@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import MarketHome from './pages/MarketHome'
 import Pricing from './pages/Pricing'
+import ClientProfile from './pages/ClientProfile'
 import { useStore } from './store/useStore'
 import { auth, db } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
@@ -52,19 +53,19 @@ function App() {
           const userDoc = await getDoc(doc(db, 'users', user.uid))
           if (userDoc.exists()) {
             const data = userDoc.data()
-            setUser(user, data.role, data.status || 'active')
+            setUser(user, data.role, data.status || 'active', { name: data.name || '', avatar: data.avatar || '' })
             if (data.role === 'tienda') {
               useStore.getState().fetchStoreData(user.uid)
             } else if (data.role === 'cliente') {
               useStore.getState().fetchClientOrders(user.uid)
             }
           } else {
-            setUser(user, 'cliente', 'active')
+            setUser(user, 'cliente', 'active', { name: user.displayName || '', avatar: user.photoURL || '' })
             useStore.getState().fetchClientOrders(user.uid)
           }
         } catch (error) {
           console.error("Error fetching user data:", error)
-          setUser(user, 'cliente', 'active')
+          setUser(user, 'cliente', 'active', { name: user.displayName || '', avatar: user.photoURL || '' })
           useStore.getState().fetchClientOrders(user.uid)
         }
       } else {
@@ -115,6 +116,12 @@ function App() {
         <Route 
           path="/market" 
           element={<MarketHome />} 
+        />
+
+        {/* Perfil de Cliente */}
+        <Route 
+          path="/profile" 
+          element={userRole === 'cliente' ? <ClientProfile /> : <Navigate to="/login" replace />} 
         />
 
         {/* Ruta Pública / Tienda (para clientes o dueños) */}

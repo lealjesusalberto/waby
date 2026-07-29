@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
-import { Star, Search, MapPin, Package, X, LogOut } from 'lucide-react'
+import { Star, Search, MapPin, Package, X, LogOut, User } from 'lucide-react'
 
 export default function MarketHome() {
   const navigate = useNavigate()
-  const { marketplaceStores, orders, logout, fetchMarketplaceStores } = useStore()
-  const [showOrders, setShowOrders] = useState(false)
+  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile } = useStore()
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
@@ -37,12 +36,17 @@ export default function MarketHome() {
         
         <div className="market-header-buttons">
           <button 
-            onClick={() => setShowOrders(true)}
+            onClick={() => navigate('/profile')}
             style={{ background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s' }}
             onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
             onMouseOut={e => e.currentTarget.style.background = '#F1F5F9'}
           >
-            <Package size={18} /> <span className="market-btn-text">Mis Órdenes</span> ({orders.length})
+            {userProfile?.avatar ? (
+              <img src={userProfile.avatar} alt="Profile" style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }} />
+            ) : (
+              <User size={18} /> 
+            )}
+            <span className="market-btn-text">Mi Perfil</span>
           </button>
           
           <button 
@@ -153,69 +157,7 @@ export default function MarketHome() {
         </div>
       </div>
 
-      {/* Modal Mis Órdenes */}
-      {showOrders && (
-        <div style={{
-          position: 'fixed', top: 0, right: 0, bottom: 0, width: '450px', maxWidth: '100vw',
-          background: 'white', zIndex: 1000, boxShadow: '-5px 0 25px rgba(0,0,0,0.1)',
-          display: 'flex', flexDirection: 'column', animation: 'slideInRight 0.3s ease-out'
-        }}>
-          <div style={{ padding: '1.5rem', borderBottom: '1px solid #E2E8E0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Package size={20} /> Mis Órdenes
-            </h3>
-            <button onClick={() => setShowOrders(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}>
-              <X size={24} />
-            </button>
-          </div>
-
-          <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }}>
-            {orders.length === 0 ? (
-              <div style={{ textAlign: 'center', color: '#94A3B8', marginTop: '3rem' }}>
-                <Package size={48} style={{ opacity: 0.5, marginBottom: '1rem' }} />
-                <p>Aún no has realizado ninguna compra.</p>
-                <button 
-                  onClick={() => setShowOrders(false)}
-                  style={{ background: 'var(--primary)', color: 'white', border: 'none', padding: '0.8rem 1.5rem', borderRadius: '8px', marginTop: '1rem', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                  Explorar Tiendas
-                </button>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {orders.map((order, idx) => (
-                  <div key={idx} style={{ border: '1px solid #E2E8E0', borderRadius: '12px', padding: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                      <div>
-                        <span style={{ fontSize: '0.75rem', color: '#64748B', display: 'block' }}>ID: {order.id}</span>
-                        <strong style={{ fontSize: '1.1rem', color: 'var(--primary)' }}>${order.total.toFixed(2)}</strong>
-                      </div>
-                      <span style={{ background: '#FEF3C7', color: '#D97706', padding: '0.3rem 0.6rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold' }}>
-                        {order.status}
-                      </span>
-                    </div>
-                    
-                    <div style={{ borderTop: '1px dashed #E2E8E0', paddingTop: '1rem' }}>
-                      <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem', fontWeight: 'bold', color: '#0F172A' }}>Productos:</p>
-                      <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.85rem', color: '#64748B' }}>
-                        {order.items.map((item, i) => (
-                          <li key={i}>{item.quantity}x {item.name}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: '#94A3B8', textAlign: 'right', marginTop: '1rem' }}>
-                      {new Date(order.date).toLocaleDateString()}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-      
-      {/* Overlays */}
-      {showOrders && <div onClick={() => setShowOrders(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999 }} />}
+      {/* El Modal de Mis Órdenes fue movido a ClientProfile.jsx */}
 
     </div>
   )

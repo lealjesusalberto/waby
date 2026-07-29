@@ -8,13 +8,24 @@ export const useStore = create((set, get) => ({
   user: null,
   userRole: 'cliente',
   storeStatus: 'pending_activation', // 'pending_activation' | 'validation_pending' | 'active'
+  userProfile: { name: '', avatar: '' },
   
   // Auth actions
-  setUser: (user, role = 'cliente', status = 'pending_activation') => set({ user, userRole: role, storeStatus: status }),
+  setUser: (user, role = 'cliente', status = 'pending_activation', profile = { name: '', avatar: '' }) => set({ user, userRole: role, storeStatus: status, userProfile: profile }),
+  updateUserProfile: async (name, avatar) => {
+    const uid = get().user?.uid
+    if (!uid) return
+    try {
+      await setDoc(doc(db, 'users', uid), { name, avatar }, { merge: true })
+      set({ userProfile: { name, avatar } })
+    } catch (err) {
+      console.error("Error updating profile", err)
+    }
+  },
   logout: async () => {
     try {
       await signOut(auth)
-      set({ user: null, userRole: 'cliente', cart: [], isCartOpen: false })
+      set({ user: null, userRole: 'cliente', userProfile: { name: '', avatar: '' }, cart: [], isCartOpen: false })
     } catch (err) {
       console.error("Error signing out: ", err)
     }
