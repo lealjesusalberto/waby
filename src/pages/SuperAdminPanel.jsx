@@ -139,60 +139,67 @@ export default function SuperAdminPanel() {
           {loading ? (
             <div style={{ textAlign: 'center', padding: '3rem', color: '#64748B' }}>Cargando datos...</div>
           ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ borderBottom: '2px solid #E2E8F0', color: '#64748B' }}>
-                    <th style={{ padding: '1rem', fontWeight: 'bold' }}>Nombre</th>
-                    <th style={{ padding: '1rem', fontWeight: 'bold' }}>Correo</th>
-                    {activeTab !== 'users' && <th style={{ padding: '1rem', fontWeight: 'bold' }}>Tienda</th>}
-                    {activeTab === 'pending' && <th style={{ padding: '1rem', fontWeight: 'bold' }}>Ref. Pago</th>}
-                    {activeTab !== 'users' && <th style={{ padding: '1rem', fontWeight: 'bold', textAlign: 'right' }}>Acciones</th>}
-                  </tr>
-                </thead>
-                <tbody>
-                  {activeTab === 'pending' && pendingStores.length === 0 && <tr><td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8' }}>No hay tiendas pendientes.</td></tr>}
-                  {activeTab === 'pending' && pendingStores.map(store => (
-                    <tr key={store.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                      <td style={{ padding: '1rem', color: '#0F172A', fontWeight: '500' }}>{store.name}</td>
-                      <td style={{ padding: '1rem', color: '#64748B' }}>{store.email}</td>
-                      <td style={{ padding: '1rem', color: '#0F172A' }}>{store.storeName}</td>
-                      <td style={{ padding: '1rem' }}>
-                        <div style={{ background: '#FEF3C7', color: '#D97706', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.85rem', display: 'inline-block' }}>
-                          Banco: {store.paymentBank} <br/> Ref: <strong>{store.paymentRef}</strong>
-                        </div>
-                      </td>
-                      <td style={{ padding: '1rem', textAlign: 'right' }}>
-                        <button onClick={() => approvePayment(store.id)} style={{ background: '#10B981', color: 'white', border: 'none', padding: '0.6rem 1rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', boxShadow: '0 2px 4px rgba(16, 185, 129, 0.2)' }}>
-                          <CheckCircle size={16} /> Aprobar
-                        </button>
-                      </td>
-                    </tr>
+            <div>
+              {/* Pending Stores Cards */}
+              {activeTab === 'pending' && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                  {pendingStores.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8', gridColumn: '1 / -1' }}>No hay tiendas pendientes.</p>}
+                  {pendingStores.map(store => (
+                    <div key={store.id} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#F8FAFC' }}>
+                      <div>
+                        <h4 style={{ margin: '0 0 0.3rem 0', color: '#0F172A', fontSize: '1.1rem' }}>{store.name}</h4>
+                        <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>{store.email}</p>
+                      </div>
+                      <div>
+                        <p style={{ margin: '0 0 0.3rem 0', fontSize: '0.85rem', color: '#64748B', fontWeight: 'bold' }}>Tienda</p>
+                        <p style={{ margin: 0, color: '#0F172A', fontWeight: '500' }}>{store.storeName}</p>
+                      </div>
+                      <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#B45309', padding: '0.8rem', borderRadius: '8px', fontSize: '0.85rem' }}>
+                        <p style={{ margin: '0 0 0.2rem 0' }}>Banco: <strong>{store.paymentBank || 'N/A'}</strong></p>
+                        <p style={{ margin: 0 }}>Ref: <strong>{store.paymentRef || 'N/A'}</strong></p>
+                      </div>
+                      <button onClick={() => approvePayment(store.id)} style={{ background: '#10B981', color: 'white', border: 'none', padding: '0.8rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: 'auto', boxShadow: '0 2px 4px rgba(16, 185, 129, 0.2)' }}>
+                        <CheckCircle size={18} /> Aprobar
+                      </button>
+                    </div>
                   ))}
+                </div>
+              )}
 
-                  {activeTab === 'active' && activeStores.length === 0 && <tr><td colSpan="4" style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8' }}>No hay tiendas activas.</td></tr>}
-                  {activeTab === 'active' && activeStores.map(store => (
-                    <tr key={store.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                      <td style={{ padding: '1rem', color: '#0F172A', fontWeight: '500' }}>{store.name}</td>
-                      <td style={{ padding: '1rem', color: '#64748B' }}>{store.email}</td>
-                      <td style={{ padding: '1rem', color: '#0F172A' }}>{store.storeName}</td>
-                      <td style={{ padding: '1rem', textAlign: 'right' }}>
-                        <button onClick={() => revokeStore(store.id)} style={{ background: '#FFF1F2', color: '#E11D48', border: '1px solid #FECDD3', padding: '0.5rem 0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.85rem' }}>
-                          <XCircle size={14} /> Revocar
-                        </button>
-                      </td>
-                    </tr>
+              {/* Active Stores Cards */}
+              {activeTab === 'active' && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                  {activeStores.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8', gridColumn: '1 / -1' }}>No hay tiendas activas.</p>}
+                  {activeStores.map(store => (
+                    <div key={store.id} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#F8FAFC' }}>
+                      <div>
+                        <h4 style={{ margin: '0 0 0.3rem 0', color: '#0F172A', fontSize: '1.1rem' }}>{store.name}</h4>
+                        <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>{store.email}</p>
+                      </div>
+                      <div>
+                        <p style={{ margin: '0 0 0.3rem 0', fontSize: '0.85rem', color: '#64748B', fontWeight: 'bold' }}>Tienda</p>
+                        <p style={{ margin: 0, color: '#0F172A', fontWeight: '500' }}>{store.storeName}</p>
+                      </div>
+                      <button onClick={() => revokeStore(store.id)} style={{ background: '#FFF1F2', color: '#E11D48', border: '1px solid #FECDD3', padding: '0.8rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: 'auto' }}>
+                        <XCircle size={18} /> Revocar Tienda
+                      </button>
+                    </div>
                   ))}
+                </div>
+              )}
 
-                  {activeTab === 'users' && clients.length === 0 && <tr><td colSpan="2" style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8' }}>No hay clientes registrados.</td></tr>}
-                  {activeTab === 'users' && clients.map(client => (
-                    <tr key={client.id} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                      <td style={{ padding: '1rem', color: '#0F172A', fontWeight: '500' }}>{client.name}</td>
-                      <td style={{ padding: '1rem', color: '#64748B' }}>{client.email}</td>
-                    </tr>
+              {/* Clients Cards */}
+              {activeTab === 'users' && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                  {clients.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8', gridColumn: '1 / -1' }}>No hay clientes registrados.</p>}
+                  {clients.map(client => (
+                    <div key={client.id} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', background: '#F8FAFC' }}>
+                      <h4 style={{ margin: 0, color: '#0F172A', fontSize: '1.1rem' }}>{client.name}</h4>
+                      <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>{client.email}</p>
+                    </div>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              )}
             </div>
           )}
         </div>
