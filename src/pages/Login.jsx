@@ -59,9 +59,7 @@ export default function Login() {
       <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', color: '#1C2B23', fontFamily: 'Fraunces' }}>Bienvenido de nuevo</h2>
       <p style={{ color: '#5F7368', marginBottom: '2rem' }}>Ingresa a tu cuenta para continuar.</p>
 
-      <div style={{ background: '#E3F2FD', color: '#0288D1', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', fontSize: '0.85rem' }}>
-        <strong>💡 Tip de prueba:</strong> Para iniciar sesión como Súper Administrador, usa <strong>wabyadmin@waby.com</strong>. Para Cliente Final, usa un correo que contenga <strong>"cliente"</strong>.
-      </div>
+
 
       <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
         {error && <div style={{ color: 'red', fontSize: '0.9rem', textAlign: 'center', background: '#FEE2E2', padding: '0.5rem', borderRadius: '8px' }}>{error}</div>}
