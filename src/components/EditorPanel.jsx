@@ -202,8 +202,23 @@ export default function EditorPanel() {
                     <label style={labelStyle}>Ubicación</label>
                     <input type="text" value={storeConfig.location || ''} onChange={(e) => updateStoreConfig({ location: e.target.value })} style={inputStyle} placeholder="Ej. Miami, FL" />
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Seguidores</label>
+                  <div>
+                    <label style={labelStyle}>Categoría Principal</label>
+                    <select value={storeConfig.category || ''} onChange={(e) => updateStoreConfig({ category: e.target.value })} style={inputStyle}>
+                      <option value="">Selecciona una categoría...</option>
+                      <option value="Frutas & Superfoods">Frutas & Superfoods</option>
+                      <option value="Ropa & Accesorios">Ropa & Accesorios</option>
+                      <option value="Comida Rápida">Comida Rápida</option>
+                      <option value="Tecnología">Tecnología</option>
+                      <option value="Mascotas">Mascotas</option>
+                      <option value="Hogar & Jardín">Hogar & Jardín</option>
+                      <option value="Salud & Belleza">Salud & Belleza</option>
+                      <option value="Servicios">Servicios</option>
+                      <option value="General">General / Otros</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Seguidores (Visual)</label>
                     <input type="text" value={storeConfig.followers || ''} onChange={(e) => updateStoreConfig({ followers: e.target.value })} style={inputStyle} placeholder="Ej. 1.5K" />
                   </div>
                 </div>
