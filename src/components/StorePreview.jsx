@@ -325,8 +325,7 @@ const HeroTemplate = ({ config, storeConfig }) => (
       ✨ NUEVA TEMPORADA 2024
     </span>
     <h1 className="hero-title" style={{ margin: '0 0 1rem 0', lineHeight: 1.1, maxWidth: '600px' }}>
-      {config.title.split('Paraíso Tropical')[0]}
-      <span style={{ color: '#FFC107' }}>Paraíso</span> Tropical
+      {config.title || '¡Bienvenido a nuestra Tienda!'}
     </h1>
     <p style={{ fontSize: '1.1rem', maxWidth: '500px', marginBottom: '2rem', lineHeight: 1.5, opacity: 0.9 }}>
       {config.subtitle}
