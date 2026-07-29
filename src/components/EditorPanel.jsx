@@ -249,7 +249,7 @@ export default function EditorPanel() {
                   <label style={labelStyle}>Nombre de la Tienda</label>
                   <input type="text" value={storeConfig.name} onChange={(e) => updateStoreConfig({ name: e.target.value })} style={inputStyle} placeholder="Ej. Mi Super Tienda" />
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Logo (URL, Emoji o Archivo)</label>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -271,18 +271,18 @@ export default function EditorPanel() {
                     </div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Color Primario</label>
                     <input type="color" value={storeConfig.primaryColor} onChange={(e) => updateStoreConfig({ primaryColor: e.target.value })} style={{ width: '100%', height: '40px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Ubicación</label>
                     <input type="text" value={storeConfig.location || ''} onChange={(e) => updateStoreConfig({ location: e.target.value })} style={inputStyle} placeholder="Ej. Miami, FL" />
                   </div>
-                  <div>
+                  <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Categoría Principal</label>
                     <select value={storeConfig.category || ''} onChange={(e) => updateStoreConfig({ category: e.target.value })} style={inputStyle}>
                       <option value="">Selecciona una categoría...</option>
@@ -297,12 +297,12 @@ export default function EditorPanel() {
                       <option value="General">General / Otros</option>
                     </select>
                   </div>
-                  <div>
+                  <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Seguidores (Visual)</label>
                     <input type="text" value={storeConfig.followers || ''} onChange={(e) => updateStoreConfig({ followers: e.target.value })} style={inputStyle} placeholder="Ej. 1.5K" />
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
+                <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Color Header</label>
                     <input type="color" value={storeConfig.headerColor || '#ffffff'} onChange={(e) => updateStoreConfig({ headerColor: e.target.value })} style={{ width: '100%', height: '40px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
