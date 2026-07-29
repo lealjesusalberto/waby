@@ -1,7 +1,38 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
-import { Package, User, Upload, ArrowLeft } from 'lucide-react'
+import { Package, User, Upload, ArrowLeft, CheckCircle, X } from 'lucide-react'
+
+const SuccessModal = ({ onClose }) => (
+  <div style={{
+    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+    background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    zIndex: 2000, backdropFilter: 'blur(4px)'
+  }}>
+    <div style={{
+      background: 'white', borderRadius: '24px', padding: '3rem 2rem', width: '90%', maxWidth: '400px',
+      textAlign: 'center', animation: 'fadeIn 0.3s ease-out', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+      position: 'relative'
+    }}>
+      <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}>
+        <X size={24} />
+      </button>
+      <div style={{ width: '80px', height: '80px', background: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+        <CheckCircle size={40} color="#16A34A" />
+      </div>
+      <h2 style={{ margin: '0 0 1rem 0', color: '#166534', fontSize: '1.5rem' }}>¡Perfil Actualizado!</h2>
+      <p style={{ color: '#475569', marginBottom: '2rem', lineHeight: '1.5' }}>
+        Tus cambios han sido guardados exitosamente.
+      </p>
+      <button 
+        onClick={onClose}
+        style={{ width: '100%', padding: '1rem', background: '#16A34A', color: 'white', border: 'none', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer' }}
+      >
+        Continuar
+      </button>
+    </div>
+  </div>
+)
 
 export default function ClientProfile() {
   const navigate = useNavigate()
@@ -10,6 +41,7 @@ export default function ClientProfile() {
   const [name, setName] = useState(userProfile.name || '')
   const [avatar, setAvatar] = useState(userProfile.avatar || '')
   const [isSaving, setIsSaving] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
@@ -27,7 +59,7 @@ export default function ClientProfile() {
     setIsSaving(true)
     await updateUserProfile(name, avatar)
     setIsSaving(false)
-    alert("Perfil guardado con éxito")
+    setShowSuccess(true)
   }
 
   return (
@@ -129,6 +161,9 @@ export default function ClientProfile() {
         </div>
 
       </div>
+
+      {/* Success Overlay */}
+      {showSuccess && <SuccessModal onClose={() => setShowSuccess(false)} />}
     </div>
   )
 }
