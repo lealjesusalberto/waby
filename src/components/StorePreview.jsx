@@ -368,8 +368,84 @@ const CategoriesTemplate = ({ categories, config, storeConfig, onCategoryClick }
     </div>
   )
 }
+const SingleProductModal = ({ product, onClose, addToCart, bcvRate }) => {
+  const [activeImgIdx, setActiveImgIdx] = useState(0)
+  const [quantity, setQuantity] = useState(1)
+  const images = [product.image, ...(product.gallery || [])].filter(Boolean)
+
+  const handleAdd = () => {
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product)
+    }
+    onClose()
+  }
+
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
+      <div style={{ background: 'white', borderRadius: '24px', width: '90%', maxWidth: '800px', display: 'flex', overflow: 'hidden', position: 'relative', maxHeight: '90vh' }}>
+        <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'white', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <X size={20} color="#64748B" />
+        </button>
+
+        {/* Galería Izquierda */}
+        <div style={{ flex: '1', background: '#F8FAFC', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
+          <div style={{ flex: 1, borderRadius: '16px', overflow: 'hidden', background: 'white', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={images[activeImgIdx]} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </div>
+          {images.length > 1 && (
+            <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+              {images.map((img, idx) => (
+                <div key={idx} onClick={() => setActiveImgIdx(idx)} style={{ width: '60px', height: '60px', borderRadius: '8px', overflow: 'hidden', border: activeImgIdx === idx ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', opacity: activeImgIdx === idx ? 1 : 0.6, transition: 'all 0.2s', flexShrink: 0 }}>
+                  <img src={img} alt={`Thumb ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Detalles Derecha */}
+        <div style={{ flex: '1', padding: '2.5rem 2rem', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+            <span style={{ background: '#E8F5E9', color: '#2E7D32', padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 'bold' }}>{product.badge}</span>
+          </div>
+          <h2 style={{ margin: '0 0 0.5rem 0', fontSize: '1.8rem', color: '#0F172A' }}>{product.name}</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            <Star size={16} color="#FFC107" fill="#FFC107" />
+            <span style={{ fontSize: '0.9rem', color: '#64748B' }}>{product.rating} (120 Reseñas)</span>
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--primary)' }}>${product.price.toFixed(2)}</div>
+            <div style={{ fontSize: '1.1rem', color: '#64748B' }}>{(product.price * bcvRate).toFixed(2)} Bs</div>
+          </div>
+
+          <p style={{ color: '#475569', lineHeight: '1.6', marginBottom: '2rem', fontSize: '0.95rem' }}>
+            {product.description || 'Este producto no tiene una descripción detallada, pero es uno de los mejores de nuestro catálogo.'}
+          </p>
+
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ padding: '0.8rem 1rem', background: '#F8FAFC', border: 'none', cursor: 'pointer', color: '#0F172A', fontWeight: 'bold' }}>-</button>
+              <div style={{ padding: '0.8rem 1rem', minWidth: '40px', textAlign: 'center', fontWeight: 'bold' }}>{quantity}</div>
+              <button onClick={() => setQuantity(quantity + 1)} style={{ padding: '0.8rem 1rem', background: '#F8FAFC', border: 'none', cursor: 'pointer', color: '#0F172A', fontWeight: 'bold' }}>+</button>
+            </div>
+            
+            <button 
+              onClick={handleAdd}
+              style={{ flex: 1, background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'opacity 0.2s' }}
+            >
+              <Plus size={20} /> Agregar - ${(product.price * quantity).toFixed(2)}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
+  const [selectedProduct, setSelectedProduct] = useState(null)
+
   return (
     <div>
       <SectionHeader title={config.sectionTitle} subtitle={config.sectionSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
@@ -386,35 +462,53 @@ const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
                 </span>
               )}
             </div>
-            <div style={{ height: '200px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}>
-              <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
-            <div style={{ padding: '1rem' }}>
-              <h5 style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--text-main)', cursor: 'pointer' }}>{prod.name}</h5>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '1rem' }}>
-                <Star size={14} color="#FFC107" fill="#FFC107" />
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{prod.rating} (120)</span>
+              <div 
+                style={{ height: '200px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}
+                onClick={() => setSelectedProduct(prod)}
+              >
+                <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
-                  {prod.oldPrice && <span style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'line-through', marginLeft: '0.5rem' }}>${prod.oldPrice}</span>}
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</div>
-                </div>
-                <button 
-                  onClick={() => addToCart(prod)}
-                  style={{ background: '#E8F5E9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
-                  onMouseOver={(e) => { e.currentTarget.style.background = '#2E7D32'; e.currentTarget.style.color = 'white'; }}
-                  onMouseOut={(e) => { e.currentTarget.style.background = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; }}
+              <div style={{ padding: '1rem' }}>
+                <h5 
+                  style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--text-main)', cursor: 'pointer' }}
+                  onClick={() => setSelectedProduct(prod)}
                 >
-                  <Plus size={18} />
-                </button>
+                  {prod.name}
+                </h5>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', marginBottom: '1rem' }}>
+                  <Star size={14} color="#FFC107" fill="#FFC107" />
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{prod.rating} (120)</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
+                    {prod.oldPrice && <span style={{ fontSize: '0.8rem', color: '#999', textDecoration: 'line-through', marginLeft: '0.5rem' }}>${prod.oldPrice}</span>}
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</div>
+                  </div>
+                  <button 
+                    onClick={() => addToCart(prod)}
+                    style={{ background: '#E8F5E9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s' }}
+                    onMouseOver={(e) => { e.currentTarget.style.background = '#2E7D32'; e.currentTarget.style.color = 'white'; }}
+                    onMouseOut={(e) => { e.currentTarget.style.background = '#E8F5E9'; e.currentTarget.style.color = '#2E7D32'; }}
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+      
+      {selectedProduct && (
+        <SingleProductModal 
+          product={selectedProduct} 
+          onClose={() => setSelectedProduct(null)} 
+          addToCart={addToCart} 
+          bcvRate={useStore.getState().bcvRate} 
+        />
+      )}
+    </>
   )
 }
 

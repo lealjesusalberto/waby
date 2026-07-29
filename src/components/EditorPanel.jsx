@@ -36,18 +36,53 @@ export default function EditorPanel() {
   const [newProdCategory, setNewProdCategory] = useState(1)
   const [isFeatured, setIsFeatured] = useState(false)
   const [isBestseller, setIsBestseller] = useState(false)
+  const [newProdDesc, setNewProdDesc] = useState('')
+  const [newProdGallery, setNewProdGallery] = useState([])
 
   const activeSection = layoutSections.find(s => s.id === activeSectionId)
 
   const handleImageUpload = (e, callback) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        callback(reader.result);
+    if (file) compressImage(file, callback);
+  }
+
+  const compressImage = (file, callback, maxSize = 600) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > maxSize) {
+            height *= maxSize / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width *= maxSize / height;
+            height = maxSize;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        callback(canvas.toDataURL('image/jpeg', 0.8));
       };
-      reader.readAsDataURL(file);
-    }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const handleGalleryUpload = (e) => {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
+      compressImage(file, (dataUrl) => {
+        setNewProdGallery(prev => [...prev, dataUrl]);
+      });
+    });
   }
 
   const onDragEnd = (result) => {
@@ -74,11 +109,16 @@ export default function EditorPanel() {
     let tags = ['all']
     if (isFeatured) tags.push('featured')
     if (isBestseller) tags.push('bestseller')
+    
+    // Si hay galería pero no imagen principal, usamos la primera de la galería
+    const mainImage = newProdImage || (newProdGallery.length > 0 ? newProdGallery[0] : 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=500')
 
     addNewProduct({ 
       name: newProdName, 
       price: parseFloat(newProdPrice), 
-      image: newProdImage || 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=500', 
+      image: mainImage,
+      gallery: newProdGallery,
+      description: newProdDesc,
       tags: tags,
       rating: 5.0,
       badge: newProdBadge,
@@ -87,6 +127,8 @@ export default function EditorPanel() {
     setNewProdName('')
     setNewProdPrice('')
     setNewProdImage('')
+    setNewProdDesc('')
+    setNewProdGallery([])
     setIsFeatured(false)
     setIsBestseller(false)
   }
@@ -456,13 +498,25 @@ export default function EditorPanel() {
                   </div>
                 </div>
                 <div>
-                  <label style={labelStyle}>URL o Imagen del Producto</label>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <input type="text" value={newProdImage} onChange={e => setNewProdImage(e.target.value)} style={{...inputStyle, flex: 1}} placeholder="https://..." />
-                    <label style={{ background: '#E2E8E0', padding: '0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Upload size={16} />
-                      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => setNewProdImage(base64))} />
+                  <label style={labelStyle}>Descripción Detallada</label>
+                  <textarea value={newProdDesc} onChange={e => setNewProdDesc(e.target.value)} style={{...inputStyle, resize: 'vertical', minHeight: '60px'}} placeholder="Describe tu producto..." />
+                </div>
+                <div>
+                  <label style={labelStyle}>Galería de Imágenes</label>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                    <label style={{ background: '#E2E8E0', padding: '1rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: '100px', height: '100px', border: '2px dashed #94A3B8' }}>
+                      <div style={{ textAlign: 'center' }}>
+                        <Upload size={20} style={{ margin: '0 auto 0.5rem auto' }} />
+                        <span style={{ fontSize: '0.75rem', display: 'block' }}>Subir Fotos</span>
+                      </div>
+                      <input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleGalleryUpload} />
                     </label>
+                    {newProdGallery.map((img, idx) => (
+                      <div key={idx} style={{ position: 'relative', width: '100px', height: '100px' }}>
+                        <img src={img} alt={`Preview ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                        <button type="button" onClick={() => setNewProdGallery(prev => prev.filter((_, i) => i !== idx))} style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#EF4444', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '10px' }}>✕</button>
+                      </div>
+                    ))}
                   </div>
                 </div>
                 <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.5rem' }}>
@@ -502,6 +556,11 @@ export default function EditorPanel() {
                         <span style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 'bold' }}>${p.price.toFixed(2)}</span>
                         <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>({(p.price * useStore.getState().bcvRate).toFixed(2)} Bs)</span>
                       </div>
+                      {p.gallery && p.gallery.length > 0 && (
+                        <span style={{ fontSize: '0.7rem', color: '#64748b', display: 'inline-block', marginTop: '0.2rem', background: '#f1f5f9', padding: '0.1rem 0.4rem', borderRadius: '4px' }}>
+                          📸 {p.gallery.length} foto(s)
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
