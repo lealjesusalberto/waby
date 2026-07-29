@@ -83,21 +83,21 @@ export const useStore = create((set, get) => ({
   layoutSections: [
     {
       id: 'sec-hero-demo',
-      title: 'Banner Principal (Editar)',
+      title: 'Banner Principal',
       templateType: 'hero',
       config: {
-        title: '¡Bienvenido a tu Tienda!',
-        subtitle: 'Haz clic en el engranaje de esta sección para editar el texto y la imagen de fondo, o elimínala.',
-        buttonText: 'Explorar',
+        title: '¡Bienvenido a nuestra Tienda!',
+        subtitle: 'Descubre los mejores productos y ofertas exclusivas seleccionadas para ti.',
+        buttonText: 'Explorar Productos',
         bgImage: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=2070&auto=format&fit=crop'
       }
     },
     {
       id: 'sec-products-demo',
-      title: 'Productos (Editar)',
+      title: 'Catálogo de Productos',
       tag: 'all',
       templateType: 'products_grid',
-      config: { columns: 4, sectionTitle: 'Tu Catálogo', sectionSubtitle: 'Sube tus primeros productos reales desde la pestaña de Catálogo y borra estos de prueba' }
+      config: { columns: 4, sectionTitle: 'Nuestros Productos', sectionSubtitle: 'Explora nuestra colección exclusiva con entrega rápida y garantía de calidad.' }
     }
   ],
 
