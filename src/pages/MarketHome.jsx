@@ -145,7 +145,7 @@ export default function MarketHome() {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', marginTop: '-40px', border: '3px solid white', overflow: 'hidden'
                   }}>
                     {store.logo?.startsWith('http') || store.logo?.startsWith('data:image') ? (
-                      <img src={store.logo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      <img src={store.logo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     ) : (
                       <span>{store.logo}</span>
                     )}
