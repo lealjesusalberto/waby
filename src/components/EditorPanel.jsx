@@ -468,6 +468,15 @@ export default function EditorPanel() {
                           </label>
                         </div>
                       </div>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b' }}>Color de Degradado / Superposición</label>
+                        <input 
+                          type="color" 
+                          value={activeSection.config.overlayColor || storeConfig.primaryColor || '#11683E'} 
+                          onChange={(e) => updateSectionConfig(activeSection.id, 'overlayColor', e.target.value)} 
+                          style={{ width: '100%', height: '40px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} 
+                        />
+                      </div>
                     </>
                   )}
 

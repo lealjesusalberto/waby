@@ -314,32 +314,47 @@ const SuccessModal = ({ onClose }) => (
 
 // --- PLANTILLAS DE SECCIÓN ---
 
-const HeroTemplate = ({ config, storeConfig }) => (
-  <div className="hero-padding hero-min-height" style={{
-    position: 'relative', borderRadius: '24px', overflow: 'hidden',
-    backgroundImage: `linear-gradient(to right, rgba(13, 92, 59, 0.9) 30%, rgba(13, 92, 59, 0.4) 100%), url(${config.bgImage})`,
-    backgroundSize: 'cover', backgroundPosition: 'center', color: 'white',
-    display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center'
-  }}>
-    <span style={{ border: '1px solid rgba(255,255,255,0.5)', padding: '0.4rem 1rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFD166' }}>
-      ✨ NUEVA TEMPORADA 2024
-    </span>
-    <h1 className="hero-title" style={{ margin: '0 0 1rem 0', lineHeight: 1.1, maxWidth: '600px' }}>
-      {config.title || '¡Bienvenido a nuestra Tienda!'}
-    </h1>
-    <p style={{ fontSize: '1.1rem', maxWidth: '500px', marginBottom: '2rem', lineHeight: 1.5, opacity: 0.9 }}>
-      {config.subtitle}
-    </p>
-    <div className="hero-buttons" style={{ display: 'flex', gap: '1rem' }}>
-      <button style={{ background: '#FF3B30', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        {config.buttonText} &rarr;
-      </button>
-      <button style={{ background: 'transparent', color: 'white', border: '1px solid white', padding: '1rem 2rem', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem' }}>
-        Ver Ofertas
-      </button>
+const hexToRgba = (hex, alpha = 0.8) => {
+  if (!hex || typeof hex !== 'string') return `rgba(17, 104, 62, ${alpha})`;
+  let c = hex.replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const num = parseInt(c, 16);
+  if (isNaN(num)) return `rgba(17, 104, 62, ${alpha})`;
+  return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+}
+
+const HeroTemplate = ({ config, storeConfig }) => {
+  const baseColor = config.overlayColor || storeConfig?.primaryColor || '#11683E';
+  const colorStart = hexToRgba(baseColor, 0.88);
+  const colorEnd = hexToRgba(baseColor, 0.45);
+
+  return (
+    <div className="hero-padding hero-min-height" style={{
+      position: 'relative', borderRadius: '24px', overflow: 'hidden',
+      backgroundImage: `linear-gradient(to right, ${colorStart} 30%, ${colorEnd} 100%), url(${config.bgImage})`,
+      backgroundSize: 'cover', backgroundPosition: 'center', color: 'white',
+      display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center'
+    }}>
+      <span style={{ border: '1px solid rgba(255,255,255,0.5)', padding: '0.4rem 1rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFD166' }}>
+        ✨ NUEVA TEMPORADA 2024
+      </span>
+      <h1 className="hero-title" style={{ margin: '0 0 1rem 0', lineHeight: 1.1, maxWidth: '600px' }}>
+        {config.title || '¡Bienvenido a nuestra Tienda!'}
+      </h1>
+      <p style={{ fontSize: '1.1rem', maxWidth: '500px', marginBottom: '2rem', lineHeight: 1.5, opacity: 0.9 }}>
+        {config.subtitle}
+      </p>
+      <div className="hero-buttons" style={{ display: 'flex', gap: '1rem' }}>
+        <button style={{ background: storeConfig?.buttonColor || '#FF3B30', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {config.buttonText || 'Explorar'} &rarr;
+        </button>
+        <button style={{ background: 'transparent', color: 'white', border: '1px solid white', padding: '1rem 2rem', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem' }}>
+          Ver Ofertas
+        </button>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 const CategoriesTemplate = ({ categories, config, storeConfig, onCategoryClick }) => {
   return (
