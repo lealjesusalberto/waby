@@ -656,12 +656,12 @@ export default function StorePreview({ isReadOnly = false }) {
             </button>
           )}
           {storeConfig.logoText?.startsWith('http') || storeConfig.logoText?.startsWith('data:image') ? (
-            <img src={storeConfig.logoText} alt="Logo" style={{ height: '65px', maxHeight: '75px', objectFit: 'contain', borderRadius: '12px' }} />
+            <img src={storeConfig.logoText} alt="Logo" style={{ height: '85px', maxHeight: '95px', objectFit: 'contain', borderRadius: '12px' }} />
           ) : (
-            <span style={{ fontSize: '3.8rem', lineHeight: 1, filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.12))', display: 'inline-block' }}>{storeConfig.logoText}</span>
+            <span style={{ fontSize: '5rem', lineHeight: 1, filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))', display: 'inline-block' }}>{storeConfig.logoText}</span>
           )}
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.8rem', fontFamily: 'Fraunces, serif', fontWeight: '900', letterSpacing: '-0.5px', color: 'var(--primary)', dropShadow: '0 2px 2px rgba(0,0,0,0.05)' }}>{storeConfig.name}</h2>
+            <h2 style={{ margin: 0, fontSize: '1.35rem', fontFamily: 'Fraunces, serif', fontWeight: '900', letterSpacing: '-0.5px', color: 'var(--primary)', dropShadow: '0 2px 2px rgba(0,0,0,0.05)' }}>{storeConfig.name}</h2>
             <div style={{ display: 'flex', gap: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}><Star size={12} fill="#FFC107" color="#FFC107" /> 5.0 (Nuevas)</span>
               <span>📦 {products.length} productos</span>
