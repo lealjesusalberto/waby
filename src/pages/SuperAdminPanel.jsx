@@ -65,9 +65,9 @@ export default function SuperAdminPanel() {
   const clients = users.filter(u => u.role === 'cliente')
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#F1F5F9', fontFamily: "'Inter', sans-serif" }}>
+    <div className="admin-layout" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Sidebar */}
-      <aside style={{ width: '260px', background: '#1E293B', color: 'white', display: 'flex', flexDirection: 'column' }}>
+      <aside className="admin-sidebar">
         <div style={{ padding: '2rem 1.5rem', borderBottom: '1px solid #334155' }}>
           <h2 style={{ margin: 0, fontSize: '1.5rem', fontFamily: 'Fraunces', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Activity color="#38BDF8" /> Waby Admin
@@ -75,7 +75,7 @@ export default function SuperAdminPanel() {
           <p style={{ margin: '0.2rem 0 0 0', color: '#94A3B8', fontSize: '0.85rem' }}>Panel de Control Global</p>
         </div>
 
-        <nav style={{ padding: '1.5rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
+        <nav className="admin-nav">
           <button 
             onClick={() => setActiveTab('pending')}
             style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem 1rem', background: activeTab === 'pending' ? '#334155' : 'transparent', color: activeTab === 'pending' ? '#38BDF8' : '#CBD5E1', border: 'none', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: activeTab === 'pending' ? 'bold' : 'normal', transition: 'all 0.2s' }}
@@ -110,7 +110,7 @@ export default function SuperAdminPanel() {
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, padding: '2rem 3rem', overflowY: 'auto' }}>
+      <main className="admin-main">
         
         {/* Header Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>

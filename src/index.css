@@ -204,6 +204,33 @@ h1, h2, h3, h4, .serif-font {
   box-shadow: 0 25px 50px -12px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.02);
 }
 
+/* SuperAdmin Layout */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #F1F5F9;
+}
+.admin-sidebar {
+  width: 260px;
+  background: #1E293B;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+.admin-nav {
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+.admin-main {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+  width: 100%;
+}
+
 /* Mobile Adjustments */
 @media (max-width: 768px) {
   /* Editor Panel Layout */
@@ -279,5 +306,25 @@ h1, h2, h3, h4, .serif-font {
   }
   .auth-card {
     padding: 2rem 1.5rem;
+  }
+
+  /* Admin Layout Mobile Adjustments */
+  .admin-layout {
+    flex-direction: column;
+  }
+  .admin-sidebar {
+    width: 100%;
+  }
+  .admin-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 1rem;
+  }
+  .admin-nav button {
+    white-space: nowrap;
+    font-size: 0.85rem;
+  }
+  .admin-main {
+    padding: 1rem;
   }
 }
