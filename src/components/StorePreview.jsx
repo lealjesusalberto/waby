@@ -186,13 +186,16 @@ const AllProductsView = ({ products, categories, onBack, addToCart, storeConfig 
         </div>
 
         {/* Category Pills */}
-        <div style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap', paddingBottom: '0.5rem' }}>
           <button 
             onClick={() => setSelectedCategory('all')}
             style={{ 
-              padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s', border: 'none',
-              background: selectedCategory === 'all' ? (storeConfig?.primaryColor || '#11683E') : '#F1F5F9',
-              color: selectedCategory === 'all' ? 'white' : '#475569'
+              padding: '0.6rem 1.5rem', borderRadius: '30px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.2s', 
+              border: selectedCategory === 'all' ? 'none' : '1px solid #E2E8F0',
+              background: selectedCategory === 'all' ? (storeConfig?.primaryColor || '#11683E') : 'white',
+              color: selectedCategory === 'all' ? 'white' : '#475569',
+              boxShadow: selectedCategory === 'all' ? '0 4px 10px rgba(0,0,0,0.1)' : 'none',
+              display: 'flex', alignItems: 'center', gap: '0.5rem'
             }}
           >
             Todas
@@ -202,12 +205,15 @@ const AllProductsView = ({ products, categories, onBack, addToCart, storeConfig 
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
               style={{ 
-                padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s', border: 'none',
-                background: selectedCategory === cat.id ? (storeConfig?.primaryColor || '#11683E') : '#F1F5F9',
-                color: selectedCategory === cat.id ? 'white' : '#475569'
+                padding: '0.6rem 1.5rem', borderRadius: '30px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.2s', 
+                border: selectedCategory === cat.id ? 'none' : '1px solid #E2E8F0',
+                background: selectedCategory === cat.id ? (storeConfig?.primaryColor || '#11683E') : 'white',
+                color: selectedCategory === cat.id ? 'white' : '#475569',
+                boxShadow: selectedCategory === cat.id ? '0 4px 10px rgba(0,0,0,0.1)' : 'none',
+                display: 'flex', alignItems: 'center', gap: '0.5rem'
               }}
             >
-              {cat.icon} {cat.name}
+              <span>{cat.icon}</span> {cat.name}
             </button>
           ))}
         </div>
