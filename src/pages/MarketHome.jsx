@@ -22,14 +22,18 @@ export default function MarketHome() {
     setSelectedStoreForMap(store)
     setShowMapModal(true)
     if (store.location && store.location !== 'Online') {
-      try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(store.location)}`)
-        const data = await response.json()
-        if (data && data.length > 0) {
-          setMapCoords([parseFloat(data[0].lat), parseFloat(data[0].lon)])
+      if (store.lat && store.lng) {
+        setMapCoords([parseFloat(store.lat), parseFloat(store.lng)])
+      } else {
+        try {
+          const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(store.location)}`)
+          const data = await response.json()
+          if (data && data.length > 0) {
+            setMapCoords([parseFloat(data[0].lat), parseFloat(data[0].lon)])
+          }
+        } catch (err) {
+          console.error("Geocoding error", err)
         }
-      } catch (err) {
-        console.error("Geocoding error", err)
       }
     }
   }
@@ -361,7 +365,7 @@ export default function MarketHome() {
             </div>
             <div style={{ height: '400px', width: '100%' }}>
               {/* Force re-render of map when coords change using key prop */}
-              <MapContainer key={mapCoords.join(',')} center={mapCoords} zoom={16} style={{ height: '100%', width: '100%' }}>
+              <MapContainer key={mapCoords.join(',')} center={mapCoords} zoom={18} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
