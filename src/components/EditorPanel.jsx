@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload } from 'lucide-react'
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { NotificationBell } from './NotificationBell'
 import OrdersDashboard from './OrdersDashboard'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
@@ -98,6 +97,7 @@ export default function EditorPanel() {
   const [paymentBank, setPaymentBank] = useState('')
 
   const [activeSubTab, setActiveSubTab] = useState('header')
+  const [draggedItemIndex, setDraggedItemIndex] = useState(null)
 
   // Location Autocomplete states
   const [locationSuggestions, setLocationSuggestions] = useState([])
@@ -230,10 +230,7 @@ export default function EditorPanel() {
     });
   }
 
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
-    reorderSections(result.source.index, result.destination.index)
-  }
+
 
   const handleAddSection = (type) => {
     addSection(type);
@@ -499,54 +496,66 @@ export default function EditorPanel() {
               SECCIONES
             </div>
 
-            <DragDropContext onDragEnd={onDragEnd}>
-              <Droppable droppableId="sections-list">
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                    {layoutSections.map((section, index) => {
-                      const isActive = activeSectionId === section.id;
-                      return (
-                        <Draggable key={section.id} draggableId={section.id} index={index}>
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef} {...provided.draggableProps}
-                              onClick={() => setActiveSectionId(section.id)}
-                              style={{
-                                display: 'flex', alignItems: 'center', gap: '1rem',
-                                padding: '0.75rem 1rem', borderRadius: '8px', 
-                                background: isActive || snapshot.isDragging ? '#F4FBF7' : 'white',
-                                border: isActive ? '1px solid var(--primary)' : '1px solid #E2E8E0',
-                                cursor: 'pointer', transition: 'all 0.2s',
-                                boxShadow: snapshot.isDragging ? '0 5px 15px rgba(0,0,0,0.1)' : 'none',
-                                ...provided.draggableProps.style
-                              }}
-                            >
-                              <div {...provided.dragHandleProps} style={{ cursor: 'grab', color: '#CBD5E1', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M18 15l-6-6-6 6"/></svg>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
-                              </div>
-                              
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1 }}>
-                                {getIcon(section.templateType)}
-                                <span style={{ fontWeight: '600', color: 'var(--text-main)', fontSize: '0.9rem' }}>{section.title}</span>
-                              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {layoutSections.map((section, index) => {
+                const isActive = activeSectionId === section.id;
+                const isDragging = draggedItemIndex === index;
+                
+                return (
+                  <div
+                    key={section.id}
+                    draggable
+                    onDragStart={(e) => {
+                      setDraggedItemIndex(index);
+                      // Required for Firefox
+                      e.dataTransfer.effectAllowed = 'move';
+                      e.dataTransfer.setData('text/html', e.target.parentNode);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      e.dataTransfer.dropEffect = 'move';
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const source = draggedItemIndex;
+                      const dest = index;
+                      if (source !== null && source !== dest) {
+                        reorderSections(source, dest);
+                      }
+                      setDraggedItemIndex(null);
+                    }}
+                    onDragEnd={() => setDraggedItemIndex(null)}
+                    onClick={() => setActiveSectionId(section.id)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '1rem',
+                      padding: '0.75rem 1rem', borderRadius: '8px', 
+                      background: isActive || isDragging ? '#F4FBF7' : 'white',
+                      border: isActive ? '1px solid var(--primary)' : '1px solid #E2E8E0',
+                      cursor: 'grab', transition: 'all 0.2s',
+                      boxShadow: isDragging ? '0 5px 15px rgba(0,0,0,0.1)' : 'none',
+                      opacity: isDragging ? 0.5 : 1
+                    }}
+                  >
+                    <div style={{ color: '#CBD5E1', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M18 15l-6-6-6 6"/></svg>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                    
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1 }}>
+                      {getIcon(section.templateType)}
+                      <span style={{ fontWeight: '600', color: 'var(--text-main)', fontSize: '0.9rem' }}>{section.title}</span>
+                    </div>
 
-                              <button 
-                                onClick={(e) => { e.stopPropagation(); deleteSection(section.id); }} 
-                                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', opacity: isActive ? 1 : 0.5 }}
-                              >
-                                <Trash2 size={16} />
-                              </button>
-                            </div>
-                          )}
-                        </Draggable>
-                      )
-                    })}
-                    {provided.placeholder}
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); deleteSection(section.id); }} 
+                      style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', opacity: isActive ? 1 : 0.5 }}
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
-                )}
-              </Droppable>
-            </DragDropContext>
+                )
+              })}
+            </div>
 
             <button 
               onClick={() => setIsModalOpen(true)}
