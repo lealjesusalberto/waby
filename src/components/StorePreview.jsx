@@ -96,66 +96,59 @@ const CartDrawer = ({ onClose, onCheckout, shippingCost = 0 }) => {
   )
 }
 
-// --- CATEGORY PRODUCTS MODAL ---
-const CategoryProductsModal = ({ category, products, onClose }) => {
-  const { addToCart } = useStore()
-
+// --- CATEGORY INLINE VIEW ---
+const CategoryInlineView = ({ category, products, onBack, addToCart }) => {
   return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      zIndex: 1000, backdropFilter: 'blur(4px)'
-    }}>
-      <div style={{
-        background: '#F8F9F3', borderRadius: '24px', width: '90%', maxWidth: '1000px',
-        maxHeight: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)', animation: 'fadeIn 0.2s ease-out'
-      }}>
-        {/* Header Modal */}
-        <div style={{ background: category.color, padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ fontSize: '3rem' }}>{category.icon}</span>
-            <div>
-              <h2 style={{ margin: 0, fontSize: '2rem', fontFamily: 'Fraunces' }}>{category.name}</h2>
-              <p style={{ margin: 0, opacity: 0.9 }}>{products.length} productos disponibles</p>
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <X size={24} />
-          </button>
-        </div>
+    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+      {/* Back Button */}
+      <button 
+        onClick={onBack} 
+        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: '#64748B', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', marginBottom: '1.5rem', padding: 0 }}
+      >
+        <ArrowLeft size={20} /> Volver a la tienda
+      </button>
 
-        {/* Products Grid */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '2rem' }}>
-          {products.length === 0 ? (
-            <p style={{ textAlign: 'center', color: '#64748B', fontSize: '1.2rem', marginTop: '2rem' }}>No hay productos en esta categoría por ahora.</p>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 220px), 280px))', gap: '1.5rem' }}>
-              {products.map(prod => (
-                <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
-                  <div style={{ height: '180px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                    <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                  <div style={{ padding: '1rem' }}>
-                    <h5 style={{ margin: '0 0 0.3rem 0', fontSize: '0.95rem', color: 'var(--text-main)' }}>{prod.name}</h5>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
-                        <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</span>
-                      </div>
-                      <button
-                        onClick={() => addToCart(prod)}
-                        style={{ background: '#E8F5E9', border: 'none', width: '32px', height: '32px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
-                      >
-                        <Plus size={18} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+      {/* Header */}
+      <div style={{ background: category.color, padding: '2rem', borderRadius: '24px', display: 'flex', alignItems: 'center', gap: '1.5rem', color: 'white', marginBottom: '2rem', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', right: '-10%', bottom: '-20%', fontSize: '10rem', opacity: 0.1, pointerEvents: 'none' }}>{category.icon}</div>
+        <span style={{ fontSize: '3.5rem', zIndex: 1 }}>{category.icon}</span>
+        <div style={{ zIndex: 1 }}>
+          <h2 style={{ margin: 0, fontSize: '2.2rem', fontFamily: 'Fraunces' }}>{category.name}</h2>
+          <p style={{ margin: 0, opacity: 0.9, fontSize: '1.1rem' }}>{products.length} productos disponibles</p>
         </div>
       </div>
+
+      {/* Products Grid */}
+      {products.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '4rem 0', color: '#64748B' }}>
+          <p style={{ fontSize: '1.2rem' }}>No hay productos en esta categoría por ahora.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 320px))', gap: '1.5rem' }}>
+          {products.map(prod => (
+            <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
+              <div style={{ height: '200px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <div style={{ padding: '1rem' }}>
+                <h5 style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--text-main)' }}>{prod.name}</h5>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</span>
+                  </div>
+                  <button
+                    onClick={() => addToCart(prod)}
+                    style={{ background: '#E8F5E9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -631,7 +624,7 @@ export default function StorePreview({ isReadOnly = false }) {
 
   const [showCheckout, setShowCheckout] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
-  const [selectedCategory, setSelectedCategory] = useState(null)
+  const [activeCategoryView, setActiveCategoryView] = useState(null)
 
   let activeStoreData;
   if (!isReadOnly) {
@@ -758,49 +751,51 @@ export default function StorePreview({ isReadOnly = false }) {
         </div>
       </div>
 
-      <div className="store-section-padding" style={{ display: 'flex', flexDirection: 'column', gap: '3rem', paddingBottom: '6rem' }}>
-        {layoutSections.map((section) => {
-          const isActive = !isReadOnly && activeSectionId === section.id
-          const config = section.config || {}
+      {activeCategoryView ? (
+        <div className="store-section-padding" style={{ paddingBottom: '6rem' }}>
+          <CategoryInlineView 
+            category={activeCategoryView} 
+            products={products.filter(p => p.categoryId === activeCategoryView.id)} 
+            onBack={() => setActiveCategoryView(null)}
+            addToCart={addToCart}
+          />
+        </div>
+      ) : (
+        <div className="store-section-padding" style={{ display: 'flex', flexDirection: 'column', gap: '3rem', paddingBottom: '6rem' }}>
+          {layoutSections.map((section) => {
+            const isActive = !isReadOnly && activeSectionId === section.id
+            const config = section.config || {}
 
-          return (
-            <section
-              key={section.id}
-              className={isReadOnly ? '' : `section-hover ${isActive ? 'section-active' : ''}`}
-              onClick={(e) => {
-                if (!isReadOnly) {
-                  e.stopPropagation();
-                  setActiveSectionId(section.id)
-                }
-              }}
-              style={{ position: 'relative', borderRadius: '24px' }}
-            >
+            return (
+              <section
+                key={section.id}
+                className={isReadOnly ? '' : `section-hover ${isActive ? 'section-active' : ''}`}
+                onClick={(e) => {
+                  if (!isReadOnly) {
+                    e.stopPropagation();
+                    setActiveSectionId(section.id)
+                  }
+                }}
+                style={{ position: 'relative', borderRadius: '24px' }}
+              >
 
-              {!isReadOnly && (
-                <div className="section-badge" style={{ background: isActive ? 'var(--primary)' : '#475569' }}>
-                  {section.title} <Settings size={12} />
-                </div>
-              )}
+                {!isReadOnly && (
+                  <div className="section-badge" style={{ background: isActive ? 'var(--primary)' : '#475569' }}>
+                    {section.title} <Settings size={12} />
+                  </div>
+                )}
 
-              {section.templateType === 'hero' && <HeroTemplate config={config} storeConfig={storeConfig} />}
-              {section.templateType === 'categories' && <CategoriesTemplate categories={categories} config={config} storeConfig={storeConfig} onCategoryClick={(cat) => setSelectedCategory(cat)} />}
-              {section.templateType === 'products_grid' && <ProductsTemplate products={products.filter(p => p.tags.includes(section.tag || 'all'))} config={config} storeConfig={storeConfig} addToCart={addToCart} />}
-              {section.templateType === 'promo' && <PromoTemplate config={config} storeConfig={storeConfig} />}
-              {section.templateType === 'features' && <FeaturesTemplate features={features} config={config} storeConfig={storeConfig} />}
-              {section.templateType === 'testimonials' && <TestimonialsTemplate testimonials={testimonials} config={config} storeConfig={storeConfig} />}
+                {section.templateType === 'hero' && <HeroTemplate config={config} storeConfig={storeConfig} />}
+                {section.templateType === 'categories' && <CategoriesTemplate categories={categories} config={config} storeConfig={storeConfig} onCategoryClick={(cat) => setActiveCategoryView(cat)} />}
+                {section.templateType === 'products_grid' && <ProductsTemplate products={products.filter(p => p.tags.includes(section.tag || 'all'))} config={config} storeConfig={storeConfig} addToCart={addToCart} />}
+                {section.templateType === 'promo' && <PromoTemplate config={config} storeConfig={storeConfig} />}
+                {section.templateType === 'features' && <FeaturesTemplate features={features} config={config} storeConfig={storeConfig} />}
+                {section.templateType === 'testimonials' && <TestimonialsTemplate testimonials={testimonials} config={config} storeConfig={storeConfig} />}
 
-            </section>
-          )
-        })}
-      </div>
-
-      {/* Category Modal */}
-      {selectedCategory && (
-        <CategoryProductsModal
-          category={selectedCategory}
-          products={products.filter(p => p.categoryId === selectedCategory.id)}
-          onClose={() => setSelectedCategory(null)}
-        />
+              </section>
+            )
+          })}
+        </div>
       )}
 
       {/* Cart & Checkout Overlays */}
