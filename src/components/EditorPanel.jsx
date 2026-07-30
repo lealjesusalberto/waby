@@ -68,7 +68,7 @@ export default function EditorPanel() {
     layoutSections, reorderSections, activeSectionId, setActiveSectionId, 
     updateSectionConfig, deleteSection, addSection,
     products, addNewProduct, deleteProduct,
-    orders, updateOrderStatus,
+    orders, updateOrderStatus, isOrdersDashboardOpen, setOrdersDashboardOpen,
     storeStatus, reportSubscriptionPayment,
     storeConfig, updateStoreConfig,
     hasUnsavedChanges, saveDesignToFirestore,
