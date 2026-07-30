@@ -1089,6 +1089,8 @@ export default function EditorPanel() {
       >
         {isCollapsed ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
       </button>
+      
+      {isOrdersDashboardOpen && <OrdersDashboard />}
     </>
   )
 }
