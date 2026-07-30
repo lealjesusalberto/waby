@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload } from 'lucide-react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
@@ -93,6 +93,40 @@ export default function EditorPanel() {
   const [isActivationModalOpen, setIsActivationModalOpen] = useState(false)
   const [paymentRef, setPaymentRef] = useState('')
   const [paymentBank, setPaymentBank] = useState('')
+
+  const [activeSubTab, setActiveSubTab] = useState('header')
+
+  // Location Autocomplete states
+  const [locationSearch, setLocationSearch] = useState('')
+  const [locationSuggestions, setLocationSuggestions] = useState([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+
+  // Initialize search with current config if exists
+  useEffect(() => {
+    if (storeConfig.location && !locationSearch && !showSuggestions) {
+      setLocationSearch(storeConfig.location)
+    }
+  }, [storeConfig.location])
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (locationSearch && showSuggestions) {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationSearch)}`)
+          .then(res => res.json())
+          .then(data => {
+            setLocationSuggestions(data)
+          })
+          .catch(err => console.error(err))
+      }
+    }, 500)
+    return () => clearTimeout(delayDebounceFn)
+  }, [locationSearch, showSuggestions])
+
+  const handleSelectLocation = (loc) => {
+    setLocationSearch(loc.display_name)
+    updateStoreConfig({ location: loc.display_name })
+    setShowSuggestions(false)
+  }
 
   // Product form state
   const [newProdName, setNewProdName] = useState('')
@@ -336,9 +370,38 @@ export default function EditorPanel() {
                   </div>
                 </div>
                 <div className="form-row-responsive">
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Ubicación</label>
-                    <input type="text" value={storeConfig.location || ''} onChange={(e) => updateStoreConfig({ location: e.target.value })} style={inputStyle} placeholder="Ej. Miami, FL" />
+                  <div style={{ flex: 1, position: 'relative' }}>
+                    <label style={labelStyle}>Ubicación (con autocompletado)</label>
+                    <input 
+                      type="text" 
+                      value={locationSearch || storeConfig.location || ''} 
+                      onChange={(e) => {
+                        setLocationSearch(e.target.value)
+                        setShowSuggestions(true)
+                      }} 
+                      style={inputStyle} 
+                      placeholder="Ej. Caracas" 
+                      onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                    />
+                    {showSuggestions && locationSuggestions.length > 0 && (
+                      <div style={{
+                        position: 'absolute', top: '100%', left: 0, right: 0, 
+                        background: 'white', border: '1px solid #E2E8F0', borderRadius: '8px', 
+                        boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', zIndex: 50, maxHeight: '200px', overflowY: 'auto', marginTop: '4px'
+                      }}>
+                        {locationSuggestions.map((loc, idx) => (
+                          <div 
+                            key={idx} 
+                            onClick={() => handleSelectLocation(loc)}
+                            style={{ padding: '0.8rem 1rem', cursor: 'pointer', borderBottom: '1px solid #F1F5F9', fontSize: '0.9rem', color: '#0F172A' }}
+                            onMouseOver={e => e.currentTarget.style.background = '#F8FAFC'}
+                            onMouseOut={e => e.currentTarget.style.background = 'white'}
+                          >
+                            📍 {loc.display_name}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Categoría Principal</label>
