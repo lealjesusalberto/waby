@@ -519,6 +519,30 @@ h4,
   display: inline;
 }
 
+/* Client Profile Desktop Layout */
+.client-profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+  align-items: start;
+}
+
+.client-profile-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E2E8F0;
+}
+
+.form-row-responsive {
+  display: flex;
+  gap: 1rem;
+}
+
 /* Mobile Adjustments */
 @media (max-width: 768px) {
 
