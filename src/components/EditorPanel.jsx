@@ -145,6 +145,29 @@ export default function EditorPanel() {
     setShowMapPicker(false)
   }
 
+  const detectCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await response.json();
+          if (data && data.display_name) {
+            updateStoreConfig({ location: data.display_name });
+            setMapPickerCoords([latitude, longitude]);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      }, (error) => {
+        console.error("Geolocation error", error);
+        alert("No se pudo detectar tu ubicación. Revisa los permisos de tu navegador.");
+      });
+    } else {
+      alert("Tu navegador no soporta la geolocalización.");
+    }
+  };
+
   // Product form state
   const [newProdName, setNewProdName] = useState('')
   const [newProdPrice, setNewProdPrice] = useState('')
@@ -390,9 +413,14 @@ export default function EditorPanel() {
                   <div style={{ flex: 1, position: 'relative' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <label style={labelStyle}>Ubicación (con autocompletado)</label>
-                      <button onClick={() => setShowMapPicker(true)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-                        📍 Seleccionar en mapa
-                      </button>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button onClick={detectCurrentLocation} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                          🎯 Mi ubicación
+                        </button>
+                        <button onClick={() => setShowMapPicker(true)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                          📍 Seleccionar en mapa
+                        </button>
+                      </div>
                     </div>
                     <input 
                       type="text" 
