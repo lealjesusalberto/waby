@@ -3,6 +3,8 @@ import { useStore } from '../store/useStore'
 import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload } from 'lucide-react'
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 import { NotificationBell } from './NotificationBell'
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import L from 'leaflet'
 
 const STORE_CATEGORY_SUBCATEGORIES = {
   'Ropa & Accesorios': [
@@ -97,21 +99,15 @@ export default function EditorPanel() {
   const [activeSubTab, setActiveSubTab] = useState('header')
 
   // Location Autocomplete states
-  const [locationSearch, setLocationSearch] = useState('')
   const [locationSuggestions, setLocationSuggestions] = useState([])
   const [showSuggestions, setShowSuggestions] = useState(false)
-
-  // Initialize search with current config if exists
-  useEffect(() => {
-    if (storeConfig.location && !locationSearch && !showSuggestions) {
-      setLocationSearch(storeConfig.location)
-    }
-  }, [storeConfig.location])
+  const [showMapPicker, setShowMapPicker] = useState(false)
+  const [mapPickerCoords, setMapPickerCoords] = useState([10.4806, -66.9036])
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      if (locationSearch && showSuggestions) {
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationSearch)}`)
+      if (storeConfig.location && showSuggestions) {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(storeConfig.location)}`)
           .then(res => res.json())
           .then(data => {
             setLocationSuggestions(data)
@@ -120,12 +116,33 @@ export default function EditorPanel() {
       }
     }, 500)
     return () => clearTimeout(delayDebounceFn)
-  }, [locationSearch, showSuggestions])
+  }, [storeConfig.location, showSuggestions])
 
   const handleSelectLocation = (loc) => {
-    setLocationSearch(loc.display_name)
     updateStoreConfig({ location: loc.display_name })
     setShowSuggestions(false)
+  }
+
+  const LocationMapEvents = () => {
+    useMapEvents({
+      click(e) {
+        setMapPickerCoords([e.latlng.lat, e.latlng.lng])
+      },
+    })
+    return null
+  }
+
+  const confirmMapSelection = async () => {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${mapPickerCoords[0]}&lon=${mapPickerCoords[1]}`)
+      const data = await response.json()
+      if (data && data.display_name) {
+        updateStoreConfig({ location: data.display_name })
+      }
+    } catch (err) {
+      console.error(err)
+    }
+    setShowMapPicker(false)
   }
 
   // Product form state
@@ -371,12 +388,17 @@ export default function EditorPanel() {
                 </div>
                 <div className="form-row-responsive">
                   <div style={{ flex: 1, position: 'relative' }}>
-                    <label style={labelStyle}>Ubicación (con autocompletado)</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label style={labelStyle}>Ubicación (con autocompletado)</label>
+                      <button onClick={() => setShowMapPicker(true)} style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                        📍 Seleccionar en mapa
+                      </button>
+                    </div>
                     <input 
                       type="text" 
-                      value={locationSearch || storeConfig.location || ''} 
+                      value={storeConfig.location || ''} 
                       onChange={(e) => {
-                        setLocationSearch(e.target.value)
+                        updateStoreConfig({ location: e.target.value })
                         setShowSuggestions(true)
                       }} 
                       style={inputStyle} 
@@ -816,6 +838,51 @@ export default function EditorPanel() {
         )}
 
       </div>
+
+      {/* Map Picker Modal */}
+      {showMapPicker && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1050, backdropFilter: 'blur(4px)', animation: 'fadeIn 0.2s'
+        }}>
+          <div style={{
+            background: 'white', borderRadius: '16px', width: '90%', maxWidth: '600px',
+            overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+            display: 'flex', flexDirection: 'column'
+          }}>
+            <div style={{ padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #E2E8F0' }}>
+              <div>
+                <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  Ubicación de tu Tienda
+                </h3>
+                <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.8rem', color: '#64748B' }}>Haz clic en el mapa para posicionar el pin y luego confirma.</p>
+              </div>
+              <button onClick={() => setShowMapPicker(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B' }}>
+                <X size={24} />
+              </button>
+            </div>
+            <div style={{ height: '400px', width: '100%' }}>
+              <MapContainer center={mapPickerCoords} zoom={13} style={{ height: '100%', width: '100%' }}>
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <LocationMapEvents />
+                <Marker position={mapPickerCoords} />
+              </MapContainer>
+            </div>
+            <div style={{ padding: '1rem', borderTop: '1px solid #E2E8F0', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <button onClick={() => setShowMapPicker(false)} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: '1px solid #CBD5E1', background: 'white', color: '#475569', fontWeight: 'bold', cursor: 'pointer' }}>
+                Cancelar
+              </button>
+              <button onClick={confirmMapSelection} style={{ padding: '0.6rem 1.2rem', borderRadius: '8px', border: 'none', background: 'var(--primary)', color: 'white', fontWeight: 'bold', cursor: 'pointer' }}>
+                Confirmar Ubicación
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL AGREGAR SECCIÓN */}
       {isModalOpen && (
