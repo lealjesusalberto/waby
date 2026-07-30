@@ -237,6 +237,11 @@ export const useStore = create((set, get) => ({
   // --- Carrito y Órdenes ---
   cart: [],
   orders: [],
+  isOrdersDashboardOpen: false,
+  setOrdersDashboardOpen: (isOpen) => set({ isOrdersDashboardOpen: isOpen }),
+  updateOrderStatus: (orderId, newStatus) => set((state) => ({
+    orders: state.orders.map(order => order.id === orderId ? { ...order, status: newStatus } : order)
+  })),
   isCartOpen: false,
   toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
   addToCart: (product) =>

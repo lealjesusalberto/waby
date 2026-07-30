@@ -785,87 +785,25 @@ export default function EditorPanel() {
 
         {/* --- PESTAÑA DE ÓRDENES --- */}
         {activeTab === 'orders' && (
-          <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
-            <h3 style={{ margin: '0 0 1.5rem 0', color: 'var(--text-main)', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Inbox size={20} /> Órdenes Recibidas ({orders.length})
-            </h3>
-            
-            {orders.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
-                <PackageOpen size={48} style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                <p>Aún no tienes órdenes nuevas.</p>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {orders.map(order => (
-                  <div key={order.id} style={{ background: 'white', borderRadius: '12px', padding: '1.5rem', border: '1px solid #E2E8E0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid #F1F5F9', paddingBottom: '0.75rem' }}>
-                      <span style={{ fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--primary)' }}>{order.id}</span>
-                      <span style={{ 
-                        background: order.status === 'Aprobado' ? '#D1FAE5' : '#FEF3C7', 
-                        color: order.status === 'Aprobado' ? '#065F46' : '#92400E', 
-                        padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.3rem' 
-                      }}>
-                        {order.status === 'Aprobado' ? <CheckCircle size={14} /> : <Clock size={14} />} {order.status}
-                      </span>
-                    </div>
-                    
-                    <div style={{ fontSize: '0.9rem', color: 'var(--text-main)', marginBottom: '1rem' }}>
-                      <p style={{ margin: '0 0 0.3rem 0' }}><strong>Fecha:</strong> {new Date(order.date).toLocaleString()}</p>
-                      
-                      {order.customer && (
-                        <div style={{ background: '#F0FDF4', padding: '0.8rem', borderRadius: '8px', marginTop: '0.8rem', border: '1px solid #BBF7D0' }}>
-                          <p style={{ margin: '0 0 0.3rem 0', fontWeight: 'bold', color: '#166534' }}>Datos del Cliente:</p>
-                          <p style={{ margin: '0 0 0.2rem 0', color: '#166534' }}><strong>Nombre:</strong> {order.customer.name}</p>
-                          <p style={{ margin: '0 0 0.2rem 0', color: '#166534' }}><strong>Teléfono:</strong> {order.customer.phone}</p>
-                          <p style={{ margin: '0', color: '#166534' }}><strong>Dirección:</strong> {order.customer.address}</p>
-                        </div>
-                      )}
-
-                      <div style={{ background: '#F8FAFC', borderRadius: '8px', padding: '1rem', marginTop: '1rem', border: '1px solid #E2E8E0' }}>
-                        <h4 style={{ margin: '0 0 0.8rem 0', fontSize: '0.95rem' }}>Productos ({order.items?.length || 0})</h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                          {order.items?.map((item, idx) => (
-                            <div key={idx} style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-                              <img src={item.image} alt={item.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '6px', background: 'white', border: '1px solid #eee' }} />
-                              <div style={{ flex: 1 }}>
-                                <p style={{ margin: 0, fontWeight: 'bold', fontSize: '0.85rem' }}>{item.name}</p>
-                                <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.8rem' }}>{item.quantity} x ${item.price.toFixed(2)}</p>
-                              </div>
-                              <span style={{ fontWeight: 'bold', color: 'var(--primary)', fontSize: '0.9rem' }}>${(item.quantity * item.price).toFixed(2)}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', paddingTop: '0.8rem', borderTop: '1px dashed #CBD5E1', fontWeight: 'bold', fontSize: '1rem' }}>
-                          <span>Total Pagado:</span>
-                          <span style={{ color: 'var(--primary)' }}>${order.total.toFixed(2)}</span>
-                        </div>
-                      </div>
-
-                      {order.pagoMovil && (
-                        <div style={{ background: '#FFF7ED', padding: '0.8rem', borderRadius: '8px', marginTop: '0.8rem', border: '1px dashed #FFEDD5' }}>
-                          <p style={{ margin: '0 0 0.3rem 0', fontWeight: 'bold', color: '#9A3412' }}>Datos Pago Móvil Reportado:</p>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#9A3412' }}>
-                            <span><strong>Ref:</strong> {order.pagoMovil.reference}</span>
-                            <span><strong>Fecha:</strong> {order.pagoMovil.date}</span>
-                            <span><strong>Banco:</strong> {order.pagoMovil.bank}</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {order.status !== 'Aprobado' && (
-                      <button 
-                        onClick={() => updateOrderStatus(order.id, 'Aprobado')}
-                        style={{ width: '100%', background: 'var(--primary)', color: 'white', border: 'none', padding: '0.8rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'opacity 0.2s' }}
-                      >
-                        <CheckCircle size={18} /> Aprobar Orden
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
+            <div style={{ background: '#F8FAFC', padding: '3rem 2rem', borderRadius: '16px', border: '1px solid #E2E8E0', width: '100%', maxWidth: '400px' }}>
+              <Inbox size={48} color="var(--primary)" style={{ marginBottom: '1rem' }} />
+              <h3 style={{ margin: '0 0 0.5rem 0', color: 'var(--text-main)', fontSize: '1.4rem' }}>Órdenes de tu Tienda</h3>
+              <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>
+                Tienes <strong>{orders.length}</strong> órdenes en total. Abre el panel de control para gestionarlas.
+              </p>
+              
+              <button 
+                onClick={() => setOrdersDashboardOpen(true)}
+                style={{
+                  background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '12px',
+                  fontWeight: 'bold', fontSize: '1.1rem', cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                  boxShadow: '0 4px 6px -1px rgba(17,104,62,0.2)'
+                }}
+              >
+                <PackageOpen size={20} /> Abrir Panel de Órdenes
+              </button>
+            </div>
           </div>
         )}
 
