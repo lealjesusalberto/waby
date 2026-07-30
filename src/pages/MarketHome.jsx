@@ -132,7 +132,7 @@ export default function MarketHome() {
                 className="guest-header-btn register-btn"
                 onClick={() => navigate('/register')}
               >
-                Crear Tienda
+                Registrarse
               </button>
             </>
           )}
@@ -464,7 +464,7 @@ export default function MarketHome() {
                 onMouseOver={e => e.currentTarget.style.background = '#0d4d2e'}
                 onMouseOut={e => e.currentTarget.style.background = '#11683E'}
               >
-                Vender en Waby
+                Registrarse
               </button>
               <button
                 onClick={() => {
