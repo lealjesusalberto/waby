@@ -15,9 +15,9 @@ export default function OrdersDashboard() {
     const matchesStatus = filterStatus === 'Todos' || order.status === filterStatus;
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = 
-      order.id.toLowerCase().includes(searchLower) || 
-      (order.customer?.name && order.customer.name.toLowerCase().includes(searchLower)) ||
-      (order.pagoMovil?.reference && order.pagoMovil.reference.includes(searchLower));
+      (order.id && String(order.id).toLowerCase().includes(searchLower)) || 
+      (order.customer?.name && String(order.customer.name).toLowerCase().includes(searchLower)) ||
+      (order.pagoMovil?.reference && String(order.pagoMovil.reference).toLowerCase().includes(searchLower));
     return matchesStatus && matchesSearch;
   });
 
