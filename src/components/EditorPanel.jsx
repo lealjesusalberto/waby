@@ -638,25 +638,7 @@ export default function EditorPanel() {
                   {/* Campos específicos por plantilla */}
                   {activeSection.templateType === 'hero' && (
                     <>
-                      <div>
-                        <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b' }}>Título del Banner</label>
-                        <input 
-                          type="text" 
-                          value={activeSection.config.title || ''} 
-                          onChange={(e) => updateSectionConfig(activeSection.id, 'title', e.target.value)} 
-                          style={inputStyle} 
-                          placeholder="¡Bienvenido a nuestra Tienda!"
-                        />
-                      </div>
-                      <div>
-                        <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b' }}>Subtítulo del Banner</label>
-                        <textarea 
-                          value={activeSection.config.subtitle || ''} 
-                          onChange={(e) => updateSectionConfig(activeSection.id, 'subtitle', e.target.value)} 
-                          style={{...inputStyle, resize: 'vertical', minHeight: '60px'}} 
-                          placeholder="Descubre los mejores productos..."
-                        />
-                      </div>
+
                       <div>
                         <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b' }}>Etiqueta (Tag)</label>
                         <input 
