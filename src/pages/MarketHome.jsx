@@ -361,7 +361,7 @@ export default function MarketHome() {
             </div>
             <div style={{ height: '400px', width: '100%' }}>
               {/* Force re-render of map when coords change using key prop */}
-              <MapContainer key={mapCoords.join(',')} center={mapCoords} zoom={13} style={{ height: '100%', width: '100%' }}>
+              <MapContainer key={mapCoords.join(',')} center={mapCoords} zoom={16} style={{ height: '100%', width: '100%' }}>
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
