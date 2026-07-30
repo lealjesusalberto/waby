@@ -161,8 +161,12 @@ export default function EditorPanel() {
         }
       }, (error) => {
         console.error("Geolocation error", error);
-        alert("No se pudo detectar tu ubicación. Revisa los permisos de tu navegador.");
-      });
+        let errorMsg = "No se pudo detectar tu ubicación. Revisa los permisos de tu navegador.";
+        if (error.code === 1) errorMsg = "Permiso denegado. Haz clic en el icono del candado en la barra de direcciones de tu navegador y permite el acceso a la ubicación.";
+        if (error.code === 2) errorMsg = "Ubicación no disponible. Tu dispositivo no pudo determinar tu ubicación (el GPS o los servicios de ubicación de tu sistema operativo pueden estar apagados).";
+        if (error.code === 3) errorMsg = "Tiempo de espera agotado al intentar obtener la ubicación.";
+        alert(errorMsg);
+      }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 });
     } else {
       alert("Tu navegador no soporta la geolocalización.");
     }
