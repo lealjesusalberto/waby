@@ -324,8 +324,9 @@ const HeroTemplate = ({ config, storeConfig }) => {
   return (
     <div className="hero-padding hero-min-height" style={{
       position: 'relative', borderRadius: '24px', overflow: 'hidden',
-      backgroundImage: `linear-gradient(to right, ${colorStart} 35%, ${colorEnd} 100%), url(${config.bgImage})`,
-      backgroundSize: 'cover', backgroundPosition: 'center', color: 'white',
+      backgroundImage: config.hideGradient ? `url(${config.bgImage})` : `linear-gradient(to right, ${colorStart} 35%, ${colorEnd} 100%), url(${config.bgImage})`,
+      backgroundSize: 'cover', backgroundPosition: 'center', color: config.hideGradient ? 'inherit' : 'white',
+      textShadow: config.hideGradient ? '0px 2px 4px rgba(0,0,0,0.6)' : 'none',
       display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center'
     }}>
       <span style={{ border: '1px solid rgba(255,255,255,0.5)', padding: '0.4rem 1rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFD166' }}>
