@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { db } from '../firebase'
 import { collection, query, getDocs, doc, updateDoc, where } from 'firebase/firestore'
-import { LogOut, Users, Store, CheckCircle, Clock, Search, XCircle, Activity } from 'lucide-react'
+import { LogOut, Users, Store, CheckCircle, Clock, Search, XCircle, Activity, Image } from 'lucide-react'
 
 export default function SuperAdminPanel() {
   const logout = useStore(state => state.logout)
-  const [activeTab, setActiveTab] = useState('pending') // pending, active, users
+  const [activeTab, setActiveTab] = useState('pending') // pending, active, users, appearance
 
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
@@ -102,6 +102,12 @@ export default function SuperAdminPanel() {
             style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem 1rem', background: activeTab === 'users' ? '#334155' : 'transparent', color: activeTab === 'users' ? '#38BDF8' : '#CBD5E1', border: 'none', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: activeTab === 'users' ? 'bold' : 'normal', transition: 'all 0.2s' }}
           >
             <Users size={18} /> Clientes
+          </button>
+          <button
+            onClick={() => setActiveTab('appearance')}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.8rem 1rem', background: activeTab === 'appearance' ? '#334155' : 'transparent', color: activeTab === 'appearance' ? '#38BDF8' : '#CBD5E1', border: 'none', borderRadius: '8px', cursor: 'pointer', textAlign: 'left', fontWeight: activeTab === 'appearance' ? 'bold' : 'normal', transition: 'all 0.2s' }}
+          >
+            <Image size={18} /> Apariencia
           </button>
         </nav>
 
@@ -224,6 +230,82 @@ export default function SuperAdminPanel() {
                       <p style={{ margin: 0, color: '#64748B', fontSize: '0.9rem' }}>{client.email}</p>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Appearance Tab */}
+              {activeTab === 'appearance' && (
+                <div style={{ background: 'white', borderRadius: '12px', padding: '2rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)', border: '1px solid #E2E8F0' }}>
+                  <h3 style={{ margin: '0 0 1.5rem 0', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Image size={20} color="var(--primary)" /> Carrusel del Banner Principal
+                  </h3>
+                  
+                  <p style={{ color: '#64748B', marginBottom: '2rem' }}>
+                    Sube las imágenes que quieres que aparezcan en el banner de la página de inicio. Si subes más de una, se mostrarán como un carrusel dinámico.
+                  </p>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+                    {useStore.getState().homeHeroImages?.map((img, idx) => (
+                      <div key={idx} style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', height: '120px', border: '1px solid #E2E8F0' }}>
+                        <img src={img} alt={`Banner ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <button
+                          onClick={() => {
+                            const newImages = [...(useStore.getState().homeHeroImages || [])]
+                            newImages.splice(idx, 1)
+                            useStore.getState().updateHomeHeroImages(newImages)
+                          }}
+                          style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', background: 'rgba(255,255,255,0.9)', color: '#EF4444', border: 'none', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}
+                        >
+                          <XCircle size={16} />
+                        </button>
+                      </div>
+                    ))}
+                    <div style={{ border: '2px dashed #CBD5E1', borderRadius: '12px', height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#F8FAFC', position: 'relative' }}>
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (!file) return;
+                          
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            const img = new window.Image();
+                            img.src = reader.result;
+                            img.onload = () => {
+                              const canvas = document.createElement('canvas');
+                              const maxSize = 1200; // Allow decent size for hero
+                              let width = img.width;
+                              let height = img.height;
+                              
+                              if (width > height && width > maxSize) {
+                                height *= maxSize / width;
+                                width = maxSize;
+                              } else if (height > maxSize) {
+                                width *= maxSize / height;
+                                height = maxSize;
+                              }
+                              
+                              canvas.width = width;
+                              canvas.height = height;
+                              const ctx = canvas.getContext('2d');
+                              ctx.drawImage(img, 0, 0, width, height);
+                              const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                              
+                              const newImages = [...(useStore.getState().homeHeroImages || []), dataUrl]
+                              useStore.getState().updateHomeHeroImages(newImages)
+                            };
+                          };
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                      <div style={{ textAlign: 'center', color: '#64748B' }}>
+                        <Image size={24} style={{ marginBottom: '0.5rem' }} />
+                        <div style={{ fontSize: '0.9rem', fontWeight: 'bold' }}>Añadir Imagen</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

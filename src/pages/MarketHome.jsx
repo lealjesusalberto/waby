@@ -11,16 +11,26 @@ import { signInAnonymously } from 'firebase/auth'
 
 export default function MarketHome() {
   const navigate = useNavigate()
-  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart, user } = useStore()
+  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart, user, homeHeroImages } = useStore()
   const [showOrders, setShowOrders] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [showGuestModal, setShowGuestModal] = useState(false)
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0)
 
   useEffect(() => {
     if ((!user || user.isAnonymous) && !sessionStorage.getItem('guest')) {
       setShowGuestModal(true)
     }
   }, [user])
+
+  useEffect(() => {
+    if (homeHeroImages && homeHeroImages.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentHeroIndex((prev) => (prev + 1) % homeHeroImages.length)
+      }, 5000)
+      return () => clearInterval(interval)
+    }
+  }, [homeHeroImages])
 
   // Map Modal State
   const [showMapModal, setShowMapModal] = useState(false)
@@ -141,14 +151,21 @@ export default function MarketHome() {
 
       {/* Hero Search Section */}
       <div style={{
-        background: 'linear-gradient(135deg, #11683E 0%, #FFC107 100%)',
+        background: homeHeroImages && homeHeroImages.length > 0 
+          ? `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${homeHeroImages[currentHeroIndex]}) center/cover no-repeat`
+          : 'linear-gradient(135deg, #11683E 0%, #FFC107 100%)',
         color: 'white', padding: '5rem 2rem', textAlign: 'center',
         borderBottomLeftRadius: '40px', borderBottomRightRadius: '40px',
-        marginBottom: '3rem', position: 'relative', overflow: 'hidden'
+        marginBottom: '3rem', position: 'relative', overflow: 'hidden',
+        transition: 'background 1s ease-in-out'
       }}>
         {/* Decoraciones de fondo abstracto */}
-        <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '300px', height: '300px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '50%', filter: 'blur(40px)' }}></div>
-        <div style={{ position: 'absolute', bottom: '-20%', right: '-5%', width: '400px', height: '400px', background: 'rgba(255, 255, 255, 0.15)', borderRadius: '50%', filter: 'blur(60px)' }}></div>
+        {(!homeHeroImages || homeHeroImages.length === 0) && (
+          <>
+            <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '300px', height: '300px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '50%', filter: 'blur(40px)' }}></div>
+            <div style={{ position: 'absolute', bottom: '-20%', right: '-5%', width: '400px', height: '400px', background: 'rgba(255, 255, 255, 0.15)', borderRadius: '50%', filter: 'blur(60px)' }}></div>
+          </>
+        )}
 
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h2 style={{ fontSize: '3rem', margin: '0 0 1rem 0', fontFamily: 'Fraunces', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>Descubre lo mejor de tu ciudad</h2>
