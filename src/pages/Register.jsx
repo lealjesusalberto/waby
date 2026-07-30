@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useStore } from '../store/useStore'
 import { Store, ShoppingBag, ArrowLeft, Loader2 } from 'lucide-react'
 import { auth, db } from '../firebase'
@@ -8,9 +8,11 @@ import { doc, setDoc } from 'firebase/firestore'
 
 export default function Register() {
   const navigate = useNavigate()
+  const location = useLocation()
   const setUserRole = useStore(state => state.setUserRole)
-  const [step, setStep] = useState(1) // 1: Role Selection, 2: Form
-  const [selectedRole, setSelectedRole] = useState(null) // 'tienda' or 'cliente'
+  
+  const [step, setStep] = useState(location.state?.role ? 2 : 1) // 1: Role Selection, 2: Form
+  const [selectedRole, setSelectedRole] = useState(location.state?.role || null) // 'tienda' or 'cliente'
 
   // Form fields
   const [name, setName] = useState('')
@@ -51,7 +53,11 @@ export default function Register() {
       if (selectedRole === 'tienda') {
         navigate('/builder')
       } else {
-        navigate('/market')
+        if (location.state?.returnTo) {
+          navigate(location.state.returnTo)
+        } else {
+          navigate('/market')
+        }
       }
     } catch (err) {
       console.error(err)

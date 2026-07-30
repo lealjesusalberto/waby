@@ -612,7 +612,7 @@ export default function StorePreview({ isReadOnly = false }) {
   const { storeId } = useParams()
   const globalState = useStore()
 
-  const { publicStoreData, fetchPublicStoreData, clearPublicStoreData, activeSectionId, setActiveSectionId, cart, isCartOpen, toggleCart, clearCart, logout, addOrder, addToCart } = globalState
+  const { publicStoreData, fetchPublicStoreData, clearPublicStoreData, activeSectionId, setActiveSectionId, cart, isCartOpen, toggleCart, clearCart, logout, addOrder, addToCart, user } = globalState
 
   useEffect(() => {
     if (isReadOnly && storeId && !mockStoreData[storeId]) {
@@ -811,6 +811,11 @@ export default function StorePreview({ isReadOnly = false }) {
             shippingCost={shippingCost}
             onClose={toggleCart}
             onCheckout={() => {
+              if (isReadOnly && (!user || user.isAnonymous)) {
+                toggleCart();
+                navigate('/register', { state: { role: 'cliente', returnTo: `/store/${storeId}` } });
+                return;
+              }
               toggleCart();
               setShowCheckout(true);
             }}
