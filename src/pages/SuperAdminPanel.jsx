@@ -13,6 +13,8 @@ export default function SuperAdminPanel() {
 
   const bcvRate = useStore(state => state.bcvRate)
   const updateBcvRate = useStore(state => state.updateBcvRate)
+  const homeHeroImages = useStore(state => state.homeHeroImages)
+  const updateHomeHeroImages = useStore(state => state.updateHomeHeroImages)
   const [localBcvRate, setLocalBcvRate] = useState(36.5)
 
   useEffect(() => {
@@ -245,14 +247,14 @@ export default function SuperAdminPanel() {
                   </p>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-                    {useStore.getState().homeHeroImages?.map((img, idx) => (
+                    {homeHeroImages?.map((img, idx) => (
                       <div key={idx} style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', height: '120px', border: '1px solid #E2E8F0' }}>
                         <img src={img} alt={`Banner ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         <button
                           onClick={() => {
-                            const newImages = [...(useStore.getState().homeHeroImages || [])]
+                            const newImages = [...(homeHeroImages || [])]
                             newImages.splice(idx, 1)
-                            useStore.getState().updateHomeHeroImages(newImages)
+                            updateHomeHeroImages(newImages)
                           }}
                           style={{ position: 'absolute', top: '0.5rem', right: '0.5rem', background: 'rgba(255,255,255,0.9)', color: '#EF4444', border: 'none', borderRadius: '50%', width: '30px', height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 5px rgba(0,0,0,0.2)' }}
                         >
@@ -293,8 +295,8 @@ export default function SuperAdminPanel() {
                               ctx.drawImage(img, 0, 0, width, height);
                               const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
                               
-                              const newImages = [...(useStore.getState().homeHeroImages || []), dataUrl]
-                              useStore.getState().updateHomeHeroImages(newImages)
+                              const newImages = [...(homeHeroImages || []), dataUrl]
+                              updateHomeHeroImages(newImages)
                             };
                           };
                           reader.readAsDataURL(file);
