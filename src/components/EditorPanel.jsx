@@ -266,7 +266,7 @@ export default function EditorPanel() {
       tags: tags,
       rating: 5.0,
       badge: newProdBadge,
-      categoryId: parseInt(newProdCategory, 10)
+      categoryId: newProdCategory
     })
     setNewProdName('')
     setNewProdPrice('')

@@ -192,9 +192,9 @@ export const useStore = create((set, get) => ({
   ],
 
   products: [
-    { id: 1, categoryId: 1, name: 'Producto de Prueba 1 (Editar)', price: 10.00, image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
-    { id: 2, categoryId: 1, name: 'Producto de Prueba 2 (Editar)', price: 15.00, image: 'https://images.unsplash.com/photo-1613146445582-7ea4c4e7ab56?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
-    { id: 3, categoryId: 1, name: 'Producto de Prueba 3 (Editar)', price: 20.00, image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
+    { id: 1, categoryId: 'camisetas', name: 'Producto de Prueba 1 (Editar)', price: 10.00, image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
+    { id: 2, categoryId: 'pantalones', name: 'Producto de Prueba 2 (Editar)', price: 15.00, image: 'https://images.unsplash.com/photo-1613146445582-7ea4c4e7ab56?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
+    { id: 3, categoryId: 'calzado', name: 'Producto de Prueba 3 (Editar)', price: 20.00, image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
   ],
 
   addNewProduct: async (product) => {
