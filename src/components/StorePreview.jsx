@@ -437,16 +437,19 @@ const SingleProductModal = ({ product, onClose, addToCart, bcvRate }) => {
             {product.description || 'Este producto no tiene una descripción detallada, pero es uno de los mejores de nuestro catálogo.'}
           </p>
 
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
-              <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ padding: '0.8rem 1rem', background: '#F8FAFC', border: 'none', cursor: 'pointer', color: '#0F172A', fontWeight: 'bold' }}>-</button>
-              <div style={{ padding: '0.8rem 1rem', minWidth: '40px', textAlign: 'center', fontWeight: 'bold' }}>{quantity}</div>
-              <button onClick={() => setQuantity(quantity + 1)} style={{ padding: '0.8rem 1rem', background: '#F8FAFC', border: 'none', cursor: 'pointer', color: '#0F172A', fontWeight: 'bold' }}>+</button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontWeight: 'bold', color: '#64748B', fontSize: '0.95rem' }}>Cantidad:</span>
+              <div style={{ display: 'flex', alignItems: 'center', border: '1px solid #E2E8F0', borderRadius: '12px', overflow: 'hidden' }}>
+                <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ padding: '0.8rem 1rem', background: '#F8FAFC', border: 'none', cursor: 'pointer', color: '#0F172A', fontWeight: 'bold' }}>-</button>
+                <div style={{ padding: '0.8rem 1rem', minWidth: '40px', textAlign: 'center', fontWeight: 'bold' }}>{quantity}</div>
+                <button onClick={() => setQuantity(quantity + 1)} style={{ padding: '0.8rem 1rem', background: '#F8FAFC', border: 'none', cursor: 'pointer', color: '#0F172A', fontWeight: 'bold' }}>+</button>
+              </div>
             </div>
 
             <button
               onClick={handleAdd}
-              style={{ flex: 1, background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'opacity 0.2s' }}
+              style={{ width: '100%', background: 'var(--primary)', color: 'white', border: 'none', padding: '1rem', borderRadius: '12px', fontWeight: 'bold', fontSize: '1rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: 'opacity 0.2s' }}
             >
               <Plus size={20} /> Agregar - ${(product.price * quantity).toFixed(2)}
             </button>
