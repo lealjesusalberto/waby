@@ -6,6 +6,9 @@ import { NotificationBell } from '../components/NotificationBell'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 
+import { auth } from '../firebase'
+import { signInAnonymously } from 'firebase/auth'
+
 export default function MarketHome() {
   const navigate = useNavigate()
   const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart, user } = useStore()
@@ -14,7 +17,7 @@ export default function MarketHome() {
   const [showGuestModal, setShowGuestModal] = useState(false)
 
   useEffect(() => {
-    if (!user && !sessionStorage.getItem('guest')) {
+    if ((!user || user.isAnonymous) && !sessionStorage.getItem('guest')) {
       setShowGuestModal(true)
     }
   }, [user])
@@ -83,7 +86,7 @@ export default function MarketHome() {
         </div>
 
         <div className="market-header-buttons">
-          {user ? (
+          {user && !user.isAnonymous ? (
             <>
               <NotificationBell />
               <button
@@ -434,6 +437,7 @@ export default function MarketHome() {
             <button 
               onClick={() => {
                 sessionStorage.setItem('guest', 'true');
+                if (!user) signInAnonymously(auth).catch(console.error);
                 setShowGuestModal(false);
               }}
               style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}
@@ -469,6 +473,7 @@ export default function MarketHome() {
               <button
                 onClick={() => {
                   sessionStorage.setItem('guest', 'true');
+                  if (!user) signInAnonymously(auth).catch(console.error);
                   setShowGuestModal(false);
                 }}
                 style={{ background: 'none', color: '#64748B', border: 'none', padding: '0.5rem', marginTop: '0.5rem', fontWeight: '600', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
