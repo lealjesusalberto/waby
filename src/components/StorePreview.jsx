@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOut, ArrowLeft } from 'lucide-react'
+import { ShoppingCart, Star, Settings, X, Plus, Minus, Trash2, CreditCard, LogOut, ArrowLeft, Search } from 'lucide-react'
 import { mockStoreData } from '../store/mockStoreData'
 
 // --- CARRITO (DRAWER) ---
@@ -140,6 +140,114 @@ const CategoryInlineView = ({ category, products, onBack, addToCart }) => {
                   <button
                     onClick={() => addToCart(prod)}
                     style={{ background: '#E8F5E9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// --- ALL PRODUCTS VIEW ---
+const AllProductsView = ({ products, categories, onBack, addToCart, storeConfig }) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+
+  const filteredProducts = products.filter(prod => {
+    const matchesSearch = prod.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCategory = selectedCategory === 'all' || prod.category === selectedCategory
+    return matchesSearch && matchesCategory
+  })
+
+  return (
+    <div style={{ animation: 'fadeIn 0.3s ease-in-out' }}>
+      <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', marginBottom: '2rem', fontSize: '1rem', padding: 0 }}>
+        <ArrowLeft size={18} /> Volver al Inicio
+      </button>
+
+      <div style={{ marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '2.5rem', margin: '0 0 1.5rem 0', color: storeConfig?.titleColor || 'var(--primary)', fontFamily: 'Fraunces' }}>Todos nuestros productos</h2>
+        
+        {/* Search Bar */}
+        <div style={{ position: 'relative', maxWidth: '600px', marginBottom: '2rem' }}>
+          <Search style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#64748B' }} size={20} />
+          <input 
+            type="text" 
+            placeholder="Busca por nombre..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', borderRadius: '12px', border: '1px solid #E2E8F0', fontSize: '1rem', outline: 'none' }}
+          />
+        </div>
+
+        {/* Category Pills */}
+        <div style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
+          <button 
+            onClick={() => setSelectedCategory('all')}
+            style={{ 
+              padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s', border: 'none',
+              background: selectedCategory === 'all' ? (storeConfig?.primaryColor || '#11683E') : '#F1F5F9',
+              color: selectedCategory === 'all' ? 'white' : '#475569'
+            }}
+          >
+            Todas
+          </button>
+          {categories.map(cat => (
+            <button 
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              style={{ 
+                padding: '0.5rem 1.2rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s', border: 'none',
+                background: selectedCategory === cat.id ? (storeConfig?.primaryColor || '#11683E') : '#F1F5F9',
+                color: selectedCategory === cat.id ? 'white' : '#475569'
+              }}
+            >
+              {cat.icon} {cat.name}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Products Grid */}
+      {filteredProducts.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '4rem 0', color: '#64748B' }}>
+          <Search size={48} style={{ opacity: 0.3, marginBottom: '1rem' }} />
+          <p style={{ fontSize: '1.2rem' }}>No se encontraron productos con esos criterios.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: '1.5rem' }}>
+          {filteredProducts.map(prod => (
+            <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
+              <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', gap: '0.5rem', zIndex: 1 }}>
+                <span style={{ background: '#E8F5E9', color: '#2E7D32', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                  {prod.badge}
+                </span>
+                {prod.oldPrice && (
+                  <span style={{ background: '#FFEBEE', color: '#C62828', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 'bold' }}>
+                    -20%
+                  </span>
+                )}
+              </div>
+              <div style={{ height: '200px', background: '#F8F9F3', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <img src={prod.image} alt={prod.name} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.3s' }} onMouseOver={e => e.currentTarget.style.transform = 'scale(1.05)'} onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'} />
+              </div>
+              <div style={{ padding: '1rem' }}>
+                <h5 style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', color: 'var(--text-main)' }}>{prod.name}</h5>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--primary)' }}>${prod.price.toFixed(2)}</span>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{(prod.price * useStore.getState().bcvRate).toFixed(2)} Bs</span>
+                  </div>
+                  <button
+                    onClick={() => addToCart(prod)}
+                    style={{ background: '#E8F5E9', border: 'none', width: '36px', height: '36px', borderRadius: '50%', color: '#2E7D32', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'background 0.2s' }}
+                    onMouseOver={e => e.currentTarget.style.background = '#C8E6C9'}
+                    onMouseOut={e => e.currentTarget.style.background = '#E8F5E9'}
                   >
                     <Plus size={18} />
                   </button>
@@ -454,18 +562,20 @@ const SingleProductModal = ({ product, onClose, addToCart, bcvRate }) => {
   )
 }
 
-const ProductsTemplate = ({ products, config, storeConfig, addToCart }) => {
+const ProductsTemplate = ({ products, config, storeConfig, addToCart, onViewAll }) => {
   const [selectedProduct, setSelectedProduct] = useState(null)
 
   const cleanTitle = (config.sectionTitle === 'Tu Catálogo') ? 'Nuestros Productos' : (config.sectionTitle || 'Nuestros Productos')
   const cleanSubtitle = (config.sectionSubtitle && config.sectionSubtitle.includes('Sube tus primeros')) ? 'Explora nuestra colección exclusiva con entrega rápida y garantía de calidad.' : (config.sectionSubtitle || '')
 
+  const displayProducts = products.slice(0, 6)
+
   return (
     <>
       <div>
-      <SectionHeader title={cleanTitle} subtitle={cleanSubtitle} link="Ver todos &rarr;" titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
+      <SectionHeader title={cleanTitle} subtitle={cleanSubtitle} link="Ver todos &rarr;" onLinkClick={onViewAll} titleColor={storeConfig?.titleColor} buttonColor={storeConfig?.buttonColor} />
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 260px), 1fr))`, gap: '1.5rem' }}>
-        {products.map(prod => (
+        {displayProducts.map(prod => (
           <div key={prod.id} style={{ background: 'white', borderRadius: '16px', overflow: 'hidden', border: '1px solid #eee', position: 'relative' }}>
             <div style={{ position: 'absolute', top: '10px', left: '10px', display: 'flex', gap: '0.5rem', zIndex: 1 }}>
               <span style={{ background: '#E8F5E9', color: '#2E7D32', padding: '0.2rem 0.6rem', borderRadius: '12px', fontSize: '0.7rem', fontWeight: 'bold' }}>
@@ -596,13 +706,20 @@ const TestimonialsTemplate = ({ testimonials, config, storeConfig }) => {
   )
 }
 
-const SectionHeader = ({ title, subtitle, link, center, titleColor, buttonColor }) => (
+const SectionHeader = ({ title, subtitle, link, onLinkClick, center, titleColor, buttonColor }) => (
   <div style={{ display: 'flex', justifyContent: center ? 'center' : 'space-between', alignItems: center ? 'center' : 'flex-end', marginBottom: '2rem', flexDirection: center ? 'column' : 'row', textAlign: center ? 'center' : 'left' }}>
     <div>
       <h2 style={{ margin: '0 0 0.3rem 0', fontSize: '2rem', color: titleColor || 'var(--primary)' }}>{title}</h2>
       <p style={{ margin: 0, color: 'var(--text-muted)' }}>{subtitle}</p>
     </div>
-    {link && <a href="#" style={{ color: buttonColor || 'var(--primary)', fontWeight: 'bold', textDecoration: 'none', fontSize: '0.9rem' }}>{link}</a>}
+    {link && (
+      <button 
+        onClick={(e) => { e.preventDefault(); if (onLinkClick) onLinkClick(); }} 
+        style={{ background: 'none', border: 'none', color: buttonColor || 'var(--primary)', fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer', padding: 0 }}
+      >
+        {link}
+      </button>
+    )}
   </div>
 )
 
@@ -626,6 +743,7 @@ export default function StorePreview({ isReadOnly = false }) {
   const [showCheckout, setShowCheckout] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const [activeCategoryView, setActiveCategoryView] = useState(null)
+  const [showAllProducts, setShowAllProducts] = useState(false)
 
   let activeStoreData;
   if (!isReadOnly) {
@@ -752,7 +870,17 @@ export default function StorePreview({ isReadOnly = false }) {
         </div>
       </div>
 
-      {activeCategoryView ? (
+      {showAllProducts ? (
+        <div className="store-section-padding" style={{ paddingBottom: '6rem' }}>
+          <AllProductsView 
+            products={products}
+            categories={categories}
+            onBack={() => setShowAllProducts(false)}
+            addToCart={addToCart}
+            storeConfig={storeConfig}
+          />
+        </div>
+      ) : activeCategoryView ? (
         <div className="store-section-padding" style={{ paddingBottom: '6rem' }}>
           <CategoryInlineView 
             category={activeCategoryView} 
@@ -792,7 +920,7 @@ export default function StorePreview({ isReadOnly = false }) {
 
                 {section.templateType === 'hero' && <HeroTemplate config={config} storeConfig={storeConfig} />}
                 {section.templateType === 'categories' && <CategoriesTemplate categories={categories} config={config} storeConfig={storeConfig} onCategoryClick={(cat) => setActiveCategoryView(cat)} />}
-                {section.templateType === 'products_grid' && <ProductsTemplate products={products.filter(p => p.tags.includes(section.tag || 'all'))} config={config} storeConfig={storeConfig} addToCart={addToCart} />}
+                {section.templateType === 'products_grid' && <ProductsTemplate products={products.filter(p => p.tags.includes(section.tag || 'all'))} config={config} storeConfig={storeConfig} addToCart={addToCart} onViewAll={() => setShowAllProducts(true)} />}
                 {section.templateType === 'promo' && <PromoTemplate config={config} storeConfig={storeConfig} />}
                 {section.templateType === 'features' && <FeaturesTemplate features={features} config={config} storeConfig={storeConfig} />}
                 {section.templateType === 'testimonials' && <TestimonialsTemplate testimonials={testimonials} config={config} storeConfig={storeConfig} />}
