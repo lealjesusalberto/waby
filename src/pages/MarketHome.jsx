@@ -198,12 +198,20 @@ export default function MarketHome() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '1rem', borderTop: '1px solid #F1F5F9' }}>
                   <span 
                     onClick={(e) => openStoreMap(store, e)}
-                    style={{ fontSize: '0.8rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.3rem', cursor: 'pointer', background: '#F4FBF7', padding: '0.3rem 0.6rem', borderRadius: '20px', border: '1px solid #A7F3D0', fontWeight: '600', transition: 'background 0.2s' }}
+                    style={{ 
+                      fontSize: '0.8rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '0.3rem', 
+                      cursor: 'pointer', background: '#F4FBF7', padding: '0.3rem 0.6rem', borderRadius: '20px', 
+                      border: '1px solid #A7F3D0', fontWeight: '600', transition: 'background 0.2s',
+                      maxWidth: '160px'
+                    }}
                     onMouseOver={e => e.currentTarget.style.background = '#D1FAE5'}
                     onMouseOut={e => e.currentTarget.style.background = '#F4FBF7'}
-                    title="Ver en mapa"
+                    title={store.location || 'Ver en mapa'}
                   >
-                    <MapPin size={14} /> {store.location || 'Online'}
+                    <MapPin size={14} style={{ flexShrink: 0 }} /> 
+                    <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {store.location ? store.location.split(',').slice(0, 2).join(',') : 'Online'}
+                    </span>
                   </span>
                   <button style={{ background: '#F4FBF7', color: 'var(--primary)', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 'bold' }}>
                     Visitar
