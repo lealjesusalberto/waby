@@ -186,9 +186,9 @@ export default function EditorPanel() {
 
   const activeSection = layoutSections.find(s => s.id === activeSectionId)
 
-  const handleImageUpload = (e, callback) => {
+  const handleImageUpload = (e, callback, maxSize = 600) => {
     const file = e.target.files[0];
-    if (file) compressImage(file, callback);
+    if (file) compressImage(file, callback, maxSize);
   }
 
   const compressImage = (file, callback, maxSize = 600) => {
@@ -677,7 +677,7 @@ export default function EditorPanel() {
                           <input type="text" value={activeSection.config.bgImage || ''} onChange={(e) => updateSectionConfig(activeSection.id, 'bgImage', e.target.value)} style={{...inputStyle, flex: 1}} placeholder="URL o subir imagen de fondo" />
                           <label style={{ background: '#E2E8E0', padding: '0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '0.2rem' }}>
                             <Upload size={16} />
-                            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => updateSectionConfig(activeSection.id, 'bgImage', base64))} />
+                            <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => updateSectionConfig(activeSection.id, 'bgImage', base64), 1920)} />
                           </label>
                         </div>
                       </div>
