@@ -34,7 +34,7 @@ function BuilderLayout() {
 // Componente Público / Cliente
 function StorefrontLayout() {
   return (
-    <div style={{ background: '#F8F9F3', minHeight: '100vh', width: '100vw' }}>
+    <div style={{ background: '#F8F9F3', minHeight: '100vh', width: '100%' }}>
       <StorePreview isReadOnly={true} />
     </div>
   )
