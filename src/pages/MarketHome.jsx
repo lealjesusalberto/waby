@@ -24,9 +24,9 @@ export default function MarketHome() {
   }, [user])
 
   useEffect(() => {
-    if (homeHeroImages && homeHeroImages.length > 1) {
+    if (homeHeroImages && homeHeroImages.length > 0) {
       const interval = setInterval(() => {
-        setCurrentHeroIndex((prev) => (prev + 1) % homeHeroImages.length)
+        setCurrentHeroIndex((prev) => (prev + 1) % (homeHeroImages.length + 1))
       }, 5000)
       return () => clearInterval(interval)
     }
@@ -151,16 +151,16 @@ export default function MarketHome() {
 
       {/* Hero Search Section */}
       <div style={{
-        background: homeHeroImages && homeHeroImages.length > 0 
-          ? `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${homeHeroImages[currentHeroIndex]}) center/cover no-repeat`
-          : 'linear-gradient(135deg, #11683E 0%, #FFC107 100%)',
+        background: currentHeroIndex === 0 
+          ? 'linear-gradient(135deg, #11683E 0%, #FFC107 100%)'
+          : `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${homeHeroImages[currentHeroIndex - 1]}) center/cover no-repeat`,
         color: 'white', padding: '5rem 2rem', textAlign: 'center',
         borderBottomLeftRadius: '40px', borderBottomRightRadius: '40px',
         marginBottom: '3rem', position: 'relative', overflow: 'hidden',
         transition: 'background 1s ease-in-out'
       }}>
         {/* Decoraciones de fondo abstracto */}
-        {(!homeHeroImages || homeHeroImages.length === 0) && (
+        {currentHeroIndex === 0 && (
           <>
             <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: '300px', height: '300px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '50%', filter: 'blur(40px)' }}></div>
             <div style={{ position: 'absolute', bottom: '-20%', right: '-5%', width: '400px', height: '400px', background: 'rgba(255, 255, 255, 0.15)', borderRadius: '50%', filter: 'blur(60px)' }}></div>
