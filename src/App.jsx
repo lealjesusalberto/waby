@@ -87,8 +87,8 @@ function App() {
     <BrowserRouter>
       <ToastBanner />
       <Routes>
-        {/* Redirigir el inicio a login por defecto */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        {/* Directorio Principal / Marketplace por defecto */}
+        <Route path="/" element={<MarketHome />} />
 
         {/* Rutas de Autenticación */}
         <Route element={<AuthLayout />}>

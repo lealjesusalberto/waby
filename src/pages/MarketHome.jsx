@@ -8,9 +8,16 @@ import L from 'leaflet'
 
 export default function MarketHome() {
   const navigate = useNavigate()
-  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart } = useStore()
+  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart, user } = useStore()
   const [showOrders, setShowOrders] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [showGuestModal, setShowGuestModal] = useState(false)
+
+  useEffect(() => {
+    if (!user && !sessionStorage.getItem('guest')) {
+      setShowGuestModal(true)
+    }
+  }, [user])
 
   // Map Modal State
   const [showMapModal, setShowMapModal] = useState(false)
@@ -76,37 +83,60 @@ export default function MarketHome() {
         </div>
 
         <div className="market-header-buttons">
-          <NotificationBell />
-          <button
-            onClick={() => setShowOrders(true)}
-            style={{ background: '#F8FAFC', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s', border: '1px solid #E2E8F0' }}
-            onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
-            onMouseOut={e => e.currentTarget.style.background = '#F8FAFC'}
-          >
-            <Package size={18} /> <span className="market-btn-text">Mis Órdenes</span> ({orders.length})
-          </button>
+          {user ? (
+            <>
+              <NotificationBell />
+              <button
+                onClick={() => setShowOrders(true)}
+                style={{ background: '#F8FAFC', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s', border: '1px solid #E2E8F0' }}
+                onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
+                onMouseOut={e => e.currentTarget.style.background = '#F8FAFC'}
+              >
+                <Package size={18} /> <span className="market-btn-text">Mis Órdenes</span> ({orders.length})
+              </button>
 
-          <button
-            onClick={() => navigate('/profile')}
-            style={{ background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s' }}
-            onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
-            onMouseOut={e => e.currentTarget.style.background = '#F1F5F9'}
-          >
-            {userProfile?.avatar ? (
-              <img src={userProfile.avatar} alt="Profile" style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }} />
-            ) : (
-              <User size={18} />
-            )}
-            <span className="market-btn-text">Mi Perfil</span>
-          </button>
+              <button
+                onClick={() => navigate('/profile')}
+                style={{ background: '#F1F5F9', color: '#0F172A', border: 'none', padding: '0.6rem 1rem', borderRadius: '20px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', transition: 'background 0.2s' }}
+                onMouseOver={e => e.currentTarget.style.background = '#E2E8E0'}
+                onMouseOut={e => e.currentTarget.style.background = '#F1F5F9'}
+              >
+                {userProfile?.avatar ? (
+                  <img src={userProfile.avatar} alt="Profile" style={{ width: '24px', height: '24px', borderRadius: '50%', objectFit: 'cover' }} />
+                ) : (
+                  <User size={18} />
+                )}
+                <span className="market-btn-text">Mi Perfil</span>
+              </button>
 
-          <button
-            onClick={handleLogout}
-            style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '0.6rem', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            title="Cerrar Sesión"
-          >
-            <LogOut size={18} />
-          </button>
+              <button
+                onClick={handleLogout}
+                style={{ background: '#FEE2E2', color: '#DC2626', border: 'none', padding: '0.6rem', borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                title="Cerrar Sesión"
+              >
+                <LogOut size={18} />
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => navigate('/login')}
+                style={{ background: '#F8FAFC', color: '#0F172A', border: '1px solid #E2E8F0', padding: '0.6rem 1.5rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
+                onMouseOver={e => e.currentTarget.style.background = '#F1F5F9'}
+                onMouseOut={e => e.currentTarget.style.background = '#F8FAFC'}
+              >
+                Iniciar Sesión
+              </button>
+              <button
+                onClick={() => navigate('/register')}
+                style={{ background: '#11683E', color: 'white', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
+                onMouseOver={e => e.currentTarget.style.background = '#0d4d2e'}
+                onMouseOut={e => e.currentTarget.style.background = '#11683E'}
+              >
+                Crear Tienda
+              </button>
+            </>
+          )}
         </div>
       </div>
 
@@ -385,6 +415,66 @@ export default function MarketHome() {
                   </Popup>
                 </Marker>
               </MapContainer>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Guest Welcome Modal */}
+      {showGuestModal && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 2000, backdropFilter: 'blur(8px)', animation: 'fadeIn 0.3s'
+        }}>
+          <div style={{
+            background: 'white', borderRadius: '24px', width: '90%', maxWidth: '400px',
+            padding: '2.5rem 2rem', textAlign: 'center', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+            display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative'
+          }}>
+            <button 
+              onClick={() => {
+                sessionStorage.setItem('guest', 'true');
+                setShowGuestModal(false);
+              }}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8' }}
+            >
+              <X size={24} />
+            </button>
+            
+            <div>
+              <img src="/waby_logo.png" alt="Waby" style={{ width: '64px', height: '64px', objectFit: 'contain', marginBottom: '1rem' }} />
+              <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0F172A', margin: '0 0 0.5rem 0' }}>¡Bienvenido a Waby!</h2>
+              <p style={{ color: '#64748B', margin: 0, fontSize: '0.95rem', lineHeight: '1.5' }}>
+                El mercado local donde encuentras de todo. Inicia sesión para comprar o crea tu propia tienda en minutos.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', marginTop: '1rem' }}>
+              <button
+                onClick={() => navigate('/login')}
+                style={{ background: '#F8FAFC', color: '#0F172A', border: '1px solid #E2E8F0', padding: '1rem', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s', fontSize: '1rem' }}
+                onMouseOver={e => e.currentTarget.style.background = '#F1F5F9'}
+                onMouseOut={e => e.currentTarget.style.background = '#F8FAFC'}
+              >
+                Iniciar Sesión
+              </button>
+              <button
+                onClick={() => navigate('/register')}
+                style={{ background: '#11683E', color: 'white', border: 'none', padding: '1rem', borderRadius: '12px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s', fontSize: '1rem' }}
+                onMouseOver={e => e.currentTarget.style.background = '#0d4d2e'}
+                onMouseOut={e => e.currentTarget.style.background = '#11683E'}
+              >
+                Vender en Waby
+              </button>
+              <button
+                onClick={() => {
+                  sessionStorage.setItem('guest', 'true');
+                  setShowGuestModal(false);
+                }}
+                style={{ background: 'none', color: '#64748B', border: 'none', padding: '0.5rem', marginTop: '0.5rem', fontWeight: '600', cursor: 'pointer', fontSize: '0.9rem', textDecoration: 'underline' }}
+              >
+                Continuar como espectador
+              </button>
             </div>
           </div>
         </div>
