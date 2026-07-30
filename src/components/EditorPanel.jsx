@@ -177,7 +177,7 @@ export default function EditorPanel() {
   const [newProdPrice, setNewProdPrice] = useState('')
   const [newProdImage, setNewProdImage] = useState('')
   const [newProdBadge, setNewProdBadge] = useState('Nuevo')
-  const [newProdCategory, setNewProdCategory] = useState(1)
+  const [newProdCategory, setNewProdCategory] = useState('camisetas')
   const [isFeatured, setIsFeatured] = useState(false)
   const [isBestseller, setIsBestseller] = useState(false)
   const [newProdDesc, setNewProdDesc] = useState('')

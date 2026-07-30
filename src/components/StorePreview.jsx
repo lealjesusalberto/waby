@@ -755,7 +755,11 @@ export default function StorePreview({ isReadOnly = false }) {
         <div className="store-section-padding" style={{ paddingBottom: '6rem' }}>
           <CategoryInlineView 
             category={activeCategoryView} 
-            products={products.filter(p => p.categoryId === activeCategoryView.id)} 
+            products={products.filter(p => {
+              // Fix for products created with the old categoryId bug
+              const catId = (p.categoryId === 1 || p.categoryId === '1' || Number.isNaN(p.categoryId)) ? 'camisetas' : p.categoryId;
+              return catId === activeCategoryView.id;
+            })} 
             onBack={() => setActiveCategoryView(null)}
             addToCart={addToCart}
           />
