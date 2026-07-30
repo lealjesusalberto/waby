@@ -396,7 +396,7 @@ const SingleProductModal = ({ product, onClose, addToCart, bcvRate }) => {
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
-      <div style={{ background: 'white', borderRadius: '24px', width: '90%', maxWidth: '800px', display: 'flex', overflow: 'hidden', position: 'relative', maxHeight: '90vh' }}>
+      <div className="single-product-modal" style={{ background: 'white', borderRadius: '24px', width: '90%', maxWidth: '800px', overflow: 'hidden', position: 'relative', maxHeight: '90vh' }}>
         <button onClick={onClose} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'white', border: 'none', borderRadius: '50%', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2, boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
           <X size={20} color="#64748B" />
         </button>
