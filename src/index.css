@@ -772,3 +772,38 @@ h4,
     overflow-y: auto !important;
   }
 }
+
+/* Guest Header Buttons */
+.guest-header-btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.guest-header-btn.login-btn {
+  background: #F8FAFC;
+  color: #0F172A;
+  border: 1px solid #E2E8F0;
+}
+.guest-header-btn.login-btn:hover {
+  background: #F1F5F9;
+}
+
+.guest-header-btn.register-btn {
+  background: #11683E;
+  color: white;
+  border: none;
+}
+.guest-header-btn.register-btn:hover {
+  background: #0d4d2e;
+}
+
+@media (max-width: 600px) {
+  .guest-header-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}

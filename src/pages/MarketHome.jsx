@@ -123,18 +123,14 @@ export default function MarketHome() {
           ) : (
             <>
               <button
+                className="guest-header-btn login-btn"
                 onClick={() => navigate('/login')}
-                style={{ background: '#F8FAFC', color: '#0F172A', border: '1px solid #E2E8F0', padding: '0.6rem 1.5rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
-                onMouseOver={e => e.currentTarget.style.background = '#F1F5F9'}
-                onMouseOut={e => e.currentTarget.style.background = '#F8FAFC'}
               >
                 Iniciar Sesión
               </button>
               <button
+                className="guest-header-btn register-btn"
                 onClick={() => navigate('/register')}
-                style={{ background: '#11683E', color: 'white', border: 'none', padding: '0.6rem 1.5rem', borderRadius: '20px', fontWeight: 'bold', cursor: 'pointer', transition: 'all 0.2s' }}
-                onMouseOver={e => e.currentTarget.style.background = '#0d4d2e'}
-                onMouseOut={e => e.currentTarget.style.background = '#11683E'}
               >
                 Crear Tienda
               </button>
