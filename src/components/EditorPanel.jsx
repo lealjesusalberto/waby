@@ -639,6 +639,25 @@ export default function EditorPanel() {
                   {activeSection.templateType === 'hero' && (
                     <>
                       <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b' }}>Subtítulo del Banner</label>
+                        <textarea 
+                          value={activeSection.config.subtitle || ''} 
+                          onChange={(e) => updateSectionConfig(activeSection.id, 'subtitle', e.target.value)} 
+                          style={{...inputStyle, resize: 'vertical', minHeight: '60px'}} 
+                          placeholder="Descubre los mejores productos..."
+                        />
+                      </div>
+                      <div>
+                        <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b' }}>Etiqueta (Tag)</label>
+                        <input 
+                          type="text" 
+                          value={activeSection.config.tagText || ''} 
+                          onChange={(e) => updateSectionConfig(activeSection.id, 'tagText', e.target.value)} 
+                          style={inputStyle} 
+                          placeholder="✨ NUEVA TEMPORADA 2024"
+                        />
+                      </div>
+                      <div>
                         <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#64748b' }}>Texto del Botón</label>
                         <input type="text" value={activeSection.config.buttonText} onChange={(e) => updateSectionConfig(activeSection.id, 'buttonText', e.target.value)} style={inputStyle} />
                       </div>

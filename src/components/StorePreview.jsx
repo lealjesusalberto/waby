@@ -330,13 +330,13 @@ const HeroTemplate = ({ config, storeConfig }) => {
       display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center'
     }}>
       <span style={{ border: '1px solid rgba(255,255,255,0.5)', padding: '0.4rem 1rem', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFD166' }}>
-        ✨ NUEVA TEMPORADA 2024
+        {config.tagText || '✨ NUEVA TEMPORADA 2024'}
       </span>
       <h1 className="hero-title" style={{ margin: '0 0 1rem 0', lineHeight: 1.1, maxWidth: '600px' }}>
         {config.title || '¡Bienvenido a nuestra Tienda!'}
       </h1>
       <p style={{ fontSize: '1.1rem', maxWidth: '500px', marginBottom: '2rem', lineHeight: 1.5, opacity: 0.9 }}>
-        {config.subtitle}
+        {config.subtitle || 'Descubre los mejores productos y ofertas exclusivas seleccionadas para ti.'}
       </p>
       <div className="hero-buttons" style={{ display: 'flex', gap: '1rem' }}>
         <button style={{ background: storeConfig?.buttonColor || '#FF3B30', color: 'white', border: 'none', padding: '1rem 2rem', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
