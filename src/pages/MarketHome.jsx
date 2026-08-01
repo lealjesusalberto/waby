@@ -269,6 +269,54 @@ export default function MarketHome() {
         </div>
       </div>
 
+      {/* Cómo Funciona Waby para Tiendas */}
+      <div style={{ maxWidth: '1200px', margin: '4rem auto', padding: '0 2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h3 style={{ fontSize: '2rem', color: '#0F172A', fontFamily: 'Fraunces', margin: '0 0 1rem 0' }}>Lleva tu negocio al siguiente nivel</h3>
+          <p style={{ color: '#64748B', fontSize: '1.1rem', maxWidth: '600px', margin: '0 auto' }}>
+            Únete a Waby y descubre la forma más fácil y profesional de vender en internet, con todo lo que necesitas integrado.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+          {/* Card 1 */}
+          <div style={{ background: 'white', padding: '2rem', borderRadius: '24px', border: '1px solid #E2E8F0', textAlign: 'center', transition: 'transform 0.3s', cursor: 'pointer' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}>
+            <div style={{ width: '60px', height: '60px', background: '#F0FDF4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+              <span style={{ fontSize: '2rem' }}>🏪</span>
+            </div>
+            <h4 style={{ fontSize: '1.2rem', color: '#0F172A', marginBottom: '0.5rem' }}>Tu tienda en minutos</h4>
+            <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: '1.5' }}>Crea tu catálogo online personalizado sin saber programar. Diseño profesional que se adapta a tu marca.</p>
+          </div>
+
+          {/* Card 2 */}
+          <div style={{ background: 'white', padding: '2rem', borderRadius: '24px', border: '1px solid #E2E8F0', textAlign: 'center', transition: 'transform 0.3s', cursor: 'pointer' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}>
+            <div style={{ width: '60px', height: '60px', background: '#F0F9FF', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+              <span style={{ fontSize: '2rem' }}>💱</span>
+            </div>
+            <h4 style={{ fontSize: '1.2rem', color: '#0F172A', marginBottom: '0.5rem' }}>Tasa BCV Automática</h4>
+            <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: '1.5' }}>Publica tus precios en dólares y Waby los convierte a bolívares automáticamente al instante.</p>
+          </div>
+
+          {/* Card 3 */}
+          <div style={{ background: 'white', padding: '2rem', borderRadius: '24px', border: '1px solid #E2E8F0', textAlign: 'center', transition: 'transform 0.3s', cursor: 'pointer' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}>
+            <div style={{ width: '60px', height: '60px', background: '#FFF7ED', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+              <span style={{ fontSize: '2rem' }}>💳</span>
+            </div>
+            <h4 style={{ fontSize: '1.2rem', color: '#0F172A', marginBottom: '0.5rem' }}>Gestión de Pagos</h4>
+            <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: '1.5' }}>Tus clientes reportan sus transferencias y Pago Móvil directamente en la plataforma, todo ordenado.</p>
+          </div>
+
+          {/* Card 4 */}
+          <div style={{ background: 'white', padding: '2rem', borderRadius: '24px', border: '1px solid #E2E8F0', textAlign: 'center', transition: 'transform 0.3s', cursor: 'pointer' }} onMouseOver={e => e.currentTarget.style.transform = 'translateY(-5px)'} onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}>
+            <div style={{ width: '60px', height: '60px', background: '#FDF2F8', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem auto' }}>
+              <span style={{ fontSize: '2rem' }}>🚀</span>
+            </div>
+            <h4 style={{ fontSize: '1.2rem', color: '#0F172A', marginBottom: '0.5rem' }}>Vende en Piloto Automático</h4>
+            <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: '1.5' }}>Deja de perder horas respondiendo mensajes. El modelo Amazon adaptado para tu negocio local.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Modal Mis Órdenes y Carrito */}
       {showOrders && (
         <div style={{
@@ -497,6 +545,26 @@ export default function MarketHome() {
           </div>
         </div>
       )}
+
+      {/* Footer Fijo al Final */}
+      <footer style={{ 
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        height: '50px', 
+        background: 'linear-gradient(135deg, #11683E 0%, #FFC107 50%, #F97316 100%)', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        color: 'white', 
+        fontWeight: 'bold', 
+        zIndex: 1000,
+        boxShadow: '0 -4px 10px rgba(0,0,0,0.1)'
+      }}>
+        Waby 2026 
+        <img src="https://flagcdn.com/w40/ve.png" alt="Venezuela" style={{ width: '20px', height: '15px', marginLeft: '8px', borderRadius: '2px' }} />
+      </footer>
 
     </div>
   )
