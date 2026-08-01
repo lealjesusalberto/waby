@@ -70,7 +70,7 @@ export default function SuperAdminPanel() {
     }
   }
 
-  const pendingStores = users.filter(u => u.role === 'tienda' && u.status === 'validation_pending')
+  const pendingStores = users.filter(u => u.role === 'tienda' && (u.status === 'validation_pending' || u.status === 'pending_activation'))
   const activeStores = users.filter(u => u.role === 'tienda' && u.status === 'active')
   const clients = users.filter(u => u.role === 'cliente')
 

@@ -394,7 +394,10 @@ export const useStore = create((set, get) => ({
       const realStores = []
       snapshot.forEach(doc => {
         const data = doc.data()
-        // Mostrar todas las tiendas por ahora para evitar confusión en desarrollo
+        
+        // Solo mostrar tiendas que ya estén activas y aprobadas
+        if (data.status !== 'active') return;
+
         let coverImg = 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?q=80&w=500'
         if (data.layoutSections) {
           const hero = data.layoutSections.find(s => s.templateType === 'hero' || s.templateType === 'banner')
