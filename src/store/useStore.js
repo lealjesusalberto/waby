@@ -201,11 +201,7 @@ export const useStore = create((set, get) => ({
     { id: 'accesorios', name: 'Accesorios & Bolsos', count: 64, color: '#64DD17', icon: '👜' },
   ],
 
-  products: [
-    { id: 1, categoryId: 'camisetas', name: 'Producto de Prueba 1 (Editar)', price: 10.00, image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
-    { id: 2, categoryId: 'pantalones', name: 'Producto de Prueba 2 (Editar)', price: 15.00, image: 'https://images.unsplash.com/photo-1613146445582-7ea4c4e7ab56?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
-    { id: 3, categoryId: 'calzado', name: 'Producto de Prueba 3 (Editar)', price: 20.00, image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?q=80&w=500', tags: ['all'], rating: 5.0, badge: 'Demo' },
-  ],
+  products: [],
 
   addNewProduct: async (product) => {
     const newProduct = { ...product, id: Date.now().toString(), storeId: get().user?.uid || 'demo' }
@@ -485,13 +481,7 @@ export const useStore = create((set, get) => ({
       if (products.length > 0) {
         set({ products: products })
       } else {
-        // If no products, save the default demo products
-        const demoProducts = get().products
-        const newProducts = demoProducts.map(p => ({ ...p, storeId: uid }))
-        newProducts.forEach(async newP => {
-          await setDoc(doc(db, 'products', newP.id.toString()), newP)
-        })
-        set({ products: newProducts })
+        set({ products: [] })
       }
 
       // 3. Fetch orders
