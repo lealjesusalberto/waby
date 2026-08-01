@@ -129,7 +129,7 @@ export default function SuperAdminPanel() {
       <main className="admin-main">
 
         {/* Header Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
           <div style={{ background: 'white', padding: '1.5rem', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05)' }}>
             <p style={{ color: '#64748B', margin: '0 0 0.5rem 0', fontSize: '0.9rem', fontWeight: 'bold' }}>Tiendas por Validar</p>
             <h3 style={{ margin: 0, fontSize: '2rem', color: '#F59E0B' }}>{pendingStores.length}</h3>
@@ -176,7 +176,7 @@ export default function SuperAdminPanel() {
             <div>
               {/* Pending Stores Cards */}
               {activeTab === 'pending' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.5rem' }}>
                   {pendingStores.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8', gridColumn: '1 / -1' }}>No hay tiendas pendientes.</p>}
                   {pendingStores.map(store => (
                     <div key={store.id} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#F8FAFC' }}>
@@ -202,7 +202,7 @@ export default function SuperAdminPanel() {
 
               {/* Active Stores Cards */}
               {activeTab === 'active' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: '1.5rem' }}>
                   {activeStores.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8', gridColumn: '1 / -1' }}>No hay tiendas activas.</p>}
                   {activeStores.map(store => (
                     <div key={store.id} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', background: '#F8FAFC' }}>
@@ -224,7 +224,7 @@ export default function SuperAdminPanel() {
 
               {/* Clients Cards */}
               {activeTab === 'users' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 250px), 1fr))', gap: '1.5rem' }}>
                   {clients.length === 0 && <p style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8', gridColumn: '1 / -1' }}>No hay clientes registrados.</p>}
                   {clients.map(client => (
                     <div key={client.id} style={{ border: '1px solid #E2E8F0', borderRadius: '12px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', background: '#F8FAFC' }}>

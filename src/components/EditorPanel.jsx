@@ -71,7 +71,7 @@ export default function EditorPanel() {
     storeStatus, reportSubscriptionPayment,
     storeConfig, updateStoreConfig,
     hasUnsavedChanges, saveDesignToFirestore,
-    categories
+    categories, bcvRate
   } = useStore()
   
   const getAvailableCategories = () => {
@@ -1053,19 +1053,19 @@ export default function EditorPanel() {
                 </h4>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
                   <span style={{ color: '#64748B' }}>Monto:</span>
-                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>$3.00 (A la tasa del día)</span>
+                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>$3.00 (Bs. {(3 * (bcvRate || 36.5)).toFixed(2)})</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
                   <span style={{ color: '#64748B' }}>Teléfono:</span>
-                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>0414-1234567</span>
+                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>0424-2098250</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
                   <span style={{ color: '#64748B' }}>Cédula/RIF:</span>
-                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>J-40123456-7</span>
+                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>J-41067989-1</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem' }}>
                   <span style={{ color: '#64748B' }}>Banco:</span>
-                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Banesco (0134)</span>
+                  <span style={{ fontWeight: 'bold', color: '#0F172A' }}>Banco de Venezuela</span>
                 </div>
               </div>
 
