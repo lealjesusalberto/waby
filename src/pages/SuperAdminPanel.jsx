@@ -189,7 +189,14 @@ export default function SuperAdminPanel() {
                         <p style={{ margin: 0, color: '#0F172A', fontWeight: '500' }}>{store.storeName}</p>
                       </div>
                       <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#B45309', padding: '0.8rem', borderRadius: '8px', fontSize: '0.85rem' }}>
-                        <p style={{ margin: '0 0 0.2rem 0' }}>Banco: <strong>{store.paymentBank || 'N/A'}</strong></p>
+                        <p style={{ margin: '0 0 0.2rem 0' }}>Monto: <strong>$3.00 (Bs. {(3 * localBcvRate).toFixed(2)})</strong></p>
+                        <p style={{ margin: '0 0 0.2rem 0' }}>Banco: <strong>{{
+                          '0102': 'Banco de Venezuela', '0104': 'Venezolano de Crédito', '0105': 'Banco Mercantil', 
+                          '0108': 'BBVA Provincial', '0114': 'Bancaribe', '0115': 'Banco Exterior', '0128': 'Banco Caroní', 
+                          '0134': 'Banesco', '0138': 'Banco Plaza', '0151': 'BFC Banco Fondo Común', '0156': '100% Banco', 
+                          '0157': 'Banco del Sur', '0163': 'Banco del Tesoro', '0169': 'Mi Banco', '0171': 'Banco Activo', 
+                          '0172': 'Bancamiga', '0175': 'Banco Bicentenario', '0177': 'Banfanb', '0191': 'BNC Nacional de Crédito'
+                        }[store.paymentBank] || store.paymentBank || 'N/A'}</strong></p>
                         <p style={{ margin: 0 }}>Ref: <strong>{store.paymentRef || 'N/A'}</strong></p>
                       </div>
                       <button onClick={() => approvePayment(store.id)} style={{ background: '#10B981', color: 'white', border: 'none', padding: '0.8rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: 'auto', boxShadow: '0 2px 4px rgba(16, 185, 129, 0.2)' }}>
