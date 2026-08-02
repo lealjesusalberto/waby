@@ -926,7 +926,7 @@ export default function StorePreview({ isReadOnly = false }) {
 
                 {section.templateType === 'hero' && <HeroTemplate config={config} storeConfig={storeConfig} />}
                 {section.templateType === 'categories' && <CategoriesTemplate categories={categories} config={config} storeConfig={storeConfig} onCategoryClick={(cat) => setActiveCategoryView(cat)} />}
-                {section.templateType === 'products_grid' && <ProductsTemplate products={products.filter(p => (p.tags || ['all']).includes(section.tag || 'all'))} config={config} storeConfig={storeConfig} addToCart={addToCart} onViewAll={() => setShowAllProducts(true)} />}
+                {section.templateType === 'products_grid' && <ProductsTemplate products={products.filter(p => { const t = section.tag || 'all'; return t === 'all' ? true : (p.tags || []).includes(t); })} config={config} storeConfig={storeConfig} addToCart={addToCart} onViewAll={() => setShowAllProducts(true)} />}
                 {section.templateType === 'promo' && <PromoTemplate config={config} storeConfig={storeConfig} />}
                 {section.templateType === 'features' && <FeaturesTemplate features={features} config={config} storeConfig={storeConfig} />}
                 {section.templateType === 'testimonials' && <TestimonialsTemplate testimonials={testimonials} config={config} storeConfig={storeConfig} />}
