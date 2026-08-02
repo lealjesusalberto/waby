@@ -187,6 +187,7 @@ export default function SuperAdminPanel() {
                       <div>
                         <p style={{ margin: '0 0 0.3rem 0', fontSize: '0.85rem', color: '#64748B', fontWeight: 'bold' }}>Tienda</p>
                         <p style={{ margin: 0, color: '#0F172A', fontWeight: '500' }}>{store.storeName}</p>
+                        {store.phone && <p style={{ margin: '0.3rem 0 0 0', color: '#64748B', fontSize: '0.85rem' }}>📞 {store.phone}</p>}
                       </div>
                       <div style={{ background: '#FEF3C7', border: '1px solid #FDE68A', color: '#B45309', padding: '0.8rem', borderRadius: '8px', fontSize: '0.85rem' }}>
                         <p style={{ margin: '0 0 0.2rem 0' }}>Monto: <strong>$3.00 (Bs. {(3 * localBcvRate).toFixed(2)})</strong></p>
@@ -220,6 +221,7 @@ export default function SuperAdminPanel() {
                       <div>
                         <p style={{ margin: '0 0 0.3rem 0', fontSize: '0.85rem', color: '#64748B', fontWeight: 'bold' }}>Tienda</p>
                         <p style={{ margin: 0, color: '#0F172A', fontWeight: '500' }}>{store.storeName}</p>
+                        {store.phone && <p style={{ margin: '0.3rem 0 0 0', color: '#64748B', fontSize: '0.85rem' }}>📞 {store.phone}</p>}
                       </div>
                       <button onClick={() => revokeStore(store.id)} style={{ background: '#FFF1F2', color: '#E11D48', border: '1px solid #FECDD3', padding: '0.8rem', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: 'auto' }}>
                         <XCircle size={18} /> Revocar Tienda

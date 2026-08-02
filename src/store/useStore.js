@@ -449,6 +449,9 @@ export const useStore = create((set, get) => ({
         if ((!data.storeConfig || data.storeConfig.name === 'Mi Nueva Tienda') && data.storeName) {
           finalConfig.name = data.storeName;
         }
+        if (!finalConfig.phone && data.phone) {
+          finalConfig.phone = data.phone;
+        }
 
         set({ storeConfig: finalConfig })
 
@@ -533,6 +536,9 @@ export const useStore = create((set, get) => ({
         // Si el nombre sigue siendo el de prueba, intentamos usar el de registro
         if ((!data.storeConfig || data.storeConfig.name === 'Mi Nueva Tienda') && data.storeName) {
           storeConfig.name = data.storeName;
+        }
+        if (!storeConfig.phone && data.phone) {
+          storeConfig.phone = data.phone;
         }
 
         if (data.layoutSections) layoutSections = data.layoutSections

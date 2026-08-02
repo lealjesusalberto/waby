@@ -849,6 +849,11 @@ export default function StorePreview({ isReadOnly = false }) {
                   🏷️ {storeConfig.category}
                 </span>
               )}
+              {storeConfig.phone && (
+                <span className="meta-pill info-pill">
+                  📞 {storeConfig.phone}
+                </span>
+              )}
               <span className="meta-pill rating-pill">
                 ⭐ 5.0 (Reseñas)
               </span>

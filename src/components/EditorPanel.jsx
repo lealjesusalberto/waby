@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useStore } from '../store/useStore'
-import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload, LogOut } from 'lucide-react'
+import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload, LogOut, User } from 'lucide-react'
 import { NotificationBell } from './NotificationBell'
 import OrdersDashboard from './OrdersDashboard'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
@@ -84,6 +85,7 @@ const STORE_CATEGORY_SUBCATEGORIES = {
 }
 
 export default function EditorPanel() {
+  const navigate = useNavigate()
   const { 
     layoutSections, reorderSections, activeSectionId, setActiveSectionId, 
     updateSectionConfig, deleteSection, addSection,
@@ -369,6 +371,13 @@ export default function EditorPanel() {
           </button>
           <NotificationBell />
           <button 
+            onClick={() => navigate('/profile')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '0.5rem' }}
+            title="Mi Perfil"
+          >
+            <User size={24} />
+          </button>
+          <button 
             onClick={() => logout()}
             title="Cerrar Sesión"
             style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: 'auto' }}
@@ -410,32 +419,7 @@ export default function EditorPanel() {
                 CONFIGURACIÓN GLOBAL
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <div>
-                  <label style={labelStyle}>Nombre de la Tienda</label>
-                  <input type="text" value={storeConfig.name} onChange={(e) => updateStoreConfig({ name: e.target.value })} style={inputStyle} placeholder="Ej. Mi Super Tienda" />
-                </div>
-                <div className="form-row-responsive">
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Logo (URL, Emoji o Archivo)</label>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <input type="text" value={storeConfig.logoText} onChange={(e) => updateStoreConfig({ logoText: e.target.value })} style={{...inputStyle, flex: 1}} placeholder="URL, Base64 o Emoji" />
-                      <label style={{ background: '#E2E8E0', padding: '0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Upload size={16} />
-                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => updateStoreConfig({ logoText: base64 }))} />
-                      </label>
-                    </div>
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Portada de la Tarjeta (URL o Archivo)</label>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <input type="text" value={storeConfig.coverUrl || ''} onChange={(e) => updateStoreConfig({ coverUrl: e.target.value })} style={{...inputStyle, flex: 1}} placeholder="URL o subir portada" />
-                      <label style={{ background: '#E2E8E0', padding: '0.8rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Upload size={16} />
-                        <input type="file" accept="image/*" style={{ display: 'none' }} onChange={(e) => handleImageUpload(e, (base64) => updateStoreConfig({ coverUrl: base64 }))} />
-                      </label>
-                    </div>
-                  </div>
-                </div>
+
                 <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Color Primario</label>
@@ -520,46 +504,7 @@ export default function EditorPanel() {
               </div>
             </div>
 
-            <div style={{ background: '#FFF7ED', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #FFEDD5' }}>
-              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#C2410C', marginBottom: '1rem', letterSpacing: '1px' }}>
-                DATOS DE PAGO MÓVIL
-              </div>
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={labelStyle}>Banco</label>
-                <select value={storeConfig.pagoMovilBank || ''} onChange={(e) => updateStoreConfig({ pagoMovilBank: e.target.value })} style={inputStyle}>
-                  <option value="">Seleccionar banco...</option>
-                  <option value="0102">Banco de Venezuela (0102)</option>
-                  <option value="0104">Venezolano de Crédito (0104)</option>
-                  <option value="0105">Mercantil (0105)</option>
-                  <option value="0108">Provincial (0108)</option>
-                  <option value="0114">Bancaribe (0114)</option>
-                  <option value="0115">Exterior (0115)</option>
-                  <option value="0128">Caroní (0128)</option>
-                  <option value="0134">Banesco (0134)</option>
-                  <option value="0138">Plaza (0138)</option>
-                  <option value="0151">BFC (0151)</option>
-                  <option value="0156">100% Banco (0156)</option>
-                  <option value="0157">Del Sur (0157)</option>
-                  <option value="0163">Tesoro (0163)</option>
-                  <option value="0169">Mi Banco (0169)</option>
-                  <option value="0171">Activo (0171)</option>
-                  <option value="0172">Bancamiga (0172)</option>
-                  <option value="0175">Bicentenario (0175)</option>
-                  <option value="0177">Banfanb (0177)</option>
-                  <option value="0191">BNC (0191)</option>
-                </select>
-              </div>
-              <div className="form-row-responsive">
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Teléfono</label>
-                  <input type="text" value={storeConfig.pagoMovilPhone || ''} onChange={(e) => updateStoreConfig({ pagoMovilPhone: e.target.value })} style={inputStyle} placeholder="Ej. 04141234567" />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <label style={labelStyle}>Cédula/RIF</label>
-                  <input type="text" value={storeConfig.pagoMovilId || ''} onChange={(e) => updateStoreConfig({ pagoMovilId: e.target.value })} style={inputStyle} placeholder="Ej. V12345678" />
-                </div>
-              </div>
-            </div>
+
 
             <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: 'var(--text-muted)', marginBottom: '1rem', letterSpacing: '1px' }}>
               SECCIONES

@@ -17,6 +17,7 @@ export default function Register() {
   // Form fields
   const [name, setName] = useState('')
   const [storeName, setStoreName] = useState('')
+  const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -43,6 +44,7 @@ export default function Register() {
         role: selectedRole,
         email: email,
         storeName: selectedRole === 'tienda' ? storeName : null,
+        phone: selectedRole === 'tienda' ? phone : null,
         status: selectedRole === 'tienda' ? 'pending_activation' : 'active',
         createdAt: new Date().toISOString()
       })
@@ -128,10 +130,16 @@ export default function Register() {
               <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Juan Pérez" style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '50px', border: '1px solid #CBD5E1', outline: 'none', background: '#F8FAFC' }} required />
             </div>
             {selectedRole === 'tienda' && (
-              <div>
-                <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Nombre de la Tienda</label>
-                <input type="text" value={storeName} onChange={e => setStoreName(e.target.value)} placeholder="Ej. Frutas Don Juan" style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '50px', border: '1px solid #CBD5E1', outline: 'none', background: '#F8FAFC' }} required />
-              </div>
+              <>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Nombre de la Tienda</label>
+                  <input type="text" value={storeName} onChange={e => setStoreName(e.target.value)} placeholder="Ej. Frutas Don Juan" style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '50px', border: '1px solid #CBD5E1', outline: 'none', background: '#F8FAFC' }} required />
+                </div>
+                <div style={{ marginTop: '1.2rem' }}>
+                  <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Teléfono de Contacto</label>
+                  <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="Ej. +58 414 1234567" style={{ width: '100%', padding: '0.8rem 1.2rem', borderRadius: '50px', border: '1px solid #CBD5E1', outline: 'none', background: '#F8FAFC' }} required />
+                </div>
+              </>
             )}
             <div>
               <label style={{ display: 'block', marginBottom: '0.3rem', fontSize: '0.9rem', fontWeight: 'bold', color: '#1C2B23' }}>Correo Electrónico</label>

@@ -9,6 +9,7 @@ import Register from './pages/Register'
 import MarketHome from './pages/MarketHome'
 import Pricing from './pages/Pricing'
 import ClientProfile from './pages/ClientProfile'
+import StoreProfile from './pages/StoreProfile'
 import { useStore } from './store/useStore'
 import { auth, db } from './firebase'
 import { onAuthStateChanged } from 'firebase/auth'
@@ -121,10 +122,14 @@ function App() {
           element={<MarketHome />}
         />
 
-        {/* Perfil de Cliente */}
+        {/* Perfil (Cliente o Tienda) */}
         <Route
           path="/profile"
-          element={userRole === 'cliente' ? <ClientProfile /> : <Navigate to="/login" replace />}
+          element={
+            userRole === 'cliente' ? <ClientProfile /> : 
+            userRole === 'tienda' ? <StoreProfile /> : 
+            <Navigate to="/login" replace />
+          }
         />
 
         {/* Ruta Pública / Tienda (para clientes o dueños) */}
