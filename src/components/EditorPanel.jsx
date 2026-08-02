@@ -349,40 +349,44 @@ export default function EditorPanel() {
           </div>
         )}
 
-        {/* Navigation Tabs */}
-        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--border-color)', background: '#F8FAFC', paddingRight: '0.8rem' }}>
-          <button 
-            onClick={() => setActiveTab('design')} 
-            style={{ flex: 1, padding: '1rem', border: 'none', background: activeTab === 'design' ? 'white' : 'transparent', fontWeight: 'bold', color: activeTab === 'design' ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab === 'design' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-          >
-            <LayoutTemplate size={18} /> Diseño
-          </button>
-          <button 
-            onClick={() => setActiveTab('catalog')} 
-            style={{ flex: 1, padding: '1rem', border: 'none', background: activeTab === 'catalog' ? 'white' : 'transparent', fontWeight: 'bold', color: activeTab === 'catalog' ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab === 'catalog' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-          >
-            <PackageOpen size={18} /> Catálogo
-          </button>
-          <button 
-            onClick={() => setActiveTab('orders')} 
-            style={{ flex: 1, padding: '1rem', border: 'none', background: activeTab === 'orders' ? 'white' : 'transparent', fontWeight: 'bold', color: activeTab === 'orders' ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab === 'orders' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
-          >
-            <Inbox size={18} /> Órdenes
-          </button>
+        {/* Top User Actions Bar */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '0.5rem 1rem', background: '#F1F5F9', borderBottom: '1px solid #E2E8F0' }}>
           <NotificationBell />
           <button 
             onClick={() => navigate('/profile')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '0.5rem' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '1rem' }}
             title="Mi Perfil"
           >
-            <User size={24} />
+            <User size={20} /> <span style={{ marginLeft: '0.25rem', fontSize: '0.85rem', fontWeight: 'bold' }}>Perfil</span>
           </button>
           <button 
             onClick={() => logout()}
             title="Cerrar Sesión"
-            style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: 'auto' }}
+            style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '1rem' }}
           >
-            <LogOut size={20} />
+            <LogOut size={20} /> <span style={{ marginLeft: '0.25rem', fontSize: '0.85rem', fontWeight: 'bold' }}>Salir</span>
+          </button>
+        </div>
+
+        {/* Navigation Tabs */}
+        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid var(--border-color)', background: '#F8FAFC' }}>
+          <button 
+            onClick={() => setActiveTab('design')} 
+            style={{ flex: 1, padding: '1rem 0', border: 'none', background: activeTab === 'design' ? 'white' : 'transparent', fontWeight: 'bold', color: activeTab === 'design' ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab === 'design' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          >
+            <LayoutTemplate size={18} /> <span className="tab-text">Diseño</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('catalog')} 
+            style={{ flex: 1, padding: '1rem 0', border: 'none', background: activeTab === 'catalog' ? 'white' : 'transparent', fontWeight: 'bold', color: activeTab === 'catalog' ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab === 'catalog' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          >
+            <PackageOpen size={18} /> <span className="tab-text">Catálogo</span>
+          </button>
+          <button 
+            onClick={() => setActiveTab('orders')} 
+            style={{ flex: 1, padding: '1rem 0', border: 'none', background: activeTab === 'orders' ? 'white' : 'transparent', fontWeight: 'bold', color: activeTab === 'orders' ? 'var(--primary)' : 'var(--text-muted)', borderBottom: activeTab === 'orders' ? '2px solid var(--primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          >
+            <Inbox size={18} /> <span className="tab-text">Órdenes</span>
           </button>
         </div>
 
