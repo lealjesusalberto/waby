@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { db, auth } from '../firebase'
-import { doc, updateDoc, getDoc, collection, setDoc, getDocs, query, where, deleteDoc } from 'firebase/firestore'
+import { doc, updateDoc, getDoc, collection, setDoc, getDocs, query, where, deleteDoc, increment } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 
 export const useStore = create((set, get) => ({
@@ -9,6 +9,7 @@ export const useStore = create((set, get) => ({
   userRole: 'cliente',
   storeStatus: 'pending_activation', // 'pending_activation' | 'validation_pending' | 'active'
   userProfile: { name: '', avatar: '' },
+  storeVisits: 0,
 
   // Auth actions
   setUser: (user, role = 'cliente', status = 'pending_activation', profile = { name: '', avatar: '' }) => set({ user, userRole: role, storeStatus: status, userProfile: profile }),
@@ -453,7 +454,7 @@ export const useStore = create((set, get) => ({
           finalConfig.phone = data.phone;
         }
 
-        set({ storeConfig: finalConfig })
+        set({ storeConfig: finalConfig, storeVisits: data.storeVisits || 0 })
 
         if (data.layoutSections && data.layoutSections.length > 0) {
           const cleanedSections = data.layoutSections.map(s => {
@@ -519,6 +520,16 @@ export const useStore = create((set, get) => ({
     }
   },
 
+  registerStoreVisit: async (storeId) => {
+    try {
+      await updateDoc(doc(db, 'users', storeId), {
+        storeVisits: increment(1)
+      })
+    } catch (err) {
+      console.error("Error incrementing store visits", err)
+    }
+  },
+
   publicStoreData: null,
   fetchPublicStoreData: async (uid) => {
     try {
@@ -528,6 +539,8 @@ export const useStore = create((set, get) => ({
 
       if (userDoc.exists()) {
         const data = userDoc.data()
+        
+        let fetchedVisits = data.storeVisits || 0;
 
         if (data.storeConfig) {
           storeConfig = { ...storeConfig, ...data.storeConfig }

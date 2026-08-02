@@ -94,7 +94,7 @@ export default function EditorPanel() {
     storeStatus, reportSubscriptionPayment,
     storeConfig, updateStoreConfig,
     hasUnsavedChanges, saveDesignToFirestore,
-    categories, bcvRate, logout
+    categories, bcvRate, logout, storeVisits
   } = useStore()
   
   const getAvailableCategories = () => {
@@ -351,6 +351,9 @@ export default function EditorPanel() {
 
         {/* Top User Actions Bar */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', padding: '0.5rem 1rem', background: '#F1F5F9', borderBottom: '1px solid #E2E8F0' }}>
+          <div title="Visitas totales a tu tienda" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#0369A1', background: '#E0F2FE', padding: '0.3rem 0.8rem', borderRadius: '20px', fontSize: '0.85rem', fontWeight: 'bold', marginRight: 'auto' }}>
+            <span>👀</span> {storeVisits || 0}
+          </div>
           <NotificationBell />
           <button 
             onClick={() => navigate('/profile')}
