@@ -3,7 +3,7 @@ import { useStore } from '../store/useStore'
 import { X, CheckCircle, Clock, PackageOpen, Inbox, Search } from 'lucide-react'
 
 export default function OrdersDashboard() {
-  const { orders, setOrdersDashboardOpen, updateOrderStatus } = useStore()
+  const { orders, setOrdersDashboardOpen, updateOrderStatus, bcvRate } = useStore()
   const [filterStatus, setFilterStatus] = useState('Todos')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -133,10 +133,21 @@ export default function OrdersDashboard() {
 
                     {order.pagoMovil && (
                       <div style={{ background: '#FFF7ED', padding: '1rem', borderRadius: '12px', border: '1px dashed #FFEDD5' }}>
-                        <p style={{ margin: '0 0 0.3rem 0', color: '#9A3412', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Reporte de Pago Móvil</p>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#9A3412' }}>
-                          <span><strong>Ref:</strong> {order.pagoMovil.reference}</span>
-                          <span><strong>Banco:</strong> {order.pagoMovil.bank}</span>
+                        <p style={{ margin: '0 0 0.5rem 0', color: '#9A3412', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Reporte de Pago Móvil</p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem', color: '#9A3412' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <span><strong>Ref:</strong> {order.pagoMovil.reference}</span>
+                            <span><strong>Monto:</strong> Bs. {(order.total * (bcvRate || 36.5)).toFixed(2)}</span>
+                          </div>
+                          <div>
+                            <strong>Banco:</strong> {{
+                              '0102': 'Banco de Venezuela', '0104': 'Venezolano de Crédito', '0105': 'Banco Mercantil', 
+                              '0108': 'BBVA Provincial', '0114': 'Bancaribe', '0115': 'Banco Exterior', '0128': 'Banco Caroní', 
+                              '0134': 'Banesco', '0138': 'Banco Plaza', '0151': 'BFC Banco Fondo Común', '0156': '100% Banco', 
+                              '0157': 'Banco del Sur', '0163': 'Banco del Tesoro', '0169': 'Mi Banco', '0171': 'Banco Activo', 
+                              '0172': 'Bancamiga', '0175': 'Banco Bicentenario', '0177': 'Banfanb', '0191': 'BNC Nacional de Crédito'
+                            }[order.pagoMovil.bank] || order.pagoMovil.bank}
+                          </div>
                         </div>
                       </div>
                     )}
