@@ -11,7 +11,7 @@ import { signInAnonymously } from 'firebase/auth'
 
 export default function MarketHome() {
   const navigate = useNavigate()
-  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart, user, homeHeroImages } = useStore()
+  const { marketplaceStores, orders, logout, fetchMarketplaceStores, userProfile, cart, user, homeHeroImages, registerPlatformVisit } = useStore()
   const [showOrders, setShowOrders] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -21,7 +21,15 @@ export default function MarketHome() {
     if ((!user || user.isAnonymous) && !sessionStorage.getItem('guest')) {
       setShowGuestModal(true)
     }
-  }, [user])
+    
+    // Registrar visita a la plataforma si es un usuario no registrado o anónimo
+    if (!user || user.isAnonymous) {
+      if (!sessionStorage.getItem('visited_waby')) {
+        registerPlatformVisit()
+        sessionStorage.setItem('visited_waby', 'true')
+      }
+    }
+  }, [user, registerPlatformVisit])
 
   useEffect(() => {
     if (homeHeroImages && homeHeroImages.length > 0) {

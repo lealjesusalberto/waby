@@ -6,6 +6,8 @@ import { LogOut, Users, Store, CheckCircle, Clock, Search, XCircle, Activity, Im
 
 export default function SuperAdminPanel() {
   const logout = useStore(state => state.logout)
+  const platformVisits = useStore(state => state.platformVisits)
+  const fetchPlatformStats = useStore(state => state.fetchPlatformStats)
   const [activeTab, setActiveTab] = useState('pending') // pending, active, users, appearance
 
   const [users, setUsers] = useState([])
@@ -23,6 +25,7 @@ export default function SuperAdminPanel() {
 
   useEffect(() => {
     fetchUsers()
+    fetchPlatformStats()
   }, [])
 
   const fetchUsers = async () => {
@@ -83,6 +86,14 @@ export default function SuperAdminPanel() {
             <Activity color="#38BDF8" /> Waby Admin
           </h2>
           <p style={{ margin: '0.2rem 0 0 0', color: '#94A3B8', fontSize: '0.85rem' }}>Panel de Control Global</p>
+        </div>
+
+        <div style={{ margin: '1.5rem', background: '#1E293B', borderRadius: '12px', padding: '1rem', border: '1px solid #334155' }}>
+          <p style={{ margin: 0, color: '#94A3B8', fontSize: '0.8rem', fontWeight: 'bold' }}>VISITAS PLATAFORMA</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>👀</span>
+            <span style={{ fontSize: '1.8rem', fontWeight: '900', color: '#F8FAFC' }}>{platformVisits || 0}</span>
+          </div>
         </div>
 
         <nav className="admin-nav">

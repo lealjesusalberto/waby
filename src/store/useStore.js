@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { db, auth } from '../firebase'
-import { doc, updateDoc, getDoc, collection, setDoc, getDocs, query, where, deleteDoc, increment } from 'firebase/firestore'
+import { doc, getDoc, setDoc, collection, query, where, getDocs, updateDoc, deleteDoc, arrayUnion, increment } from 'firebase/firestore'
 import { signOut } from 'firebase/auth'
 
 export const useStore = create((set, get) => ({
@@ -9,7 +9,7 @@ export const useStore = create((set, get) => ({
   userRole: 'cliente',
   storeStatus: 'pending_activation', // 'pending_activation' | 'validation_pending' | 'active'
   userProfile: { name: '', avatar: '' },
-  storeVisits: 0,
+  platformVisits: 0,
 
   // Auth actions
   setUser: (user, role = 'cliente', status = 'pending_activation', profile = { name: '', avatar: '' }) => set({ user, userRole: role, storeStatus: status, userProfile: profile }),
@@ -454,7 +454,7 @@ export const useStore = create((set, get) => ({
           finalConfig.phone = data.phone;
         }
 
-        set({ storeConfig: finalConfig, storeVisits: data.storeVisits || 0 })
+        set({ storeConfig: finalConfig })
 
         if (data.layoutSections && data.layoutSections.length > 0) {
           const cleanedSections = data.layoutSections.map(s => {
@@ -520,13 +520,24 @@ export const useStore = create((set, get) => ({
     }
   },
 
-  registerStoreVisit: async (storeId) => {
+  registerPlatformVisit: async () => {
     try {
-      await updateDoc(doc(db, 'users', storeId), {
-        storeVisits: increment(1)
-      })
+      await setDoc(doc(db, 'system', 'stats'), {
+        platformVisits: increment(1)
+      }, { merge: true })
     } catch (err) {
-      console.error("Error incrementing store visits", err)
+      console.error("Error incrementing platform visits", err)
+    }
+  },
+
+  fetchPlatformStats: async () => {
+    try {
+      const statsDoc = await getDoc(doc(db, 'system', 'stats'))
+      if (statsDoc.exists()) {
+        set({ platformVisits: statsDoc.data().platformVisits || 0 })
+      }
+    } catch (err) {
+      console.error("Error fetching platform stats", err)
     }
   },
 
@@ -539,8 +550,6 @@ export const useStore = create((set, get) => ({
 
       if (userDoc.exists()) {
         const data = userDoc.data()
-        
-        let fetchedVisits = data.storeVisits || 0;
 
         if (data.storeConfig) {
           storeConfig = { ...storeConfig, ...data.storeConfig }

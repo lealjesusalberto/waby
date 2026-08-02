@@ -742,25 +742,16 @@ export default function StorePreview({ isReadOnly = false }) {
   const { storeId } = useParams()
   const globalState = useStore()
 
-  const { publicStoreData, fetchPublicStoreData, clearPublicStoreData, activeSectionId, setActiveSectionId, cart, isCartOpen, toggleCart, clearCart, logout, addOrder, addToCart, user, registerStoreVisit } = globalState
+  const { publicStoreData, fetchPublicStoreData, clearPublicStoreData, activeSectionId, setActiveSectionId, cart, isCartOpen, toggleCart, clearCart, logout, addOrder, addToCart, user } = globalState
 
   useEffect(() => {
     if (isReadOnly && storeId && !mockStoreData[storeId]) {
       fetchPublicStoreData(storeId)
-      
-      // Registrar visita si es visitante no registrado
-      if (!user || user.isAnonymous) {
-        const visitKey = `visited_${storeId}`
-        if (!sessionStorage.getItem(visitKey)) {
-          registerStoreVisit(storeId)
-          sessionStorage.setItem(visitKey, 'true')
-        }
-      }
     }
     return () => {
       if (isReadOnly) clearPublicStoreData()
     }
-  }, [storeId, isReadOnly, fetchPublicStoreData, clearPublicStoreData, user, registerStoreVisit])
+  }, [storeId, isReadOnly, fetchPublicStoreData, clearPublicStoreData])
 
   const [showCheckout, setShowCheckout] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
