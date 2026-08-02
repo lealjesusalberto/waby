@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useStore } from '../store/useStore'
-import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload } from 'lucide-react'
+import { Trash2, GripVertical, Settings, Plus, X, PackageOpen, LayoutTemplate, Inbox, CheckCircle, Clock, ChevronLeft, ChevronRight, Search, Filter, Rocket, CreditCard, Save, Upload, LogOut } from 'lucide-react'
 import { NotificationBell } from './NotificationBell'
 import OrdersDashboard from './OrdersDashboard'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
@@ -54,6 +54,27 @@ const STORE_CATEGORY_SUBCATEGORIES = {
     { id: 'capilar', name: 'Cuidado Capilar', icon: '💇' },
     { id: 'perfumes', name: 'Perfumes & Fragancias', icon: '🧴' },
   ],
+  'Repostería': [
+    { id: 'tortas', name: 'Tortas & Pasteles', icon: '🎂' },
+    { id: 'cupcakes', name: 'Cupcakes & Muffins', icon: '🧁' },
+    { id: 'galletas', name: 'Galletas & Brownies', icon: '🍪' },
+    { id: 'panaderia', name: 'Panes & Salados', icon: '🥐' },
+    { id: 'postres_frios', name: 'Postres Fríos', icon: '🍨' },
+  ],
+  'Arte & Pintura': [
+    { id: 'cuadros', name: 'Cuadros & Lienzos', icon: '🖼️' },
+    { id: 'pinturas', name: 'Pinturas & Acuarelas', icon: '🎨' },
+    { id: 'materiales', name: 'Pinceles & Materiales', icon: '🖌️' },
+    { id: 'esculturas', name: 'Esculturas & Cerámica', icon: '🏺' },
+    { id: 'dibujo', name: 'Material de Dibujo', icon: '✏️' },
+  ],
+  'Ferretería': [
+    { id: 'herramientas', name: 'Herramientas Manuales', icon: '🔨' },
+    { id: 'electricas', name: 'Herramientas Eléctricas', icon: '⚡' },
+    { id: 'plomeria', name: 'Plomería & Tuberías', icon: '🚰' },
+    { id: 'electricidad', name: 'Electricidad & Cables', icon: '🔌' },
+    { id: 'construccion', name: 'Material de Construcción', icon: '🧱' },
+  ],
   'General': [
     { id: 'destacados', name: 'Productos Destacados', icon: '⭐' },
     { id: 'ofertas', name: 'Ofertas & Promociones', icon: '🔥' },
@@ -71,7 +92,7 @@ export default function EditorPanel() {
     storeStatus, reportSubscriptionPayment,
     storeConfig, updateStoreConfig,
     hasUnsavedChanges, saveDesignToFirestore,
-    categories, bcvRate
+    categories, bcvRate, logout
   } = useStore()
   
   const getAvailableCategories = () => {
@@ -173,18 +194,21 @@ export default function EditorPanel() {
     }
   };
 
+  const activeSection = layoutSections.find(s => s.id === activeSectionId)
+  
   // Product form state
+  const availableCatsForNewProd = getAvailableCategories();
+  const defaultCat = availableCatsForNewProd.length > 0 ? availableCatsForNewProd[0].id : 'camisetas';
+  
   const [newProdName, setNewProdName] = useState('')
   const [newProdPrice, setNewProdPrice] = useState('')
   const [newProdImage, setNewProdImage] = useState('')
   const [newProdBadge, setNewProdBadge] = useState('Nuevo')
-  const [newProdCategory, setNewProdCategory] = useState('camisetas')
+  const [newProdCategory, setNewProdCategory] = useState(defaultCat)
   const [isFeatured, setIsFeatured] = useState(false)
   const [isBestseller, setIsBestseller] = useState(false)
   const [newProdDesc, setNewProdDesc] = useState('')
   const [newProdGallery, setNewProdGallery] = useState([])
-
-  const activeSection = layoutSections.find(s => s.id === activeSectionId)
 
   const handleImageUpload = (e, callback, maxSize = 600) => {
     const file = e.target.files[0];
@@ -344,6 +368,13 @@ export default function EditorPanel() {
             <Inbox size={18} /> Órdenes
           </button>
           <NotificationBell />
+          <button 
+            onClick={() => logout()}
+            title="Cerrar Sesión"
+            style={{ background: 'none', border: 'none', color: '#EF4444', cursor: 'pointer', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: 'auto' }}
+          >
+            <LogOut size={20} />
+          </button>
         </div>
 
         {/* --- PESTAÑA DE DISEÑO (Visual Builder) --- */}
@@ -411,8 +442,7 @@ export default function EditorPanel() {
                     <input type="color" value={storeConfig.primaryColor} onChange={(e) => updateStoreConfig({ primaryColor: e.target.value })} style={{ width: '100%', height: '40px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
                   </div>
                 </div>
-                <div className="form-row-responsive">
-                  <div style={{ flex: 1, position: 'relative' }}>
+                  <div style={{ position: 'relative' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <label style={labelStyle}>Ubicación (con autocompletado)</label>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -455,7 +485,7 @@ export default function EditorPanel() {
                       </div>
                     )}
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div>
                     <label style={labelStyle}>Categoría Principal</label>
                     <select value={storeConfig.category || ''} onChange={(e) => updateStoreConfig({ category: e.target.value })} style={inputStyle}>
                       <option value="">Selecciona una categoría...</option>
@@ -466,15 +496,13 @@ export default function EditorPanel() {
                       <option value="Mascotas">Mascotas</option>
                       <option value="Hogar & Jardín">Hogar & Jardín</option>
                       <option value="Salud & Belleza">Salud & Belleza</option>
+                      <option value="Repostería">Repostería</option>
+                      <option value="Arte & Pintura">Arte & Pintura</option>
+                      <option value="Ferretería">Ferretería</option>
                       <option value="Servicios">Servicios</option>
                       <option value="General">General / Otros</option>
                     </select>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={labelStyle}>Seguidores (Visual)</label>
-                    <input type="text" value={storeConfig.followers || ''} onChange={(e) => updateStoreConfig({ followers: e.target.value })} style={inputStyle} placeholder="Ej. 1.5K" />
-                  </div>
-                </div>
                 <div className="form-row-responsive">
                   <div style={{ flex: 1 }}>
                     <label style={labelStyle}>Color Header</label>
@@ -488,6 +516,47 @@ export default function EditorPanel() {
                     <label style={labelStyle}>Color Botones</label>
                     <input type="color" value={storeConfig.buttonColor || storeConfig.primaryColor || '#11683e'} onChange={(e) => updateStoreConfig({ buttonColor: e.target.value })} style={{ width: '100%', height: '40px', border: 'none', borderRadius: '8px', cursor: 'pointer' }} />
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ background: '#FFF7ED', padding: '1.5rem', borderRadius: '12px', marginBottom: '2rem', border: '1px solid #FFEDD5' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#C2410C', marginBottom: '1rem', letterSpacing: '1px' }}>
+                DATOS DE PAGO MÓVIL
+              </div>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={labelStyle}>Banco</label>
+                <select value={storeConfig.pagoMovilBank || ''} onChange={(e) => updateStoreConfig({ pagoMovilBank: e.target.value })} style={inputStyle}>
+                  <option value="">Seleccionar banco...</option>
+                  <option value="0102">Banco de Venezuela (0102)</option>
+                  <option value="0104">Venezolano de Crédito (0104)</option>
+                  <option value="0105">Mercantil (0105)</option>
+                  <option value="0108">Provincial (0108)</option>
+                  <option value="0114">Bancaribe (0114)</option>
+                  <option value="0115">Exterior (0115)</option>
+                  <option value="0128">Caroní (0128)</option>
+                  <option value="0134">Banesco (0134)</option>
+                  <option value="0138">Plaza (0138)</option>
+                  <option value="0151">BFC (0151)</option>
+                  <option value="0156">100% Banco (0156)</option>
+                  <option value="0157">Del Sur (0157)</option>
+                  <option value="0163">Tesoro (0163)</option>
+                  <option value="0169">Mi Banco (0169)</option>
+                  <option value="0171">Activo (0171)</option>
+                  <option value="0172">Bancamiga (0172)</option>
+                  <option value="0175">Bicentenario (0175)</option>
+                  <option value="0177">Banfanb (0177)</option>
+                  <option value="0191">BNC (0191)</option>
+                </select>
+              </div>
+              <div className="form-row-responsive">
+                <div style={{ flex: 1 }}>
+                  <label style={labelStyle}>Teléfono</label>
+                  <input type="text" value={storeConfig.pagoMovilPhone || ''} onChange={(e) => updateStoreConfig({ pagoMovilPhone: e.target.value })} style={inputStyle} placeholder="Ej. 04141234567" />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={labelStyle}>Cédula/RIF</label>
+                  <input type="text" value={storeConfig.pagoMovilId || ''} onChange={(e) => updateStoreConfig({ pagoMovilId: e.target.value })} style={inputStyle} placeholder="Ej. V12345678" />
                 </div>
               </div>
             </div>
@@ -785,7 +854,7 @@ export default function EditorPanel() {
 
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <h4 style={{ margin: 0, color: 'var(--text-main)', fontSize: '1rem' }}>Inventario ({products.length})</h4>
-              <button onClick={() => setIsInventoryModalOpen(true)} style={{ background: '#E3F2FD', color: '#0288D1', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}>
+              <button onClick={() => setActiveTab('inventory')} style={{ background: '#E3F2FD', color: '#0288D1', border: 'none', padding: '0.4rem 0.8rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 'bold', cursor: 'pointer' }}>
                 Ver Todo
               </button>
             </div>
@@ -813,6 +882,91 @@ export default function EditorPanel() {
               {products.length > 3 && (
                 <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', margin: '0.5rem 0' }}>+ {products.length - 3} productos más</p>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* --- PESTAÑA DE INVENTARIO --- */}
+        {activeTab === 'inventory' && (
+          <div style={{ position: 'fixed', inset: 0, zIndex: 3000, background: '#F8FAFC', display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+            <div style={{ background: 'white', padding: '1.5rem 3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #E2E8E0', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+              <h3 style={{ color: 'var(--primary)', margin: 0, fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <PackageOpen size={24} /> Inventario Completo
+              </h3>
+              <button onClick={() => setActiveTab('catalog')} style={{ background: '#E3F2FD', color: '#0288D1', border: 'none', padding: '0.6rem 1.2rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold' }}>
+                <ChevronLeft size={16} /> Volver a Catálogo
+              </button>
+            </div>
+            
+            <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%', padding: '2rem' }}>
+            
+            <div className="form-row-responsive" style={{ marginBottom: '1.5rem' }}>
+              <div style={{ flex: 1, position: 'relative' }}>
+                <Search size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#94A3B8' }} />
+                <input 
+                  type="text" 
+                  placeholder="Buscar por nombre..." 
+                  value={inventorySearch}
+                  onChange={(e) => setInventorySearch(e.target.value)}
+                  style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.5rem', border: '1px solid #CBD5E1', borderRadius: '8px', fontSize: '0.95rem' }} 
+                />
+              </div>
+              <div style={{ flex: 1, position: 'relative' }}>
+                <Filter size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#94A3B8' }} />
+                <select 
+                  value={inventoryCategory}
+                  onChange={(e) => setInventoryCategory(e.target.value)}
+                  style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.5rem', border: '1px solid #CBD5E1', borderRadius: '8px', fontSize: '0.95rem', background: 'white', cursor: 'pointer' }}
+                >
+                  <option value="all">Todas las categorías</option>
+                  {getAvailableCategories().map(c => (
+                    <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {products
+                .filter(p => p.name.toLowerCase().includes(inventorySearch.toLowerCase()))
+                .filter(p => {
+                  if (inventoryCategory === 'all') return true;
+                  const pCatStr = String(p.categoryId);
+                  if (pCatStr === String(inventoryCategory)) return true;
+                  const legacyMap = { '1': 'camisetas', '2': 'pantalones', '3': 'vestidos', '4': 'calzado', '5': 'accesorios' };
+                  return legacyMap[pCatStr] === inventoryCategory;
+                })
+                .map(p => (
+                <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', border: '1px solid #E2E8E0', padding: '1rem', borderRadius: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+                    <img src={p.image} alt={p.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
+                    <div>
+                      <p style={{ margin: '0 0 0.3rem 0', fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--text-main)' }}>{p.name}</p>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        <span style={{ color: 'var(--primary)', fontSize: '1rem', fontWeight: 'bold' }}>${p.price.toFixed(2)}</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>({(p.price * useStore.getState().bcvRate).toFixed(2)} Bs)</span>
+                        {p.tags.includes('featured') && <span style={{ fontSize: '0.75rem', background: '#FEF3C7', color: '#D97706', padding: '0.1rem 0.5rem', borderRadius: '4px' }}>⭐ Destacado</span>}
+                        {p.tags.includes('bestseller') && <span style={{ fontSize: '0.75rem', background: '#FEE2E2', color: '#DC2626', padding: '0.1rem 0.5rem', borderRadius: '4px' }}>🔥 Bestseller</span>}
+                      </div>
+                    </div>
+                  </div>
+                  <button onClick={() => deleteProduct(p.id)} style={{ background: '#FEE2E2', color: '#EF4444', border: 'none', width: '40px', height: '40px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Trash2 size={20} />
+                  </button>
+                </div>
+              ))}
+              {products.filter(p => {
+                  const matchesSearch = p.name.toLowerCase().includes(inventorySearch.toLowerCase());
+                  const pCatStr = String(p.categoryId);
+                  const legacyMap = { '1': 'camisetas', '2': 'pantalones', '3': 'vestidos', '4': 'calzado', '5': 'accesorios' };
+                  const matchesCategory = inventoryCategory === 'all' || pCatStr === String(inventoryCategory) || legacyMap[pCatStr] === inventoryCategory;
+                  return matchesSearch && matchesCategory;
+                }).length === 0 && (
+                <div style={{ textAlign: 'center', color: '#94A3B8', marginTop: '3rem' }}>
+                  <p style={{ fontSize: '1.1rem' }}>No se encontraron productos con esos filtros.</p>
+                </div>
+              )}
+            </div>
             </div>
           </div>
         )}
@@ -939,86 +1093,7 @@ export default function EditorPanel() {
         </div>
       )}
 
-      {/* MODAL INVENTARIO COMPLETO */}
-      {isInventoryModalOpen && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 1050, backdropFilter: 'blur(4px)'
-        }}>
-          <div style={{
-            background: 'white', borderRadius: '16px', width: '90%', maxWidth: '900px', height: '80vh',
-            display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-            animation: 'fadeIn 0.2s ease-out'
-          }}>
-            <div style={{ background: 'var(--primary)', padding: '1.5rem 2rem', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h2 style={{ margin: 0, fontFamily: 'Inter', fontSize: '1.5rem' }}>Inventario Completo</h2>
-                <p style={{ margin: '0.2rem 0 0 0', opacity: 0.8, fontSize: '0.9rem' }}>Gestiona todos los productos de tu tienda</p>
-              </div>
-              <button onClick={() => setIsInventoryModalOpen(false)} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', opacity: 0.8 }}>
-                <X size={28} />
-              </button>
-            </div>
 
-            <div className="modal-filter-row" style={{ padding: '1.5rem', borderBottom: '1px solid #E2E8E0', display: 'flex', gap: '1rem', background: '#F8FAFC' }}>
-              <div style={{ flex: 1, position: 'relative' }}>
-                <Search size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#94A3B8' }} />
-                <input 
-                  type="text" 
-                  placeholder="Buscar por nombre..." 
-                  value={inventorySearch}
-                  onChange={(e) => setInventorySearch(e.target.value)}
-                  style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.5rem', border: '1px solid #CBD5E1', borderRadius: '8px', fontSize: '0.95rem' }} 
-                />
-              </div>
-              <div className="modal-select-box" style={{ width: '250px', position: 'relative' }}>
-                <Filter size={18} style={{ position: 'absolute', left: '12px', top: '12px', color: '#94A3B8' }} />
-                <select 
-                  value={inventoryCategory}
-                  onChange={(e) => setInventoryCategory(e.target.value)}
-                  style={{ width: '100%', padding: '0.7rem 1rem 0.7rem 2.5rem', border: '1px solid #CBD5E1', borderRadius: '8px', fontSize: '0.95rem', background: 'white', cursor: 'pointer' }}
-                >
-                  <option value="all">Todas las categorías</option>
-                  {getAvailableCategories().map(c => (
-                    <option key={c.id} value={c.id}>{c.icon} {c.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {products
-                .filter(p => p.name.toLowerCase().includes(inventorySearch.toLowerCase()))
-                .filter(p => inventoryCategory === 'all' || p.categoryId === parseInt(inventoryCategory))
-                .map(p => (
-                <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'white', border: '1px solid #E2E8E0', padding: '1rem', borderRadius: '12px', transition: 'all 0.2s', ':hover': { boxShadow: '0 4px 6px rgba(0,0,0,0.05)' } }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                    <img src={p.image} alt={p.name} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '8px' }} />
-                    <div>
-                      <p style={{ margin: '0 0 0.3rem 0', fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--text-main)' }}>{p.name}</p>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <span style={{ color: 'var(--primary)', fontSize: '1rem', fontWeight: 'bold' }}>${p.price.toFixed(2)}</span>
-                        <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>({(p.price * useStore.getState().bcvRate).toFixed(2)} Bs)</span>
-                        {p.tags.includes('featured') && <span style={{ fontSize: '0.75rem', background: '#FEF3C7', color: '#D97706', padding: '0.1rem 0.5rem', borderRadius: '4px' }}>⭐ Destacado</span>}
-                        {p.tags.includes('bestseller') && <span style={{ fontSize: '0.75rem', background: '#FEE2E2', color: '#DC2626', padding: '0.1rem 0.5rem', borderRadius: '4px' }}>🔥 Bestseller</span>}
-                      </div>
-                    </div>
-                  </div>
-                  <button onClick={() => deleteProduct(p.id)} style={{ background: '#FEE2E2', color: '#EF4444', border: 'none', width: '40px', height: '40px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Trash2 size={20} />
-                  </button>
-                </div>
-              ))}
-              {products.filter(p => p.name.toLowerCase().includes(inventorySearch.toLowerCase()) && (inventoryCategory === 'all' || p.categoryId === parseInt(inventoryCategory))).length === 0 && (
-                <div style={{ textAlign: 'center', color: '#94A3B8', marginTop: '3rem' }}>
-                  <p style={{ fontSize: '1.1rem' }}>No se encontraron productos con esos filtros.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* MODAL ACTIVACIÓN DE TIENDA */}
       {isActivationModalOpen && (

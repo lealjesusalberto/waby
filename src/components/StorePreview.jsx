@@ -270,6 +270,7 @@ const AllProductsView = ({ products, categories, onBack, addToCart, storeConfig 
 const CheckoutModal = ({ onClose, total, onSuccess }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const bcvRate = useStore.getState().bcvRate;
+  const storeConfig = useStore.getState().storeConfig;
 
   // Customer details
   const [customerName, setCustomerName] = useState('');
@@ -322,9 +323,15 @@ const CheckoutModal = ({ onClose, total, onSuccess }) => {
           <div style={{ background: '#FFF7ED', border: '1px solid #FFEDD5', padding: '1rem', borderRadius: '12px', marginBottom: '2rem' }}>
             <h4 style={{ margin: '0 0 0.5rem 0', color: '#C2410C', fontSize: '0.95rem' }}>Datos de Pago Móvil de la Tienda</h4>
             <div style={{ fontSize: '0.85rem', color: '#9A3412', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-              <div><strong>Banco:</strong> Banesco (0134)</div>
-              <div><strong>Teléfono:</strong> 0414-1234567</div>
-              <div><strong>Cédula/RIF:</strong> V-12345678</div>
+              <div><strong>Banco:</strong> {storeConfig.pagoMovilBank ? {
+                '0102': 'Venezuela (0102)', '0104': 'Venezolano de Crédito (0104)', '0105': 'Mercantil (0105)', 
+                '0108': 'Provincial (0108)', '0114': 'Bancaribe (0114)', '0115': 'Exterior (0115)', '0128': 'Caroní (0128)', 
+                '0134': 'Banesco (0134)', '0138': 'Plaza (0138)', '0151': 'BFC (0151)', '0156': '100% Banco (0156)', 
+                '0157': 'Del Sur (0157)', '0163': 'Tesoro (0163)', '0169': 'Mi Banco (0169)', '0171': 'Activo (0171)', 
+                '0172': 'Bancamiga (0172)', '0175': 'Bicentenario (0175)', '0177': 'Banfanb (0177)', '0191': 'BNC (0191)'
+              }[storeConfig.pagoMovilBank] || storeConfig.pagoMovilBank : 'No configurado'}</div>
+              <div><strong>Teléfono:</strong> {storeConfig.pagoMovilPhone || 'No configurado'}</div>
+              <div><strong>Cédula/RIF:</strong> {storeConfig.pagoMovilId || 'No configurado'}</div>
               <div><strong>Tasa (BCV):</strong> {bcvRate.toFixed(2)} Bs</div>
             </div>
             <div style={{ marginTop: '0.5rem', paddingTop: '0.5rem', borderTop: '1px dashed #FFEDD5', fontWeight: 'bold', color: '#C2410C' }}>
@@ -851,11 +858,6 @@ export default function StorePreview({ isReadOnly = false }) {
               {storeConfig.location && (
                 <span className="meta-pill info-pill">
                   📍 {storeConfig.location}
-                </span>
-              )}
-              {storeConfig.followers && (
-                <span className="meta-pill info-pill">
-                  👥 {storeConfig.followers} seguidores
                 </span>
               )}
             </div>
