@@ -52,7 +52,7 @@ export default function OrdersDashboard() {
         
         {/* Filters & Search */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
             {['Todos', 'Validando Pago', 'Aprobado', 'Entregado', 'Rechazado'].map(status => (
               <button 
                 key={status}
@@ -67,14 +67,14 @@ export default function OrdersDashboard() {
               </button>
             ))}
           </div>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', flex: '1 1 300px', maxWidth: '100%' }}>
             <Search size={18} color="#94A3B8" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
             <input 
               type="text" 
               placeholder="Buscar por ID o Cliente..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ padding: '0.8rem 1rem 0.8rem 2.5rem', borderRadius: '12px', border: '1px solid #CBD5E1', width: '300px', outline: 'none' }}
+              style={{ padding: '0.8rem 1rem 0.8rem 2.5rem', borderRadius: '12px', border: '1px solid #CBD5E1', width: '100%', outline: 'none', boxSizing: 'border-box' }}
             />
           </div>
         </div>
@@ -87,7 +87,7 @@ export default function OrdersDashboard() {
             <p style={{ margin: 0 }}>Intenta con otro filtro o término de búsqueda.</p>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '1.5rem' }}>
             {filteredOrders.map(order => {
               const colors = getStatusColor(order.status)
               return (
@@ -154,7 +154,7 @@ export default function OrdersDashboard() {
                   </div>
 
                   {/* Card Footer Actions */}
-                  <div style={{ padding: '1rem 1.25rem', borderTop: '1px solid #F1F5F9', background: '#F8FAFC', display: 'flex', gap: '0.5rem' }}>
+                  <div style={{ padding: '1rem 1.25rem', borderTop: '1px solid #F1F5F9', background: '#F8FAFC', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                     <button 
                       onClick={() => updateOrderStatus(order.id, 'Aprobado')}
                       style={{ flex: 1, padding: '0.6rem', background: '#10B981', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
